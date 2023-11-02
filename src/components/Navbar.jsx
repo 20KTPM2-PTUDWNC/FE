@@ -52,9 +52,9 @@ function Navbar() {
                 <li>
                     <Link to="/about">About</Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link to="/hotjobs">Hot Jobs</Link>
-                </li>
+                </li> */}
 
                 {!user && (
                     <>
@@ -73,7 +73,7 @@ function Navbar() {
 
                 {user && (
                     <>
-                        {user?.userType === 1 && (
+                        {/* {user?.userType === 1 && (
                             <li>
                                 <Link to="/approve">Approve</Link>
                             </li>
@@ -92,7 +92,7 @@ function Navbar() {
                                     <Link to="/myjobs">My Jobs</Link>
                                 </li>
                             </>
-                        )}
+                        )} */}
                         <li>
                             <Link to={user?.userType === 2 ? `profile/${user?._id}` : `company_profile/${user?._id}`}>
                                 <img

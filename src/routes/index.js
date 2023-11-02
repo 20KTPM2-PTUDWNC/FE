@@ -1,21 +1,21 @@
 import Home from "../pages/Home";
-import SearchJob from "../pages/SearchJob";
+// import SearchJob from "../pages/SearchJob";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
-import JobDetail from "../pages/JobDetail";
-import Approve from "../pages/Approve";
-import CreateJob from "../pages/CreateJob";
-import HotJob from "../pages/HotJob";
+// import JobDetail from "../pages/JobDetail";
+// import Approve from "../pages/Approve";
+// import CreateJob from "../pages/CreateJob";
+// import HotJob from "../pages/HotJob";
 import Profile from "../pages/Profile";
-import CompanyProfile from "../pages/CompanyProfile";
+// import CompanyProfile from "../pages/CompanyProfile";
 import ForgetPassword from "../pages/ForgetPassword";
-import History from "../pages/History";
+// import History from "../pages/History";
 import AboutUs from "../pages/AboutUs";
-import MyJobs from "../pages/MyJobs";
-import Notification from "../pages/Notification";
-import Notification_details from "../pages/Noti_details";
+// import MyJobs from "../pages/MyJobs";
+// import Notification from "../pages/Notification";
+// import Notification_details from "../pages/Noti_details";
 import EditProfile from "../pages/EditProfile";
-import EditCompanyProfile from "../pages/EditCompanyProfile";
+// import EditCompanyProfile from "../pages/EditCompanyProfile";
 import ResetPassword from "../pages/ResetPassword";
 
 // Public Routes

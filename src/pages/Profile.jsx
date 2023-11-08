@@ -19,7 +19,7 @@ function Profile() {
     }, []);
 
     return (
-        <section className="pt-20 bg-blueGray-50 text-black bg-[#393E46] font-sans">
+        <section className="pt-20 bg-blueGray-50 text-black bg-gradient-to-r from-[#000000] to-[#393E46] font-sans">
             {user && (
                 <div className="w-full lg:w-4/12 px-4 mx-auto ">
                     <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">

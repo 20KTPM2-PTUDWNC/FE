@@ -1,10 +1,11 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { Navigate, Route, HashRouter as Router, Routes, useLocation } from "react-router-dom";
-import { publicRoutes, employeeRoutes,  adminRoutes } from "./routes";
+import { publicRoutes, employeeRoutes, adminRoutes } from "./routes";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import LandingPage from "./pages/Welcome";
 
 const ScrollToTop = ({ children }) => {
     const location = useLocation();
@@ -16,7 +17,12 @@ const ScrollToTop = ({ children }) => {
 
 function App() {
     const user = useSelector(selectUser);
+    const [isLandingPage, setIsLandingPage] = useState(true);
+    // function RenderLandingPage() {
+    //     return (
 
+    //     )
+    // }
     return (
         <Router>
             <ScrollToTop>
@@ -29,11 +35,16 @@ function App() {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Navbar />
+
+
                     <Routes>
                         {publicRoutes.map((route, index) => {
                             const Page = route.component;
-
+                            if (route.path !== "/") return <Route key={index} path={route.path} element={
+                                <>
+                                    <Navbar />
+                                    <Page />
+                                </>} />
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}
 

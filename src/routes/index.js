@@ -1,4 +1,5 @@
 import Home from "../pages/Home";
+import LandingPage from "../pages/Welcome";
 // import SearchJob from "../pages/SearchJob";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
@@ -20,7 +21,8 @@ import ResetPassword from "../pages/ResetPassword";
 
 // Public Routes
 const publicRoutes = [
-    { path: "/", component: Home },
+    { path: "/", component: LandingPage },
+    { path: "/home", component: Home },
     // { path: "/job/:jobId", component: JobDetail },
     // { path: "/hotjobs", component: HotJob },
     // { path: "/search/:keyword", component: SearchJob },
@@ -48,4 +50,4 @@ const employeeRoutes = [
 
 // const adminRoutes = [{ path: "/approve", component: Approve }];
 
-export { publicRoutes, employeeRoutes};
+export { publicRoutes, employeeRoutes };

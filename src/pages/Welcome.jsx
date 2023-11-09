@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import cover from "../assets/cover.jpg"
 export default function LandingPage() {
     return (
-        <div name="home" className="w-full h-screen text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
-            <div className="pt-[120px] pb-[50px] max-w-[1100px] mx-auto p-4 flex flex-row justify-between w-full h-full">
+        <div name="home" className="w-full h-full text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
+            {/* <div className="pt-[120px] pb-[50px] max-w-[1100px] mx-auto p-4 flex flex-row justify-between w-full h-full">
                 <div className="bg-[url(https://placekitten.com/600)] h-[600px] w-[600px] relative">
                     <div className="absolute bottom-0 px-4 py-3 bg-gray-500/50 w-full">
                         <h1 className="text-white font-semibold text-4xl"> Welcome </h1>
@@ -30,7 +30,28 @@ export default function LandingPage() {
                         </Link>
                     </div>
                 </div>
+            </div> */}
+            <div className="bg-gray-100 ">
+                <section className="cover bg-gradient-to-r from-[#000000] to-[#393E46] relative bg-blue-600 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 overflow-hidden py-48 flex
+      items-center min-h-screen">
+                    <div className="h-full absolute top-0 left-0 z-0">
+                        <img src={cover} alt="" className="w-screen h-full object-cover opacity-20" />
+                    </div>
+
+                    <div className="lg:w-3/4 xl:w-2/4 relative z-10 h-100 lg:mt-16">
+                        <div>
+                            <h1 className="text-white text-4xl md:text-5xl xl:text-6xl font-bold leading-tight">Welcome</h1>
+                            <p className="text-blue-100 text-xl md:text-2xl leading-snug mt-4">Welcome to our App</p>
+                            <div className="flex flex-row align-center">
+                                <Link to="/" className="px-8 py-4 bg-[#1B9C85] text-white rounded inline-block mt-8 mr-8 font-semibold">Start a meeting</Link>
+                                <Link to="/home" className="px-8 py-4 bg-white border-2 border-[#1B9C85] text-[#1B9C85] rounded inline-block mt-8 font-semibold">Home</Link>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
+
     )
 }

@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { Navigate, Route, HashRouter as Router, Routes, useLocation } from "react-router-dom";
-import { publicRoutes, employeeRoutes, adminRoutes } from "./routes";
+import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/Welcome";
@@ -50,7 +50,7 @@ function App() {
 
                         {user &&
                             user?.userType === 2 &&
-                            employeeRoutes.map((route, index) => {
+                            privateRoutes.map((route, index) => {
                                 const Page = route.component;
 
                                 return <Route key={index} path={route.path} element={<Page />} />;
@@ -72,7 +72,7 @@ function App() {
                                 return <Route key={index} path={route.path} element={<Page />} />;
                             })} */}
 
-                        <Route path="*" element={<Navigate to="/" replace />} />
+                        <Route path="*" element={<Navigate to="/signin" replace />} />
                     </Routes>
                     <Footer />
                 </div>

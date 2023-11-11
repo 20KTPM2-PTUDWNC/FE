@@ -37,8 +37,9 @@ const publicRoutes = [
     // { path: "/company_profile/:companyId", component: CompanyProfile },
 ];
 
-const employeeRoutes = [
+const privateRoutes = [
     { path: "/profile/edit", component: EditProfile },
+    { path: "/home", component: Home },
     // { path: "/history", component: History },
 ];
 
@@ -50,4 +51,4 @@ const employeeRoutes = [
 
 // const adminRoutes = [{ path: "/approve", component: Approve }];
 
-export { publicRoutes, employeeRoutes };
+export { publicRoutes, privateRoutes };

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../api/user/user.api";
+import { getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
 
 let skill_list = [];
@@ -17,7 +18,7 @@ function splitStr(a) {
 }
 
 function EditProfile() {
-    const user = useSelector(selectUser);
+    const user = getUser();
     const [userAuth, setUserAuth] = useState(null);
 
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];

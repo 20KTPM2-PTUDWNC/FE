@@ -5,9 +5,11 @@ import Logo from "../assets/logo.jpg";
 import { logout, selectUser } from "../features/userSlice";
 import { getProfile } from "../api/user/user.api";
 import Search from "./Search";
+import { getUser, singout } from "../features/user";
+import { signOut } from "../api/auth/auth.api";
 
 function Navbar() {
-    const user = useSelector(selectUser);
+    const user = getUser();
 
     const [keyword, setKeyword] = useState("");
 
@@ -16,9 +18,10 @@ function Navbar() {
 
     const handleLogout = async (e) => {
         e.preventDefault();
-
+        console.log(`profile/${user?._id}`)
         try {
-            dispatch(logout());
+            signOut()
+            singout();
             navigate("/");
         } catch (error) {
             console.log(error);
@@ -94,10 +97,10 @@ function Navbar() {
                             </>
                         )} */}
                         <li>
-                            <Link to={user?.userType === 2 ? `profile/${user?._id}` : `company_profile/${user?._id}`}>
+                            <Link to={`/user/${user?._id}`}>
                                 <img
                                     className="rounded-full"
-                                    src={user?.avatar}
+                                    src={Logo}
                                     alt="Avatar"
                                     title="Profile"
                                     style={{ width: "50px", cursor: "pointer" }}

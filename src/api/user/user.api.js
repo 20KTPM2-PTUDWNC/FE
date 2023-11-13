@@ -1,13 +1,9 @@
 import { axiosPrivate } from "../api";
 
 export const updateProfile = async (params) => {
-    const { id, authToken, data } = params || {};
+    const { id, data } = params || {};
     try {
-        return await axiosPrivate.patch(`/api/v1/users/${id}`, data, {
-            headers: {
-                "auth-token": `${authToken}`,
-            },
-        });
+        return await axiosPrivate.put(`/v1/user/${id}`, data);
     } catch (err) {
         throw err;
     }
@@ -15,7 +11,8 @@ export const updateProfile = async (params) => {
 
 export const getProfile = async (id) => {
     try {
-        return await axiosPrivate.get(`/api/v1/users/${id}`);
+        console.log("getProfile: ",id);
+        return await axiosPrivate.get(`/v1/user/${id}`);
     } catch (error) {
         throw error;
     }

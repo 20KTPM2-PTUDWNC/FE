@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../api/auth/auth.api";
-import { signup } from "../features/userSlice";
 
 function SignUp() {
     const [userType, setUserType] = useState(2);
@@ -30,48 +29,52 @@ function SignUp() {
             return setError("Confirm password does not match!");
         }
 
-        if (userType === 3 && !field) {
-            return setError("Please fill all fields!");
-        }
+        // if (userType === 3 && !field) {
+        //     return setError("Please fill all fields!");
+        // }
 
         // If userType === 3 name is companyName, have field of company
         // If userType === 2 name is name, no field of company
-        let userAuth;
-        if (userType === 2) {
-            userAuth = {
-                name,
-                email,
-                password,
-                userType,
-                phone,
-                address,
-                avatar: "https://i.stack.imgur.com/34AD2.jpg",
-                description: "I'm a member of Jobee!",
-            };
-        } else {
-            userAuth = {
-                companyName: name,
-                email,
-                password,
-                userType,
-                phone,
-                address,
-                avatar: "https://i.stack.imgur.com/34AD2.jpg",
-                description: "I'm a member of Jobee!",
-                field,
-            };
-        }
+        let userAuth = {
+            name,
+            email,
+            password,
+            phone,
+            address,
+            // avatar: "https://i.stack.imgur.com/34AD2.jpg",                
+        };
+        // if (userType === 2) {
+        //     userAuth = {
+        //         name,
+        //         email,
+        //         password,
+        //         phone,
+        //         address,
+        //         // avatar: "https://i.stack.imgur.com/34AD2.jpg",                
+        //     };
+        // } else {
+        //     userAuth = {
+
+        //         email,
+        //         password,
+        //         userType,
+        //         phone,
+        //         address,
+        //         // avatar: "https://i.stack.imgur.com/34AD2.jpg",
+        //         // description: "",
+
+        //     };
+        // }
 
         try {
             const response = await signUp(userAuth);
-            if (response.status === 201) {
+            if (response.status === 200) {
                 alert("Sign up successfully!");
-                console.log(response.data);
-                dispatch(signup(response.data));
-                navigate("/");
+                navigate("/signin")
             }
         } catch (error) {
             setError(error.response.data.message);
+            alert(error.response.data.message)
             console.log(error);
         }
     };
@@ -186,7 +189,7 @@ function SignUp() {
                                     onChange={(e) => setConfirmPassWord(e.target.value)}
                                 />
                             </div>
-                            <div>
+                            {/* <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Role
                                 </label>
@@ -197,8 +200,8 @@ function SignUp() {
                                     <option value="2">Job Seeker</option>
                                     <option value="3">Recruiter</option>
                                 </select>
-                            </div>
-                            {userType === 3 && (
+                            </div> */}
+                            {/* {userType === 3 && (
                                 <div>
                                     <label
                                         htmlFor="field"
@@ -215,7 +218,7 @@ function SignUp() {
                                         onChange={(e) => setField(e.target.value)}
                                     />
                                 </div>
-                            )}
+                            )} */}
                             <div className="flex items-start">
                                 <div className="flex items-center h-5">
                                     <input
@@ -241,11 +244,10 @@ function SignUp() {
                             </div>
                             <button
                                 type="submit"
-                                className={`w-full text-white font-semibold rounded-lg text-sm px-5 py-2.5 text-center  ${
-                                    !agree
+                                className={`w-full text-white font-semibold rounded-lg text-sm px-5 py-2.5 text-center  ${!agree
                                         ? "bg-gray-400"
                                         : "bg-[#1B9C85] hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                }`}
+                                    }`}
                                 onClick={handleSignUp}
                                 disabled={!agree}
                             >

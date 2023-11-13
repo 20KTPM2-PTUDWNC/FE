@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { Navigate, Route, HashRouter as Router, Routes, useLocation } from "react-router-dom";
@@ -6,6 +6,7 @@ import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/Welcome";
+import { getUser } from "./features/user";
 
 const ScrollToTop = ({ children }) => {
     const location = useLocation();
@@ -16,13 +17,18 @@ const ScrollToTop = ({ children }) => {
 };
 
 function App() {
-    const user = useSelector(selectUser);
+    const [user, setUser] = useState(null)
+
     const [isLandingPage, setIsLandingPage] = useState(true);
     // function RenderLandingPage() {
     //     return (
 
     //     )
     // }
+    useEffect(() => {
+        const userData = getUser();
+        setUser(userData)
+    }, [user])
     return (
         <Router>
             <ScrollToTop>
@@ -49,11 +55,14 @@ function App() {
                         })}
 
                         {user &&
-                            user?.userType === 2 &&
+                            user?.userFlag === 1 &&
                             privateRoutes.map((route, index) => {
                                 const Page = route.component;
 
-                                return <Route key={index} path={route.path} element={<Page />} />;
+                                return <Route key={index} path={route.path} element={<>
+                                    <Navbar />
+                                    <Page />
+                                </>} />;
                             })}
 
                         {/* {user &&

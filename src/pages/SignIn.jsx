@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, redirect } from "react-router-dom";
 import { signIn } from "../api/auth/auth.api";
-import { signin } from "../features/userSlice";
+import { getProfile } from "../api/user/user.api";
+import { signin } from "../features/user";
 
 function SignIn() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -25,12 +26,16 @@ function SignIn() {
 
         try {
             const response = await signIn(userAuth);
-            if (response.status === 201) {
-                dispatch(signin(response.data));
-                navigate("/");
+            // const res = await getProfile("6550abc2c99e30c698187add");
+            if (response.status === 200) {
+                console.log(response.data.token)
+                signin(response.data.token);
+                navigate("/home");
+                
             }
         } catch (error) {
-            setError(error.response.data.message);
+            console.log("Error123: ",error);
+            setError("Error: ", error);
         }
     };
 

@@ -2,7 +2,7 @@ import { axiosPrivate } from "../api";
 
 export const signIn = async (data) => {
     try {
-        return await axiosPrivate.post("/api/v1/auth/signin", data);
+        return await axiosPrivate.post("/v1/signIn", data);
     } catch (error) {
         throw error;
     }
@@ -11,7 +11,14 @@ export const signIn = async (data) => {
 export const signUp = async (data) => {
     console.log(data);
     try {
-        return await axiosPrivate.post("/api/v1/auth/signup", data);
+        return await axiosPrivate.post("/v1/signUp", data);
+    } catch (error) {
+        throw error;
+    }
+};
+export const signOut = async () => {
+    try {
+        return await axiosPrivate.get("/v1/signOut");
     } catch (error) {
         throw error;
     }

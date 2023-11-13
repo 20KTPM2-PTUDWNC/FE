@@ -31,15 +31,16 @@ const publicRoutes = [
     { path: "/forgetPassword", component: ForgetPassword },
     { path: "/resetPassword/:id/:token", component: ResetPassword },
     { path: "/about", component: AboutUs },
+    { path: "/user/:id", component: Profile },
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
-    { path: "/profile/:id", component: Profile },
     // { path: "/company_profile/:companyId", component: CompanyProfile },
 ];
 
 const privateRoutes = [
     { path: "/profile/edit", component: EditProfile },
-    { path: "/home", component: Home },
+    
+    // { path: "/home", component: Home },
     // { path: "/history", component: History },
 ];
 

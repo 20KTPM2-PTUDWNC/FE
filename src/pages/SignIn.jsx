@@ -4,8 +4,10 @@ import { Link, useNavigate, redirect } from "react-router-dom";
 import { signIn } from "../api/auth/auth.api";
 import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
+import Cookies from 'universal-cookie/es6';
 
 function SignIn() {
+    const cookies = new Cookies();
     const navigate = useNavigate();
     // const dispatch = useDispatch();
     const [email, setEmail] = useState("");
@@ -27,8 +29,10 @@ function SignIn() {
         try {
             const response = await signIn(userAuth);
             // const res = await getProfile("6550abc2c99e30c698187add");
+
             if (response.status === 200) {
-                console.log(response.data.token)
+                console.log(response.data.token);
+                cookies.set('token', response.data.token);
                 signin(response.data.token);
                 navigate("/home");
                 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getProfile, updateProfile } from "../api/user/user.api";
+import { getProfile, updateProfile, updateAvatar } from "../api/user/user.api";
 import { getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
 
@@ -19,12 +19,15 @@ function splitStr(a) {
 
 function EditProfile() {
     const user = getUser();
-    const [userAuth, setUserAuth] = useState(null);
-
+    const navigate = useNavigate();
+    useEffect(() => {
+        if(!user)
+            navigate("/signin")
+    },[])
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
 
-    const navigate = useNavigate();
-    const [avatar, setAvatar] = useState("");
+
+    const [avatar, setAvatar] = useState(null);
     const [name, setName] = useState("");
     const [experience, setExperience] = useState([]);
     const [academicLevel, setAcademicLevel] = useState([]);
@@ -38,15 +41,12 @@ function EditProfile() {
         const fetchData = async () => {
             try {
                 const response = await getProfile(user?._id);
-                setUserAuth(response.data);
-                setAvatar(response.data.avatar);
+
+                setAvatar(response.data.avatar || "");
                 setName(response.data.name);
-                
-                setAcademicLevel(splitStr(response.data.academicLevel));
-                setExperience(splitStr(response.data.experience));
                 setAddress(response.data.address);
                 setPhone(response.data.phone);
-                setDescription(response.data.description);
+
                 console.log(response.data);
             } catch (error) {
                 console.error(error);
@@ -56,57 +56,68 @@ function EditProfile() {
 
         fetchData();
     }, [user?._id]);
-
-    const handleCheckBoxs = (check, value) => {
-        if ((check === true) & !skill_list.includes(value)) {
-            skill_list.push(value);
-        }
-        if ((check === false) & skill_list.includes(value)) {
-            skill_list.splice(skill_list.indexOf(value), 1);
-        }
-    };
-
+    // useEffect(() => {
+    //     return () => {
+    //         avatar && URL.revokeObjectURL(avatar.previewURL)
+    //     }
+    // },[avatar])
+    // const handleCheckBoxs = (check, value) => {
+    //     if ((check === true) & !skill_list.includes(value)) {
+    //         skill_list.push(value);
+    //     }
+    //     if ((check === false) & skill_list.includes(value)) {
+    //         skill_list.splice(skill_list.indexOf(value), 1);
+    //     }
+    // };
+    const handleAvatar = async (e) => {
+        e.preventDefault();
+        const file = e.target.files[0]
+        // file.previewURl = URL.createObjectURL(file)
+        setAvatar(file)
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const data = {
-            avatar,
             name,
-            experience,
-            academicLevel,
-            skills: skill_list,
             address,
             phone,
-            description,
         };
 
-        if (typeof experience === "string") {
-            data.experience = experience.split("\n");
+        const Avatar = new FormData();
+        if (avatar) {
+            Avatar.append("user-avatar", avatar)
         }
+        console.log(avatar)
+        // if (typeof experience === "string") {
+        //     data.experience = experience.split("\n");
+        // }
 
-        if (typeof academicLevel === "string") {
-            data.academicLevel = academicLevel.split("\n");
-        }
-        
-        if (
-            !data.avatar ||
-            !data.name ||
-            !data.address ||
-            !data.phone ||
-            !data.description ||
-            data.skills.length === 0 ||
-            data.experience.length === 0
-        ) {
-            return setError("Please fill all fields!");
-        }
+        // if (typeof academicLevel === "string") {
+        //     data.academicLevel = academicLevel.split("\n");
+        // }
+
+        // if (
+        //     !data.avatar ||
+        //     !data.name ||
+        //     !data.address ||
+        //     !data.phone ||
+        //     !data.description ||
+        //     data.skills.length === 0 ||
+        //     data.experience.length === 0
+        // ) {
+        //     return setError("Please fill all fields!");
+        // }
 
         setError("");
 
         try {
-            await updateProfile({ id: user?._id, data, authToken: user?.token });
+            await updateProfile(user?._id, data);
+            if (avatar)
+                await updateAvatar(user?._id, Avatar)
             alert("Update profile successfully!");
             skill_list = []
-            navigate(`/profile/${user?._id}`);
+            navigate(`/user/${user?._id}`);
         } catch (error) {
             console.log(error);
             setError(error.response?.data?.message || "Failed to update profile");
@@ -114,7 +125,7 @@ function EditProfile() {
     };
 
     return (
-        <div name="editProfile" className="w-full h-full text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
+        <div name="editProfile" className="w-full h-screen text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
             <div className="pt-[120px] pb-[50px] max-w-[900px] mx-auto p-4 flex flex-col justify-center w-full h-full">
                 <div className="pb-4">
                     <p className="text-4xl font-bold inline text-[#00ADB5] border-b-4 border-pink-600">
@@ -168,78 +179,20 @@ function EditProfile() {
                                     />
                                 </div>
 
-                                <div className="w-6/12">
+                                {/* <div className="w-6/12">
                                     <p className="font-semibold mb-1">Avatar</p>
                                     <input
-                                        type="text"
+                                        type="file"
                                         name="avatar"
                                         id="avatar"
                                         className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-                                        value={avatar}
-                                        onChange={(e) => setAvatar(e.target.value)}
+
+                                        onChange={handleAvatar}
                                     />
-                                </div>
+                                </div> */}
                             </div>
 
-                            <div className="mt-4">
-                                <p className="font-semibold mb-1">Education</p>
-                                <textarea
-                                    name="education"
-                                    id="education"
-                                    className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-                                    defaultValue={academicLevel}
-                                    rows={5}
-                                    onChange={(e) => setAcademicLevel(e.target.value)}
-                                />
-                            </div>
 
-                            <div className="mt-4">
-                                <p className="font-semibold mb-1">Experience</p>
-                                <textarea
-                                    name="experience"
-                                    id="experience"
-                                    className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-                                    defaultValue={experience}
-                                    rows={5}
-                                    onChange={(e) => setExperience(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <p className="font-semibold mb-1">Description</p>
-                                <textarea
-                                    name="description"
-                                    id="description"
-                                    className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-                                    value={description}
-                                    rows={5}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <p className="font-semibold mb-1">Skills</p>
-                                <div class="grid md:grid-cols-4 gap-2 text-justify">
-                                    {skillList &&
-                                        skillList.map((skill, index) => (
-                                            <div key={index}>
-                                                <input
-                                                    id="default-checkbox"
-                                                    type="checkbox"
-                                                    value={skill}
-                                                    onChange={(e) => handleCheckBoxs(e.target.checked, e.target.value)}
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                                />
-                                                <label
-                                                    htmlFor="default-checkbox"
-                                                    class="ml-2 text-sm font-medium text-white"
-                                                >
-                                                    {skill}
-                                                </label>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
                         </div>
                     </div>
 

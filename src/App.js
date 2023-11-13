@@ -17,18 +17,17 @@ const ScrollToTop = ({ children }) => {
 };
 
 function App() {
-    const [user, setUser] = useState(null)
+    const user = getUser();
 
-    const [isLandingPage, setIsLandingPage] = useState(true);
+
     // function RenderLandingPage() {
     //     return (
 
     //     )
     // }
     useEffect(() => {
-        const userData = getUser();
-        setUser(userData)
-    }, [user])
+        document.title = "Class Room";
+    }, [])
     return (
         <Router>
             <ScrollToTop>
@@ -54,8 +53,7 @@ function App() {
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}
 
-                        {user &&
-                            user?.userFlag === 1 &&
+                        {/* {user &&
                             privateRoutes.map((route, index) => {
                                 const Page = route.component;
 
@@ -63,7 +61,7 @@ function App() {
                                     <Navbar />
                                     <Page />
                                 </>} />;
-                            })}
+                            })} */}
 
                         {/* {user &&
                             user?.userType === 3 &&
@@ -81,7 +79,7 @@ function App() {
                                 return <Route key={index} path={route.path} element={<Page />} />;
                             })} */}
 
-                        <Route path="*" element={<Navigate to="/signin" replace />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                     <Footer />
                 </div>

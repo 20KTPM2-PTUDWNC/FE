@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from "react";
-
+import Logo from '../assets/logo.jpg'
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../api/user/user.api";
 import { getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
 
 function Profile() {
     const user = getUser()
+    const navigate = useNavigate()
     const params = useParams();
     const id = params.id;
+    // const [a,setA] = useState("")
     const [profile, setProfile] = useState(null);
     useEffect(() => {
-        getProfile(id).then((res) => {
-            setProfile(res.data);
-            console.log(res.data);
-        });
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            getUserProfile(id);
+        }
+        // const file = "D:/Genshin Impact/image.png"
+        // const url = URL.createObjectURL(file)
+        // console.log(url)
+        // // setA("D:/Genshin Impact/image.png")
     }, []);
 
 
@@ -23,14 +31,14 @@ function Profile() {
     async function getUserProfile(userId) {
         try {
             const response = await getProfile(userId);
-            
+
             if (response.status === 200) {
                 console.log(response.data)
-                setProfile(response.data)         
+                setProfile(response.data)
             }
         } catch (error) {
-            console.log("Error123: ",error);
-            
+            console.log("Error123: ", error);
+
         }
     }
     return (
@@ -42,7 +50,7 @@ function Profile() {
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full px-4 flex justify-center">
                                     <div className="relative pt-5">
-                                        <img alt="avatar" src={profile.avatar} className="rounded-full border h-48 w-48" />
+                                        <img src={Logo} className="rounded-full border h-48 w-48" />
                                     </div>
                                 </div>
                             </div>
@@ -115,11 +123,11 @@ function Profile() {
                                 </div>
                             </div> */}
                             {user._id === id && (
-                                <div className="py-10 border-t border-blueGray-200 text-center">
+                                <div className="py-10 mt-10 border-t border-blueGray-200 text-center">
                                     <div className="flex flex-wrap justify-center">
                                         <div className="w-full lg:w-9/12 px-4 mb-2">
                                             <Link
-                                                to="/profile/edit"
+                                                to="/user/edit"
                                                 className="w-full text-white bg-[#222831] hover:bg-[#00ADB5] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                             >
                                                 Edit Profile

@@ -10,10 +10,10 @@ function AboutUs() {
             <div className="pt-[120px] pb-[50px] max-w-[1100px] mx-auto p-4 flex flex-col justify-center w-full h-full">
                 <div className="pb-4">
                     <p className="text-4xl font-bold inline text-[#00ADB5] border-b-4 border-pink-600">About Us</p>
-                    <p className="py-4">The members of Jobee</p>
+                    <p className="py-4">The members of our App</p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-5">
+                {/* <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-5">
                     <div className="flex flex-col justify-center items-center text-center">
                         <div className="hover:scale-110 duration-500">
                             <img alt="avatar" src={MinhTri} className="rounded-full border h-48 w-48" />
@@ -45,7 +45,7 @@ function AboutUs() {
                         <p className="text-4xl font-bold inline text-pink-600 pt-5">Hồ Quang Khải</p>
                         <p className="text-2xl mt-1 font-bold inline text-white">Backend Developer</p>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

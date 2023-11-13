@@ -32,13 +32,14 @@ const publicRoutes = [
     { path: "/resetPassword/:id/:token", component: ResetPassword },
     { path: "/about", component: AboutUs },
     { path: "/user/:id", component: Profile },
+    { path: "/user/edit", component: EditProfile },
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
     // { path: "/company_profile/:companyId", component: CompanyProfile },
 ];
 
 const privateRoutes = [
-    { path: "/profile/edit", component: EditProfile },
+    { path: "/user/edit", component: EditProfile },
     
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

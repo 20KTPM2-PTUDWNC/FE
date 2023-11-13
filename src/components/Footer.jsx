@@ -7,7 +7,7 @@ function Footer() {
             <div className="max-w-[1350px] container mx-auto">
                 <div className="flex flex-col md:flex-row md:justify-between">
                     <div className="">
-                        <h2 className="text-2xl font-bold text-white mb-4">Jobee</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">App</h2>
                         <p className="text-gray-400">Connect with us on social media</p>
                         <div className="flex mt-4">
                             <a href="/" className="mr-4">

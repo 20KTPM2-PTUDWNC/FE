@@ -18,5 +18,4 @@ import { api } from "../constants";
 //   });
 export const axiosPrivate = axios.create({
     baseURL: api.dev,
-    headers: { "Content-Type": "application/json" },
 });

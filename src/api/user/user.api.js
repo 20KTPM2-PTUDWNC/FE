@@ -10,9 +10,10 @@ export const updateProfile = async (params) => {
 };
 
 export const getProfile = async (id) => {
+
     try {
-        console.log("getProfile: ",id);
-        return await axiosPrivate.get(`/v1/user/${id}`);
+        console.log("getProfile: ", id);
+        return await axiosPrivate.get(`/v1/user/${id}`, { withCredentials: true });
     } catch (error) {
         throw error;
     }

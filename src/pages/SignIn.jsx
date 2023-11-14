@@ -32,7 +32,6 @@ function SignIn() {
 
             if (response.status === 200) {
                 console.log(response.data.token);
-                cookies.set('token', response.data.token);
                 signin(response.data.token);
                 navigate("/home");
                 

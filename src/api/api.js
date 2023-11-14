@@ -13,9 +13,10 @@ import { api } from "../constants";
 //     // Cấu hình tiêu đề để cho phép CORS
 //     config.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000/#/profile/6550abc2c99e30c698187add'; // Thay đổi '*' bằng tên miền của máy chủ API thực tế
 //     config.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
-  
+
 //     return config;
 //   });
 export const axiosPrivate = axios.create({
-    baseURL: api.dev,
+    baseURL: api.prod,
+    headers: { "Content-Type": "application/json" }
 });

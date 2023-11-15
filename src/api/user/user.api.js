@@ -3,9 +3,7 @@ import { axiosPrivate } from "../api";
 export const updateProfile = async (id, data) => {
 
     try {
-        return await axiosPrivate.put(`/v1/user/${id}`, data, {
-            withCredentials: true,
-        });
+        return await axiosPrivate.put(`/v1/user/${id}`, data);
     } catch (err) {
         throw err;
     }
@@ -14,7 +12,7 @@ export const updateAvatar = async (id, data) => {
 
     try {
         return await axiosPrivate.post(`/v1/user/uploadPhoto/${id}`, data, {
-            withCredentials: true,
+
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -28,9 +26,7 @@ export const getProfile = async (id) => {
 
     try {
         console.log("getProfile: ", id);
-        return await axiosPrivate.get(`/v1/user/${id}`, {
-            withCredentials: true,
-        });
+        return await axiosPrivate.get(`/v1/user/${id}`);
     } catch (error) {
         throw error;
     }
@@ -39,7 +35,7 @@ export const getAvatar = async (id) => {
 
     try {
         console.log("getProfile: ", id);
-        return await axiosPrivate.get(`/v1/user/${id}`, { withCredentials: true });
+        return await axiosPrivate.get(`/v1/user/${id}`);
     } catch (error) {
         throw error;
     }

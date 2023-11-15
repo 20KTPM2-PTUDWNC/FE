@@ -18,5 +18,7 @@ import { api } from "../constants";
 //   });
 export const axiosPrivate = axios.create({
     baseURL: api.prod,
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+    credentials: 'include',
 });

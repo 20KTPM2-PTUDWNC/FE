@@ -19,8 +19,8 @@ function Profile() {
             navigate("/signin");
         }
         else {
-            document.cookie = `token=getCookies(); expires=Thu, 01 Jan 2030 00:00:00 GMT; path=/v1/user/${id};`;
-            // cookie.set('token', getCookies(), { path: `/v1/user/${id}` });
+            // document.cookie = `token=getCookies(); expires=Thu, 01 Jan 2030 00:00:00 GMT; path=/v1/user/${id};`;
+            cookie.set('token', getCookies(), { path: `/` });
             getUserProfile(id);
         }
         // const file = "D:/Genshin Impact/image.png"

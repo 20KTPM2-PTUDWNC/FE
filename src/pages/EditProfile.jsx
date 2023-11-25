@@ -125,10 +125,10 @@ function EditProfile() {
     };
 
     return (
-        <div name="editProfile" className="w-full h-screen text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
+        <div name="editProfile" className="w-full h-screen">
             <div className="pt-[120px] pb-[50px] max-w-[900px] mx-auto p-4 flex flex-col justify-center w-full h-full">
-                <div className="pb-4">
-                    <p className="text-4xl font-bold inline text-[#00ADB5] border-b-4 border-pink-600">
+                <div className="pb-4 mb-5">
+                    <p className="text-4xl font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">
                         Update Profile
                     </p>
                 </div>
@@ -142,7 +142,7 @@ function EditProfile() {
                         <div className="flex flex-col w-full font-sans">
                             <div className="flex">
                                 <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Name</p>
+                                    <p className="text-[#5f27cd] font-semibold mb-1">Name</p>
                                     <input
                                         type="text"
                                         name="name"
@@ -154,7 +154,7 @@ function EditProfile() {
                                 </div>
 
                                 <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Address</p>
+                                    <p className="text-[#5f27cd] font-semibold mb-1">Address</p>
                                     <input
                                         type="text"
                                         name="address"
@@ -168,7 +168,7 @@ function EditProfile() {
 
                             <div className="flex mt-4">
                                 <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Phone</p>
+                                    <p className="text-[#5f27cd] font-semibold mb-1">Phone</p>
                                     <input
                                         type="text"
                                         name="phone"
@@ -199,7 +199,7 @@ function EditProfile() {
                     <div className="mt-8">
                         <button
                             type="submit"
-                            className="bg-[#00ADB5] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
+                            className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
                             onClick={handleSubmit}
                         >
                             Update Profile

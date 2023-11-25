@@ -5,6 +5,7 @@ import { signIn } from "../api/auth/auth.api";
 import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
 import Cookies from 'universal-cookie/es6';
+import { FaFacebook, FaGoogle } from "react-icons/fa";
 
 function SignIn() {
     const cookies = new Cookies();
@@ -35,30 +36,30 @@ function SignIn() {
                 cookies.set('token', response.data.token);
                 signin(response.data.token);
                 navigate("/home");
-                
+
             }
         } catch (error) {
-            console.log("Error123: ",error);
+            console.log("Error123: ", error);
             setError("Error: ", error);
         }
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full text-gray-300 bg-gradient-to-r from-[#000000] to-[#393E46]">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <section className="bg-white">
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full ">
+                <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        <h1 className="text-2xl text-white font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Sign in
                         </h1>
                         {error && (
-                            <p className="bg-[#D14D72] text-sm text-white font-bold py-3 px-4 rounded">{error}</p>
+                            <p className="bg-[#D14D72] text-sm text-[#ff6b81] font-bold py-3 px-4 rounded">{error}</p>
                         )}
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-sm font-medium text-white dark:text-white"
                                 >
                                     Email
                                 </label>
@@ -75,7 +76,7 @@ function SignIn() {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-sm font-medium text-white dark:text-white"
                                 >
                                     Password
                                 </label>
@@ -100,26 +101,26 @@ function SignIn() {
                                         />
                                     </div>
                                     <div className="ml-3 text-sm">
-                                        <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
+                                        <label htmlFor="remember" className="text-white dark:text-gray-300">
                                             Remember me
                                         </label>
                                     </div>
                                 </div>
                                 <Link
                                     to="/forgetPassword"
-                                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    className="text-sm font-medium text-white hover:underline dark:text-primary-500"
                                 >
                                     Forgot password?
                                 </Link>
                             </div>
                             <button
                                 type="submit"
-                                className="w-full text-white bg-[#1B9C85] hover:bg-[#1dbfaf] focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                className="w-full text-white bg-[#ff4757] hover:bg-[#ff9f43] focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                 onClick={handleSubmit}
                             >
                                 Sign In
                             </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                            <p className="text-sm font-light text-white dark:text-gray-400">
                                 Don’t have an account yet?{" "}
                                 <Link
                                     to="/signup"
@@ -128,9 +129,25 @@ function SignIn() {
                                     Sign up
                                 </Link>
                             </p>
+                            <div className="flex items-center">
+                                <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
+                                <div className="flex">
+                                    <a href="/" className="mr-4">
+                                        <FaFacebook className="text-white hover:text-[#00ADB5]" size={24} />
+                                    </a>
+                                    <a href="/" className="mr-4">
+                                        <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
+                                    </a>
+                                  
+                                </div>
+                            </div>
+
                         </form>
+
                     </div>
+
                 </div>
+
             </div>
         </section>
     );

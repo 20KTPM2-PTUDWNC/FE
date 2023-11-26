@@ -6,7 +6,7 @@ import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
 import Cookies from 'universal-cookie/es6';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-
+import FacebookLogin from 'react-facebook-login';
 function SignIn() {
     const cookies = new Cookies();
     const navigate = useNavigate();
@@ -14,7 +14,11 @@ function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
+    const responseFacebook = (response) => {
+        console.log(response);
+        // Handle the response from Facebook login
+        // You can send the response to your server for authentication
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -132,13 +136,22 @@ function SignIn() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-                                    <a href="/" className="mr-4">
-                                        <FaFacebook className="text-white hover:text-[#00ADB5]" size={24} />
-                                    </a>
+
+                                    <FacebookLogin
+                                        appId="361876739653020"
+                                        autoLoad={false}
+                                        fields="name,email,picture"
+                                        callback={responseFacebook}
+                                        cssClass="text-white mr-3 hover:text-[#00ADB5]"
+                                        icon="fa-facebook"
+
+                                    />
+
+
                                     <a href="/" className="mr-4">
                                         <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
-                                  
+
                                 </div>
                             </div>
 

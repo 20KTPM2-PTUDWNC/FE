@@ -56,7 +56,7 @@ function Profile() {
                             </div>
                             <div className="text-center mt-12">
                                 <h3 className="text-2xl font-semibold leading-normal mb-2 mb-2">
-                                    {profile.name}
+                                    {profile.name !== "undefined undefined" ? profile.name : "No name"}
                                 </h3>
                                 <div className="text-sm leading-normal mt-0 mb-2  font-bold">
                                     <i className="fas fa-map-marker-alt mr-2 text-lg "></i>

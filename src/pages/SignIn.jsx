@@ -60,8 +60,8 @@ function SignIn() {
 
             }
         } catch (error) {
-            console.log("Error123: ", error);
-            setError("Error: ", error);
+            console.log("Error123: ", error.message);
+            setError("Error: ", error.message);
         }
     };
 
@@ -74,7 +74,7 @@ function SignIn() {
                             Sign in
                         </h1>
                         {error && (
-                            <p className="bg-[#D14D72] text-sm text-[#ff6b81] font-bold py-3 px-4 rounded">{error}</p>
+                            <p className="bg-[#D14D72] text-sm text-white font-bold py-3 px-4 rounded">{error}</p>
                         )}
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div>

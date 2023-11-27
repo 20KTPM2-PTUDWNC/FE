@@ -18,6 +18,7 @@ import AboutUs from "../pages/AboutUs";
 import EditProfile from "../pages/EditProfile";
 // import EditCompanyProfile from "../pages/EditCompanyProfile";
 import ResetPassword from "../pages/ResetPassword";
+import ClassDetails from "../pages/ClassDetails";
 
 // Public Routes
 const publicRoutes = [
@@ -30,9 +31,11 @@ const publicRoutes = [
     { path: "/signup", component: SignUp },
     { path: "/forgetPassword", component: ForgetPassword },
     { path: "/resetPassword/:id/:token", component: ResetPassword },
-    { path: "/about", component: AboutUs },
+
     { path: "/user/:id", component: Profile },
     { path: "/user/edit", component: EditProfile },
+    { path: "/class/:classId", component: ClassDetails },
+
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
     // { path: "/company_profile/:companyId", component: CompanyProfile },
@@ -40,7 +43,7 @@ const publicRoutes = [
 
 const privateRoutes = [
     { path: "/user/edit", component: EditProfile },
-    
+
     // { path: "/home", component: Home },
     // { path: "/history", component: History },
 ];

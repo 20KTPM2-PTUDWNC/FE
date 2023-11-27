@@ -54,3 +54,10 @@ export const signInGG = async () => {
         throw error;
     }
 };
+export const activateAcc = async (token) => {
+    try {
+        return await axiosPrivate.get(`/v1/activateAccount/${token}`);
+    } catch (error) {
+        throw error;
+    }
+};

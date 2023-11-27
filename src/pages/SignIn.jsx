@@ -60,8 +60,8 @@ function SignIn() {
 
             }
         } catch (error) {
-            console.log("Error123: ", error.message);
-            setError("Error: ", error.message);
+            console.log("Error123: ", error.response.data.message);
+            setError(error.response.data.message);
         }
     };
 

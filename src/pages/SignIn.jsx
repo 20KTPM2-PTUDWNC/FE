@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, redirect } from "react-router-dom";
-import { signIn } from "../api/auth/auth.api";
+import { signIn, signInFB, signInGG } from "../api/auth/auth.api";
 import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
 import Cookies from 'universal-cookie/es6';
@@ -14,11 +14,28 @@ function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const responseFacebook = (response) => {
-        console.log(response);
-        // Handle the response from Facebook login
-        // You can send the response to your server for authentication
-    };
+    // const handleLoginFacebook = async () => {
+    //     console.log("login facebook");
+    //     try {
+    //         window.open("http://localhost:8080/v1/auth/facebook","_self")
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
+
+    // };
+    // const handleLoginGoogle = async () => {
+    //     console.log("login facebook");
+    //     alert("login facebook")
+    //     try {
+    //         const response = await signInGG();
+    //         console.log("login: ", response)
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
+
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -136,22 +153,12 @@ function SignIn() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-
-                                    <FacebookLogin
-                                        appId="361876739653020"
-                                        autoLoad={false}
-                                        fields="name,email,picture"
-                                        callback={responseFacebook}
-                                        cssClass="text-white mr-3 hover:text-[#00ADB5]"
-                                        icon="fa-facebook"
-
-                                    />
-
-
-                                    <a href="/" className="mr-4">
-                                        <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
+                                    <a href="http://localhost:8080/v1/auth/facebook">
+                                        <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
-
+                                    <a href="http://localhost:8080/v1/auth/google">
+                                        <FaGoogle className="text-white hover:text-[#00ADB5]"  size={24} />
+                                    </a>
                                 </div>
                             </div>
 

@@ -3,6 +3,7 @@ import LandingPage from "../pages/Welcome";
 // import SearchJob from "../pages/SearchJob";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
+import SignInSuccess from "../pages/SignInSuccess";
 // import JobDetail from "../pages/JobDetail";
 // import Approve from "../pages/Approve";
 // import CreateJob from "../pages/CreateJob";
@@ -11,8 +12,8 @@ import Profile from "../pages/Profile";
 // import CompanyProfile from "../pages/CompanyProfile";
 import ForgetPassword from "../pages/ForgetPassword";
 // import History from "../pages/History";
-import AboutUs from "../pages/AboutUs";
-// import MyJobs from "../pages/MyJobs";
+
+
 // import Notification from "../pages/Notification";
 // import Notification_details from "../pages/Noti_details";
 import EditProfile from "../pages/EditProfile";
@@ -29,6 +30,7 @@ const publicRoutes = [
     // { path: "/search/:keyword", component: SearchJob },
     { path: "/signin", component: SignIn },
     { path: "/signup", component: SignUp },
+    { path: "/loginSuccess/:token", component: SignInSuccess },
     { path: "/forgetPassword", component: ForgetPassword },
     { path: "/resetPassword/:id/:token", component: ResetPassword },
 

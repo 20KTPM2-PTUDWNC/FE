@@ -12,8 +12,9 @@ export const updateAvatar = async (id, data) => {
 
     try {
         return await axiosPrivate.post(`/v1/user/uploadPhoto/${id}`, data, {
+
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
             },
            
         });

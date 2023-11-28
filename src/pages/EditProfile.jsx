@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
-
+import Cookies from "universal-cookie";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, updateAvatar } from "../api/user/user.api";
-import { getUser } from "../features/user";
+import { getCookies, getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
 
 let skill_list = [];
@@ -20,10 +20,16 @@ function splitStr(a) {
 function EditProfile() {
     const user = getUser();
     const navigate = useNavigate();
+    const id = user._id
     useEffect(() => {
-        if(!user)
+        if (!user)
             navigate("/signin")
-    },[])
+        else {
+            const cookie = new Cookies()
+            cookie.set('token', getCookies(), { path: `/v1/user/${id}` });
+        }
+
+    }, [])
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
 
 

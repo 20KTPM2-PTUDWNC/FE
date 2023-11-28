@@ -3,11 +3,12 @@ import Logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../api/user/user.api";
-import { getUser } from "../features/user";
+import { getCookies, getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
-
+import Cookies from "universal-cookie";
 function Profile() {
     const user = getUser()
+    const cookie = new Cookies()
     const navigate = useNavigate()
     const params = useParams();
     const id = params.id;
@@ -18,12 +19,15 @@ function Profile() {
             navigate("/signin");
         }
         else {
+            // document.cookie = `token=getCookies(); expires=Thu, 01 Jan 2030 00:00:00 GMT; path=/v1/user/${id};`;
+            cookie.set('token', getCookies(), { path: `/` });
             getUserProfile(id);
         }
         // const file = "D:/Genshin Impact/image.png"
         // const url = URL.createObjectURL(file)
         // console.log(url)
         // // setA("D:/Genshin Impact/image.png")
+
     }, []);
 
 

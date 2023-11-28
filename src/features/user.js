@@ -12,6 +12,15 @@ export const signin = (token) => {
     sessionStorage.setItem("user", JSON.stringify(userData));
     sessionStorage.setItem("cookie", token);
 }
+export const storeEmail = (email) => {
+    sessionStorage.setItem("email", email)
+}
+export const getEmail = () => {
+    sessionStorage.getItem("email")
+}
+export const removeEmail = () => {
+    sessionStorage.removeItem("email")
+}
 export const singout = () => {
     const cookie = new Cookies()
     cookie.remove(sessionStorage.getItem("cookie"))

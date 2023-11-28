@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { resetPassword } from "../api/auth/auth.api";
+import { getEmail, removeEmail } from "../features/user";
 
 function ResetPassword() {
     const params = useParams();
@@ -25,15 +26,16 @@ function ResetPassword() {
         }
 
         const userAuth = {
-            id: userId,
             token: authToken,
-            password,
+            email: getEmail(),
+            newPassword: password
         };
 
         try {
             const response = await resetPassword(userAuth);
             if (response.status === 200) {
                 alert("Reset password successfully. Please login again!");
+                removeEmail();
                 navigate("/signin");
             }
         }
@@ -44,9 +46,9 @@ function ResetPassword() {
     };
 
     return (
-        <section className="bg-white">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full text-gray-300">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <section className="bg-white text-white">
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full ">
+                <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Reset Password

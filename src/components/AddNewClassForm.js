@@ -39,12 +39,14 @@ function AddNewClass({ onClose }) {
             const response = await createClass(newClass);
             if (response.status === 200) {
                 alert("Create new class successfully!");
+                onClose()
                 navigate('/home');
             }
         } catch (error) {
             setError(error.response.data.message);
             alert(error.response.data.message)
             console.log(error);
+            
         }
     };
 
@@ -94,10 +96,7 @@ function AddNewClass({ onClose }) {
                         <button
                             className="absolute bottom-[20px] w-11/12 bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
-                            onClick={(e) => {
-                                handleSubmit(e)
-                                onClose()
-                            }}
+                            onClick={handleSubmit}
                         >
                             Add
                         </button>

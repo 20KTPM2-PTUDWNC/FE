@@ -11,10 +11,14 @@ import Options from "../components/Options.jsx";
 import UpdateForm from "../components/UpdateForm.jsx";
 import { formatDate, formatDateLeft } from "../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../utils/splitTextWithLineBreaks.js";
+import { showClassDetail, showMemberList } from "../api/class/class.api.js";
+import Cookies from "universal-cookie";
+import { getCookies, getUser } from "../features/user";
 
 function ClassDetails() {
+    const user = getUser()
     const params = useParams();
-    const jobId = params.jobId;
+    const classId = params.classId;
     const [job, setJob] = useState({});
 
     const [showAssignmentOption, setShowAssignmentOption] = useState(false);
@@ -23,7 +27,11 @@ function ClassDetails() {
     const [showApply, setShowApply] = useState(false);
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState([]);
+    const [classDetail, setClassDetail] = useState({});
+    const [memberList, setMemberList] = useState([]);
+    const cookie = new Cookies()
+
     const addTopic = () => {
         alert("add topic");
     }
@@ -82,9 +90,47 @@ function ClassDetails() {
         }
     }, [showAssignmentOption, showUpdate, showApply]);
 
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/userClass/${classId}` });
+            getClassDetail(classId);
+            getMemberList(classId);
+        }
 
+    }, []);
 
-    if (job) {
+    async function getClassDetail(classId) {
+        try {
+            const response = await showClassDetail(classId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setClassDetail(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
+
+    async function getMemberList(classId) {
+        try {
+            const response = await showMemberList(classId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setMemberList(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
+
+    if (classDetail && memberList) {
         return (
             <div className="w-full h-full text-black overflow-hidden">
                 <div className="pt-[120px] pb-[50px] flex flex-col justify-between items-center w-full h-full">
@@ -192,14 +238,14 @@ function ClassDetails() {
                             <div className="flex justify-center pt-4 pb-2">
                                 <Link to={`/company_profile/${job?.userId?._id}`}>
                                     <p className="text-3xl text-center text-[#5f27cd] ">
-                                        Class Name
+                                        {classDetail.name}
                                     </p>
                                 </Link>
                             </div>
                             <div className="flex justify-center mt-4 p-2 border-2 border-[#5f27cd] rounded-lg">
 
                                 <p className="text-center text-2xl text-[#5f27cd]">
-                                    {splitTextWithLineBreaks("Class ID\n 12345")}
+                                    {splitTextWithLineBreaks(`Class ID\n ${classDetail.code}`)}
                                 </p>
 
                             </div>
@@ -252,16 +298,21 @@ function ClassDetails() {
                                 )}
                                 {tab === 3 && (
                                     <div>
-                                        <Link to="/class/classId">
-                                            <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                <p className="text-lg font-bold">Trần Trọng Tín - Teacher</p>
-                                            </div>
-                                        </Link>
-                                        {images.map((imgUrl, index) =>
-                                            <div key={index}>
-                                                <Link to="/class/classId">
+                                        {memberList.teachers.map((teacher) =>
+                                            <div key={teacher._id}>
+                                                <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">Student Name {index + 1} - Student</p>
+                                                        <p className="text-lg font-bold">{teacher.name} - Teacher</p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        )}
+                                        
+                                        {memberList.students.map((student) =>
+                                            <div key={student._id}>
+                                                <Link to={`/class/${classId}`}>
+                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
+                                                        <p className="text-lg font-bold">{student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>

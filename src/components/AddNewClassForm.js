@@ -1,31 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineDownload } from "react-icons/ai";
 
-import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/cv/cv.api.js";
-import { sendEmail } from "../api/email/email.api.js";
-import { selectUser } from "../features/userSlice.js";
-import { formatDateTime } from "../utils/formatDate.js";
-import { Link } from "react-router-dom";
+import { getCookies, getUser } from "../features/user";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { createClass } from "../api/class/class.api.js";
+import Cookies from "universal-cookie";
 
 function AddNewClass({ onClose }) {
-    const [images, setImages] = useState([])
-    // useEffect(() => {
+    const [name, setName] = useState("");
+    const [subject, setSubject] = useState("");
+    const [error, setError] = useState("");
+    
+    const navigate = useNavigate();
+    const user = getUser();
+    const cookie = new Cookies();
+    const params = useParams();
 
-    //     loadImg();
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/class/createClass` });
+        }
+    }, []);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    //     return () => {
-    //         console.log("useEffect done");
-    //     }
-    // }, [])
-    // async function loadImg() {
+        if (!name) {
+            return setError("Please fill name field!");
+        }
 
-    //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-    //     const imgJson = await res.json()
-    //     setImages(imgJson.results)
+        let newClass = {
+            name, subject            
+        };
 
-    // }
-
+        try {
+            const response = await createClass(newClass);
+            if (response.status === 200) {
+                alert("Create new class successfully!");
+                navigate('/home');
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            alert(error.response.data.message)
+            console.log(error);
+        }
+    };
 
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
@@ -55,24 +76,25 @@ function AddNewClass({ onClose }) {
                                 name="name"
                                 id="name"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            // value={name}
-                            // onChange={(e) => setName(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             />
                         </div>
                         <div className="mt-5">
                             <p className="text-[#5f27cd] font-semibold mb-1">Description</p>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
+                                name="subject"
+                                id="subject"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            // value={name}
-                            // onChange={(e) => setName(e.target.value)}
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
                             />
                         </div>
                         <button
                             className="absolute bottom-[20px] w-11/12 bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-
+                            type="submit"
+                            onClick={handleSubmit}
                         >
                             Add
                         </button>

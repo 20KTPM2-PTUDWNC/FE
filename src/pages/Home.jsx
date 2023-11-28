@@ -1,13 +1,15 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getJobs } from "../api/post/post.api";
+import { getAllClassById } from "../api/class/class.api.js";
 import Filter from "../components/Filter";
 import Jobs from "../components/Jobs";
-import { getUser } from "../features/user";
+import { getCookies, getUser } from "../features/user";
 import Logo from "../assets/cover.jpg";
 import AddNewClass from "../components/AddNewClassForm";
 import JoinClass from "../components/JoinClassForm";
+import Cookies from "universal-cookie";
+
 function Home() {
     // const [jobs, setJobs] = useState([]);
     // const [pageNumber, setPageNumber] = useState(1);
@@ -30,11 +32,17 @@ function Home() {
     // };
     const navigate = useNavigate();
     const user = getUser();
-    const [showAddNewClass, setShowAddNewClass] = useState(false)
-    const [showJoinClass, setShowJoinClass] = useState(false)
+    const cookie = new Cookies();
+    const [showAddNewClass, setShowAddNewClass] = useState(false);
+    const [showJoinClass, setShowJoinClass] = useState(false);
+    const [listClass, setListClass] = useState([]);
+
     useEffect(() => {
         if (!user) {
             navigate("/signin")
+        }
+        else{
+            cookie.set('token', getCookies(), { path: `/v1/class/getAllClassById` });
         }
     }, [])
     useEffect(() => {
@@ -45,9 +53,6 @@ function Home() {
         }
     }, [showAddNewClass, showJoinClass]);
     const [images, setImages] = useState([])
-
-
-
 
     useEffect(() => {
 
@@ -65,6 +70,20 @@ function Home() {
         setImages(imgJson.results)
 
     }
+
+    useEffect(() => {
+        async function fetchClasses() {
+          try {
+            const response = await getAllClassById();
+            if (response.status === 200) {
+              setListClass(response.data);
+            }
+          } catch (error) {
+            console.log("Error: ", error);
+          }
+        }
+        fetchClasses();
+      }, []);
 
     return (
         <div name="home" className="bg-white w-full h-full text-black">
@@ -98,15 +117,15 @@ function Home() {
                     </div>
                 </div>
                 <div className="grid grid-cols-3 grid-flow-row gap-10 text-center">
-                    {images.map((imgUrl, index) =>
+                    {listClass.map((_class, index) =>
                         <div key={index}>
-                            <Link to="/class/classId">
+                            <Link to={`/class/${_class._id}`}>
                                 <div class="h-[250px] w-[300px] relative">
                                     <img src={Logo} alt="" className="rounded-lg" />
                                     <div class="absolute rounded-lg bottom-0 px-4 py-3 bg-[#5f27cd] w-full">
-                                        <h1 class="text-white font-semibold text-2xl"> Course Name </h1>
+                                        <h1 class="text-white font-semibold text-2xl">{_class.name}</h1>
                                         <p class="text-gray-200">
-                                            Course des
+                                        {_class.subject}
                                         </p>
                                     </div>
                                 </div>

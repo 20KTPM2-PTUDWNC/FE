@@ -12,6 +12,7 @@ import UpdateForm from "../components/UpdateForm.jsx";
 import { formatDate, formatDateLeft } from "../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../utils/splitTextWithLineBreaks.js";
 import { showClassDetail, showMemberList } from "../api/class/class.api.js";
+import { addGradeComposition, showGradeStructure } from "../api/grade/grade.api.js";
 import Cookies from "universal-cookie";
 import { getCookies, getUser } from "../features/user";
 
@@ -30,6 +31,7 @@ function ClassDetails() {
     const [images, setImages] = useState([]);
     const [classDetail, setClassDetail] = useState({});
     const [memberList, setMemberList] = useState([]);
+    const [gradeList, setGradeList] = useState([]);
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -98,6 +100,7 @@ function ClassDetails() {
             cookie.set('token', getCookies(), { path: `/v1/userClass/${classId}` });
             getClassDetail(classId);
             getMemberList(classId);
+            getGradeList(classId);
         }
 
     }, []);
@@ -130,7 +133,23 @@ function ClassDetails() {
         }
     }
 
-    if (classDetail && memberList) {
+    async function getGradeList(classId) {
+        try {
+            const response = await showGradeStructure(classId);
+
+            if (response.status === 200) {
+                const gradeStructures = response.data;
+                gradeStructures.sort((a, b) => a.sort - b.sort);
+                console.log(gradeStructures);
+                setGradeList(gradeStructures);
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
+
+    if (classDetail && memberList && gradeList) {
         return (
             <div className="w-full h-full text-black overflow-hidden">
                 <div className="pt-[120px] pb-[50px] flex flex-col justify-between items-center w-full h-full">
@@ -254,11 +273,11 @@ function ClassDetails() {
                             <div className="text-base mt-10">
                                 {tab === 1 && (
                                     <div>
-                                        {images.map((imgUrl, index) =>
-                                            <div key={index}>
+                                        {gradeList.map((grade) =>
+                                            <div key={grade._id}>
                                                 <Link to="/class/classId">
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">Topic - {index + 1}</p>
+                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}</p>
                                                     </div>
                                                 </Link>
                                             </div>
@@ -267,11 +286,11 @@ function ClassDetails() {
                                 )}
                                 {tab === 2 && (
                                     <div>
-                                        {images.map((imgUrl, index) =>
-                                            <div key={index}>
+                                        {gradeList.map((grade) =>
+                                            <div key={grade._id}>
                                                 <div>
                                                     <div className="flex ml-5 mt-2">
-                                                        <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">Topic - {index + 1}</p>
+                                                        <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}</p>
                                                         <button
                                                             className="font-bold hover:opacity-90 rounded duration-200"
                                                             onClick={() => setShowTopicOption(true)}

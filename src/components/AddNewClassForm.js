@@ -9,7 +9,7 @@ function AddNewClass({ onClose }) {
     const [name, setName] = useState("");
     const [subject, setSubject] = useState("");
     const [error, setError] = useState("");
-    
+
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
@@ -32,7 +32,7 @@ function AddNewClass({ onClose }) {
         }
 
         let newClass = {
-            name, subject            
+            name, subject
         };
 
         try {
@@ -76,8 +76,8 @@ function AddNewClass({ onClose }) {
                                 name="name"
                                 id="name"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                             />
                         </div>
                         <div className="mt-5">
@@ -94,7 +94,10 @@ function AddNewClass({ onClose }) {
                         <button
                             className="absolute bottom-[20px] w-11/12 bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
-                            onClick={handleSubmit}
+                            onClick={(e) => {
+                                handleSubmit(e)
+                                onClose()
+                            }}
                         >
                             Add
                         </button>

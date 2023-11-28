@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, redirect } from "react-router-dom";
-import { signIn } from "../api/auth/auth.api";
+import { signIn, signInFB, signInGG } from "../api/auth/auth.api";
 import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
 import Cookies from 'universal-cookie/es6';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-
+import FacebookLogin from 'react-facebook-login';
 function SignIn() {
     const cookies = new Cookies();
     const navigate = useNavigate();
@@ -14,7 +14,28 @@ function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    // const handleLoginFacebook = async () => {
+    //     console.log("login facebook");
+    //     try {
+    //         window.open("http://localhost:8080/v1/auth/facebook","_self")
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
 
+    // };
+    // const handleLoginGoogle = async () => {
+    //     console.log("login facebook");
+    //     alert("login facebook")
+    //     try {
+    //         const response = await signInGG();
+    //         console.log("login: ", response)
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
+
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -38,8 +59,8 @@ function SignIn() {
 
             }
         } catch (error) {
-            console.log("Error123: ", error);
-            setError("Error: ", error);
+            console.log("Error123: ", error.response.data.message);
+            setError(error.response.data.message);
         }
     };
 
@@ -52,7 +73,7 @@ function SignIn() {
                             Sign in
                         </h1>
                         {error && (
-                            <p className="bg-[#D14D72] text-sm text-[#ff6b81] font-bold py-3 px-4 rounded">{error}</p>
+                            <p className="bg-[#D14D72] text-sm text-white font-bold py-3 px-4 rounded">{error}</p>
                         )}
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div>
@@ -131,13 +152,12 @@ function SignIn() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-                                    <a href="/" className="mr-4">
-                                        <FaFacebook className="text-white hover:text-[#00ADB5]" size={24} />
+                                    <a href="http://localhost:8080/v1/auth/facebook">
+                                        <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
-                                    <a href="/" className="mr-4">
-                                        <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
+                                    <a href="http://localhost:8080/v1/auth/google">
+                                        <FaGoogle className="text-white hover:text-[#00ADB5]"  size={24} />
                                     </a>
-                                  
                                 </div>
                             </div>
 

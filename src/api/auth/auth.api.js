@@ -39,3 +39,25 @@ export const resetPassword = async (data) => {
         throw error;
     }
 };
+
+export const signInFB = async () => {
+    try {
+        return await axiosPrivate.get("/v1/auth/facebook");
+    } catch (error) {
+        throw error;
+    }
+};
+export const signInGG = async () => {
+    try {
+        return await axiosPrivate.get("/v1/auth/google");
+    } catch (error) {
+        throw error;
+    }
+};
+export const activateAcc = async (token) => {
+    try {
+        return await axiosPrivate.get(`/v1/activateAccount/${token}`);
+    } catch (error) {
+        throw error;
+    }
+};

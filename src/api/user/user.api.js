@@ -16,6 +16,7 @@ export const updateAvatar = async (id, data) => {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
+           
         });
     } catch (err) {
         throw err;

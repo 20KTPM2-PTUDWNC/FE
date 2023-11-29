@@ -13,6 +13,7 @@ import { formatDate, formatDateLeft } from "../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../utils/splitTextWithLineBreaks.js";
 import { showClassDetail, showMemberList } from "../api/class/class.api.js";
 import { addGradeComposition, showGradeStructure } from "../api/grade/grade.api.js";
+import { addAssignment, showAssignmentList } from "../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 import { getCookies, getUser } from "../features/user";
 
@@ -32,6 +33,7 @@ function ClassDetails() {
     const [classDetail, setClassDetail] = useState({});
     const [memberList, setMemberList] = useState([]);
     const [gradeList, setGradeList] = useState([]);
+    const [assignmentList, setAssignmentList] = useState([]);
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -101,6 +103,9 @@ function ClassDetails() {
             getClassDetail(classId);
             getMemberList(classId);
             getGradeList(classId);
+            for(let i = 0; i < gradeList.length; i++){
+                getAssignmentList(gradeList[i]._id);
+            }
         }
 
     }, []);
@@ -142,6 +147,23 @@ function ClassDetails() {
                 gradeStructures.sort((a, b) => a.sort - b.sort);
                 console.log(gradeStructures);
                 setGradeList(gradeStructures);
+                for(let i = 0; i < gradeList.length; i++){
+                    getAssignmentList(gradeList[i]._id);
+                }
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
+
+    async function getAssignmentList(assignmentId) {
+        try {
+            const response = await showAssignmentList(assignmentId);
+
+            if (response.status === 200) {
+                console.log(response.data);
+                setAssignmentList(response.data);
             }
         } catch (error) {
             console.log("Error123: ", error);
@@ -301,11 +323,11 @@ function ClassDetails() {
                                                 </div>
 
 
-                                                {images.map((imgUrl, index) =>
-                                                    <div key={index}>
+                                                {assignmentList.map((assignment) =>
+                                                    <div key={assignment._id}>
                                                         <Link to="/class/classId">
                                                             <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                <p className="text-lg font-bold">Assignment - {index + 1}</p>
+                                                                <p className="text-lg font-bold">{assignment.name} - {assignment.scale}</p>
                                                             </div>
                                                         </Link>
                                                     </div>

@@ -9,10 +9,10 @@ export const createClass = async (data) => {
     }
 };
 
-export const getAllClassById = async () => {
+export const getAllClassById = async (data) => {
 
     try {
-        return await axiosPrivate.get('/v1/class/getAllClassById');
+        return await axiosPrivate.get('/v1/class/getAllClassById', data);
     } catch (err) {
         throw err;
     }
@@ -21,7 +21,7 @@ export const getAllClassById = async () => {
 export const showClassDetail = async (id, data) => {
 
     try {
-        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`);
+        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`, data);
     } catch (err) {
         throw err;
     }
@@ -30,7 +30,7 @@ export const showClassDetail = async (id, data) => {
 export const showMemberList = async (id, data) => {
 
     try {
-        return await axiosPrivate.get(`/v1/userClass/${id}`);
+        return await axiosPrivate.get(`/v1/userClass/${id}`, data);
     } catch (err) {
         throw err;
     }

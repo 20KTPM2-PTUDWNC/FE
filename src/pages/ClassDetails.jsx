@@ -103,12 +103,22 @@ function ClassDetails() {
             getClassDetail(classId);
             getMemberList(classId);
             getGradeList(classId);
-            for(let i = 0; i < gradeList.length; i++){
-                getAssignmentList(gradeList[i]._id);
+            if (gradeList.length > 0){
+                gradeList.forEach((grade) => {
+                    getAssignmentList(grade._id);
+                });
             }
         }
 
     }, []);
+
+    useEffect(() => {
+        if (gradeList.length > 0){
+            gradeList.forEach((grade) => {
+                getAssignmentList(grade._id);
+            });
+        }
+    }, [gradeList]);
 
     async function getClassDetail(classId) {
         try {
@@ -147,9 +157,6 @@ function ClassDetails() {
                 gradeStructures.sort((a, b) => a.sort - b.sort);
                 console.log(gradeStructures);
                 setGradeList(gradeStructures);
-                for(let i = 0; i < gradeList.length; i++){
-                    getAssignmentList(gradeList[i]._id);
-                }
             }
         } catch (error) {
             console.log("Error123: ", error);
@@ -157,21 +164,28 @@ function ClassDetails() {
         }
     }
 
-    async function getAssignmentList(assignmentId) {
-        try {
-            const response = await showAssignmentList(assignmentId);
+    async function getAssignmentList(gradeId) {
+        setAssignmentList([]);
 
+        try {
+            const response = await showAssignmentList(gradeId);
+    
             if (response.status === 200) {
                 console.log(response.data);
-                setAssignmentList(response.data);
+                
+                // Cập nhật trạng thái với các assignment tương ứng với grade cụ thể
+                setAssignmentList(prevAssignmentList => [
+                    ...prevAssignmentList.filter(assignment => assignment.gradeId !== gradeId),
+                    ...response.data.map(assignment => ({ ...assignment, gradeId })),
+                ]);
             }
         } catch (error) {
             console.log("Error123: ", error);
-
         }
     }
+    
 
-    if (classDetail && memberList && gradeList) {
+    if (classDetail && memberList && gradeList && assignmentList) {
         return (
             <div className="w-full h-full text-black overflow-hidden">
                 <div className="pt-[120px] pb-[50px] flex flex-col justify-between items-center w-full h-full">
@@ -325,11 +339,13 @@ function ClassDetails() {
 
                                                 {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
-                                                        <Link to="/class/classId">
-                                                            <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                <p className="text-lg font-bold">{assignment.name} - {assignment.scale}</p>
-                                                            </div>
-                                                        </Link>
+                                                        {assignment.gradeId === grade._id && (
+                                                            <Link to="/class/classId">
+                                                                <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}</p>
+                                                                </div>
+                                                            </Link>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>

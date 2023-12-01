@@ -44,4 +44,3 @@ export const arrangeGradeComposition = async (classId, gradeId, position, data) 
         throw err;
     }
 };
-

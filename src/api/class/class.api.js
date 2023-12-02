@@ -27,10 +27,10 @@ export const getAllClassById = async () => {
     }
 };
 
-export const showClassDetail = async (id, data) => {
+export const showClassDetail = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`, data, {
+        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`, {
             headers: {
                 'Authorization': getCookies()
             }
@@ -40,10 +40,10 @@ export const showClassDetail = async (id, data) => {
     }
 };
 
-export const showMemberList = async (id, data) => {
+export const showMemberList = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/userClass/${id}`, data, {
+        return await axiosPrivate.get(`/v1/userClass/${id}`, {
             headers: {
                 'Authorization': getCookies()
             }

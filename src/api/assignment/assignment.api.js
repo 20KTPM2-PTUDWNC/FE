@@ -6,7 +6,7 @@ export const addAssignment = async (id, data) => {
     try {
         return await axiosPrivate.post(`/v1/assignment/addAssignment/${id}`, data, {
             headers: {
-                Authorization: getCookies()
+                'Authorization': getCookies()
             }
         });
     } catch (err) {
@@ -19,7 +19,7 @@ export const showAssignmentList = async (id, data) => {
     try {
         return await axiosPrivate.get(`/v1/assignment/showAssignmentList/${id}`, data, {
             headers: {
-                Authorization: getCookies()
+                'Authorization': getCookies()
             }
         });
     } catch (err) {

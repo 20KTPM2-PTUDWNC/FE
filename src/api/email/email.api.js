@@ -5,7 +5,7 @@ export const sendEmail = async (data) => {
     try {
         return await axiosPrivate.post("/api/v1/email/sendmail", data, {
             headers: {
-                Authorization: getCookies()
+                'Authorization': getCookies()
             }
         });
     } catch (error) {

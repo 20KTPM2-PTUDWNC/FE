@@ -14,10 +14,10 @@ export const createClass = async (data) => {
     }
 };
 
-export const getAllClassById = async (data) => {
-
+export const getAllClassById = async () => {
+    console.log("class cookie:", getCookies())
     try {
-        return await axiosPrivate.get('/v1/class/getAllClassById', data, {
+        return await axiosPrivate.get('/v1/class/getAllClassById', {
             headers: {
                 'Authorization': getCookies()
             }

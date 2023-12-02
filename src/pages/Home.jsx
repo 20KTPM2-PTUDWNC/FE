@@ -41,9 +41,7 @@ function Home() {
         if (!user) {
             navigate("/signin")
         }
-        else{
-            cookie.set('token', getCookies(), { path: `/v1/class/getAllClassById` });
-        }
+        
     }, [])
     useEffect(() => {
         if (showAddNewClass || showJoinClass) {

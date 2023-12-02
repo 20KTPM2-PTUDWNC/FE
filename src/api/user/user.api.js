@@ -1,4 +1,5 @@
 import { axiosPrivate } from "../api";
+import { getCookies } from "../../features/user";
 
 export const updateProfile = async (id, data) => {
 
@@ -29,7 +30,6 @@ export const updateAvatar = async (id, data) => {
 export const getProfile = async (id) => {
 
     try {
-        console.log("getProfile: ", id);
         return await axiosPrivate.get(`/v1/user/${id}`, {
             "Authorization": getCookies()
         });
@@ -40,7 +40,6 @@ export const getProfile = async (id) => {
 export const getAvatar = async (id) => {
 
     try {
-        console.log("getProfile: ", id);
         return await axiosPrivate.get(`/v1/user/${id}`, {
             "Authorization": getCookies()
         });

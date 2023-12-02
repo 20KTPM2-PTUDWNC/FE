@@ -1,4 +1,5 @@
 import { axiosPrivate } from "../api";
+import { getCookies } from "../../features/user";
 
 export const addGradeComposition = async (id, data) => {
 

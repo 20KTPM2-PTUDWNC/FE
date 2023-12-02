@@ -12,10 +12,10 @@ export const createClass = async (data) => {
     }
 };
 
-export const getAllClassById = async (data) => {
+export const getAllClassById = async () => {
 
     try {
-        return await axiosPrivate.get('/v1/class/getAllClassById', data, {
+        return await axiosPrivate.get('/v1/class/getAllClassById', {
             "Authorization": getCookies()
         });
     } catch (err) {
@@ -23,10 +23,10 @@ export const getAllClassById = async (data) => {
     }
 };
 
-export const showClassDetail = async (id, data) => {
+export const showClassDetail = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`, data, {
+        return await axiosPrivate.get(`/v1/class/showClassDetail/${id}`, {
             "Authorization": getCookies()
         });
     } catch (err) {
@@ -34,10 +34,10 @@ export const showClassDetail = async (id, data) => {
     }
 };
 
-export const showMemberList = async (id, data) => {
+export const showMemberList = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/userClass/${id}`, data, {
+        return await axiosPrivate.get(`/v1/userClass/${id}`, {
             "Authorization": getCookies()
         });
     } catch (err) {

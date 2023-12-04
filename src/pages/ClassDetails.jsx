@@ -16,6 +16,8 @@ import { addGradeComposition, showGradeStructure } from "../api/grade/grade.api.
 import { addAssignment, showAssignmentList } from "../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 import { getCookies, getUser } from "../features/user";
+import AddTopicForm from "../components/AddTopicForm";
+import AddAssignmentForm from "../components/AddAssignmentForm";
 
 function ClassDetails() {
     const user = getUser()
@@ -25,6 +27,8 @@ function ClassDetails() {
 
     const [showAssignmentOption, setShowAssignmentOption] = useState(false);
     const [showTopicOption, setShowTopicOption] = useState(false);
+    const [showAddTopic, setShowAddTopic] = useState(false);
+    const [ showAddAssigment, setShowAddAssigment] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false);
     const [showApply, setShowApply] = useState(false);
     const [tab, setTab] = useState(1);
@@ -38,13 +42,18 @@ function ClassDetails() {
 
     const addTopic = () => {
         alert("add topic");
+        setShowAssignmentOption(false);
+        setShowAddTopic(true)
+
     }
     const addAssignment = () => {
         alert("add assignment");
+        setShowAssignmentOption(false);
+        setShowAddAssigment(true)
     }
-    const addGradeStructure = () => {
-        alert("add grade structure");
-    }
+    // const addGradeStructure = () => {
+    //     alert("add grade structure");
+    // }
     const assignmentOption = [
         {
             name: "Add Topic",
@@ -54,21 +63,47 @@ function ClassDetails() {
             name: "Add Assignment",
             todo: addAssignment
         },
-        {
-            name: "Add Topic",
-            todo: addGradeStructure
-        }
+        // {
+        //     name: "Add Topic",
+        //     todo: addGradeStructure
+        // }
     ]
     const topicOption = [
         {
             name: "Add Assignment",
             todo: addAssignment
         },
-        {
-            name: "Add Topic",
-            todo: addGradeStructure
-        }
+        // {
+        //     name: "Add Topic",
+        //     todo: addGradeStructure
+        // }
     ]
+    const closeTab = {
+        asssignmentOptions: {
+            close: function () {
+                setShowAssignmentOption(false)
+            }
+        },
+        topicOptions: {
+            close: function () {
+                setShowTopicOption(false)
+            }
+        },
+        topicTab: {
+            close: function () {
+                setShowAssignmentOption(true)
+                setShowAddTopic(false)
+
+            }
+        },
+        assignmentTab: {
+            close: function () {
+                setShowAssignmentOption(true)
+                setShowAddAssigment(false)
+
+            }
+        }
+    }
     useEffect(() => {
 
         loadImg();
@@ -103,7 +138,7 @@ function ClassDetails() {
             getClassDetail(classId);
             getMemberList(classId);
             getGradeList(classId);
-            if (gradeList.length > 0){
+            if (gradeList.length > 0) {
                 gradeList.forEach((grade) => {
                     getAssignmentList(grade._id);
                 });
@@ -113,7 +148,7 @@ function ClassDetails() {
     }, []);
 
     useEffect(() => {
-        if (gradeList.length > 0){
+        if (gradeList.length > 0) {
             gradeList.forEach((grade) => {
                 getAssignmentList(grade._id);
             });
@@ -169,10 +204,10 @@ function ClassDetails() {
 
         try {
             const response = await showAssignmentList(gradeId);
-    
+
             if (response.status === 200) {
                 console.log(response.data);
-                
+
                 // Cập nhật trạng thái với các assignment tương ứng với grade cụ thể
                 setAssignmentList(prevAssignmentList => [
                     ...prevAssignmentList.filter(assignment => assignment.gradeId !== gradeId),
@@ -183,7 +218,7 @@ function ClassDetails() {
             console.log("Error123: ", error);
         }
     }
-    
+
 
     if (classDetail && memberList && gradeList && assignmentList) {
         return (
@@ -237,7 +272,14 @@ function ClassDetails() {
                                         >
                                             <p>Member List</p>
                                         </button>
-
+                                        <div className="ml-5 mt-2">
+                                            <button
+                                                className="font-bold hover:opacity-90 rounded duration-200"
+                                                onClick={() => setShowAssignmentOption(true)}
+                                            >
+                                                <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                            </button>
+                                        </div>
                                     </>
                                     )}
                                     {tab === 3 && (<>
@@ -263,16 +305,6 @@ function ClassDetails() {
 
                                     </>
                                     )}
-                                    <div className="ml-5 mt-2">
-                                        <button
-                                            className="font-bold hover:opacity-90 rounded duration-200"
-                                            onClick={() => setShowAssignmentOption(true)}
-                                        >
-                                            <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                        </button>
-                                    </div>
-
-
 
                                 </div>
                             </div>
@@ -364,7 +396,7 @@ function ClassDetails() {
                                                 </Link>
                                             </div>
                                         )}
-                                        
+
                                         {memberList.students.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
@@ -380,8 +412,10 @@ function ClassDetails() {
                         </div>
                     </div>
                 </div>
-                {showAssignmentOption && <Options data={assignmentOption} onClose={() => setShowAssignmentOption(false)} />}
-                {showTopicOption && <Options data={topicOption} onClose={() => setShowTopicOption(false)} />}
+                {showAssignmentOption && <Options data={assignmentOption} onClose={closeTab.asssignmentOptions.close} />}
+                {showAddTopic && <AddTopicForm onClose={closeTab.topicTab.close} />}
+                {showAddAssigment && <AddAssignmentForm onClose={closeTab.assignmentTab.close} />}
+                {showTopicOption && <Options data={topicOption} onClose={() => closeTab.topicOptions.close} />}
             </div>
         );
     } else {

@@ -28,7 +28,7 @@ function ClassDetails() {
     const [showAssignmentOption, setShowAssignmentOption] = useState(false);
     const [showTopicOption, setShowTopicOption] = useState(false);
     const [showAddTopic, setShowAddTopic] = useState(false);
-    const [ showAddAssigment, setShowAddAssigment] = useState(false)
+    const [showAddAssigment, setShowAddAssigment] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false);
     const [showApply, setShowApply] = useState(false);
     const [tab, setTab] = useState(1);
@@ -367,7 +367,17 @@ function ClassDetails() {
                                                         </button>
                                                     </div>
                                                 </div>
+                                                {images.map((assignment, index) =>
+                                                    <div key={index}>
 
+                                                        <Link to="/class/assingment/assignmentID">
+                                                            <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                                <p className="text-lg font-bold">assignment - {index}</p>
+                                                            </div>
+                                                        </Link>
+
+                                                    </div>
+                                                )}
 
                                                 {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>

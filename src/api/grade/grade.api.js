@@ -9,10 +9,12 @@ export const addGradeComposition = async (id, data) => {
     }
 };
 
-export const showGradeStructure = async (id, data) => {
+export const showGradeStructure = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/grade/showGradeStructure/${id}`, data);
+        return await axiosPrivate.get(`/v1/grade/showGradeStructure/${id}`, {
+            "Authorization": getCookies()
+        });
     } catch (err) {
         throw err;
     }
@@ -27,19 +29,23 @@ export const updateGradeComposition = async (classId, gradeId, data) => {
     }
 };
 
-export const deleteGradeComposition = async (classId, gradeId, data) => {
+export const deleteGradeComposition = async (classId, gradeId) => {
 
     try {
-        return await axiosPrivate.delete(`/v1/grade/${classId}/deleteteGradeComposition/${gradeId}`, data);
+        return await axiosPrivate.delete(`/v1/grade/${classId}/deleteteGradeComposition/${gradeId}`, {
+            "Authorization": getCookies()
+        });
     } catch (err) {
         throw err;
     }
 };
 
-export const arrangeGradeComposition = async (classId, gradeId, position, data) => {
+export const arrangeGradeComposition = async (classId, gradeId, position) => {
 
     try {
-        return await axiosPrivate.delete(`/v1/grade/${classId}/arrangeGradeComposition/${gradeId}/position/${position}`, data);
+        return await axiosPrivate.delete(`/v1/grade/${classId}/arrangeGradeComposition/${gradeId}/position/${position}`, {
+            "Authorization": getCookies()
+        });
     } catch (err) {
         throw err;
     }

@@ -35,3 +35,14 @@ export const showMemberList = async (id, data) => {
         throw err;
     }
 };
+
+export const joinClass = async (data) => {
+
+    try {
+        return await axiosPrivate.post('/v1/class/joinClass', data, {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};

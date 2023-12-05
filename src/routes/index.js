@@ -32,8 +32,8 @@ const publicRoutes = [
     { path: "/signup", component: SignUp },
     { path: "/loginSuccess/:token", component: SignInSuccess },
     { path: "/forgetPassword", component: ForgetPassword },
-    { path: "/resetPassword/:id/:token", component: ResetPassword },
-
+    { path: "/resetPassword/:token", component: ResetPassword },
+  
     { path: "/user/:id", component: Profile },
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },

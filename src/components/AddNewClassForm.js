@@ -9,7 +9,7 @@ function AddNewClass({ onClose }) {
     const [name, setName] = useState("");
     const [subject, setSubject] = useState("");
     const [error, setError] = useState("");
-    
+
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
@@ -32,19 +32,21 @@ function AddNewClass({ onClose }) {
         }
 
         let newClass = {
-            name, subject            
+            name, subject
         };
 
         try {
             const response = await createClass(newClass);
             if (response.status === 200) {
                 alert("Create new class successfully!");
+                onClose()
                 navigate('/home');
             }
         } catch (error) {
             setError(error.response.data.message);
             alert(error.response.data.message)
             console.log(error);
+            
         }
     };
 
@@ -65,8 +67,6 @@ function AddNewClass({ onClose }) {
                     </button>
                 </div>
 
-                {/* Render CV list */}
-
                 <div className="overflow-y-auto w-full h-64 font-sans">
                     <div className="flex flex-col">
                         <div className="mt-5">
@@ -76,8 +76,8 @@ function AddNewClass({ onClose }) {
                                 name="name"
                                 id="name"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                             />
                         </div>
                         <div className="mt-5">

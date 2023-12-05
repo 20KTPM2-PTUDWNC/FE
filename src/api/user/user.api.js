@@ -1,9 +1,12 @@
 import { axiosPrivate } from "../api";
+import { getCookies } from "../../features/user";
 
 export const updateProfile = async (id, data) => {
 
     try {
-        return await axiosPrivate.put(`/v1/user/${id}`, data);
+        return await axiosPrivate.put(`/v1/user/${id}`, data, {
+            "Authorization": getCookies()
+        });
     } catch (err) {
         throw err;
     }
@@ -15,8 +18,9 @@ export const updateAvatar = async (id, data) => {
 
             headers: {
                 'Content-Type': 'multipart/form-data',
+                "Authorization": getCookies()
             },
-           
+
         });
     } catch (err) {
         throw err;
@@ -26,8 +30,9 @@ export const updateAvatar = async (id, data) => {
 export const getProfile = async (id) => {
 
     try {
-        console.log("getProfile: ", id);
-        return await axiosPrivate.get(`/v1/user/${id}`);
+        return await axiosPrivate.get(`/v1/user/${id}`, {
+            "Authorization": getCookies()
+        });
     } catch (error) {
         throw error;
     }
@@ -35,8 +40,9 @@ export const getProfile = async (id) => {
 export const getAvatar = async (id) => {
 
     try {
-        console.log("getProfile: ", id);
-        return await axiosPrivate.get(`/v1/user/${id}`);
+        return await axiosPrivate.get(`/v1/user/${id}`, {
+            "Authorization": getCookies()
+        });
     } catch (error) {
         throw error;
     }

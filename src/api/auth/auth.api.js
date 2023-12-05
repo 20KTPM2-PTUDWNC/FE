@@ -24,9 +24,9 @@ export const signOut = async () => {
     }
 };
 
-export const forgotPassword = async (data) => {
+export const forgetPassword = async (data) => {
     try {
-        return await axiosPrivate.post("/api/v1/auth/forgotPassword", data);
+        return await axiosPrivate.post("/v1/forgotPassword", data);
     } catch (error) {
         throw error;
     }
@@ -34,7 +34,7 @@ export const forgotPassword = async (data) => {
 
 export const resetPassword = async (data) => {
     try {
-        return await axiosPrivate.post("/api/v1/auth/resetPassword", data);
+        return await axiosPrivate.post("/v1/resetPassword", data);
     } catch (error) {
         throw error;
     }

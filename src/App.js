@@ -79,7 +79,7 @@ function App() {
                                 return <Route key={index} path={route.path} element={<Page />} />;
                             })} */}
 
-                        <Route path="*" element={<Navigate to="/" replace />} />
+                        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
                     </Routes>
                     <Footer />
                 </div>

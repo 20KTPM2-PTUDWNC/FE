@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { forgotPassword } from "../api/auth/auth.api";
+import { forgetPassword } from "../api/auth/auth.api";
+import { storeEmail } from "../features/user";
 
 function ForgetPassword() {
     const [email, setEmail] = useState("");
@@ -18,11 +19,11 @@ function ForgetPassword() {
         };
 
         try {
-            const response = await forgotPassword(userAuth);
-            if (response.status === 200) {
-                setSuccess(response.data.message);
-                setEmail("");
-            }
+            const response = await forgetPassword(userAuth);
+            storeEmail(email)
+            setSuccess(response.data.message)
+            console.log(response)
+
         } catch (error) {
             setError(error.response.data.message);
             console.log(error);
@@ -30,11 +31,11 @@ function ForgetPassword() {
     };
 
     return (
-        <section className="bg-white">
-            <div className="text-blackflex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <section className="bg-white text-white">
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full ">
+                <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl dark:text-white">
                             Forget Password
                         </h1>
                         {error && (
@@ -47,7 +48,7 @@ function ForgetPassword() {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-sm font-medium  dark:text-white"
                                 >
                                     Your email
                                 </label>

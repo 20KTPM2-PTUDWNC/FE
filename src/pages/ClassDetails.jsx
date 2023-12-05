@@ -425,7 +425,7 @@ function ClassDetails() {
                 {showAssignmentOption && <Options data={assignmentOption} onClose={closeTab.asssignmentOptions.close} />}
                 {showAddTopic && <AddTopicForm onClose={closeTab.topicTab.close} />}
                 {showAddAssigment && <AddAssignmentForm onClose={closeTab.assignmentTab.close} />}
-                {showTopicOption && <Options data={topicOption} onClose={() => closeTab.topicOptions.close} />}
+                {showTopicOption && <Options data={topicOption} onClose={closeTab.topicOptions.close} />}
             </div>
         );
     } else {

@@ -5,15 +5,60 @@ import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/
 import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
 import { formatDateTime } from "../utils/formatDate.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getCookies, getUser } from "../features/user";
+import { addAssignment } from "../api/assignment/assignment.api.js";
+import Cookies from "universal-cookie";
 
 function AddAssignmentForm({ onClose, topic }) {
     const [name, setName] = useState("");
-    const [gradeStructure, setGradeStructure] = useState("");
+    const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
     const [error, setError] = useState("");
+    const [images, setImages] = useState([]);
 
-    const [images, setImages] = useState([])
+    const navigate = useNavigate();
+    const user = getUser();
+    const cookie = new Cookies();
+    const params = useParams();
+    const gradeStructureId = params.gradeStructureId;
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/assignment/addAssignment/${gradeStructureId}` });
+        }
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!name || !_scale) {
+            return setError("Please fill all field!");
+        }
+
+        let scale = Number(_scale);
+
+        let newAssignment = {
+            name, scale
+        };
+
+        try {
+            const response = await addAssignment(gradeStructureId, newAssignment);
+            if (response.status === 200) {
+                alert("Add new grade composition successfully!");
+                onClose();
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            alert(error.response.data.message)
+            console.log(error);
+            
+        }
+    };
+
     useEffect(() => {
 
         // loadImg();
@@ -67,11 +112,11 @@ function AddAssignmentForm({ onClose, topic }) {
                             <p className="text-[#5f27cd] font-semibold mb-1">Description</p>
                             <input
                                 type="text"
-                                name="subject"
-                                id="subject"
+                                name="_scale"
+                                id="_scale"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                                value={gradeStructure}
-                                onChange={(e) => setGradeStructure(e.target.value)}
+                                value={_scale}
+                                onChange={(e) => setScale(e.target.value)}
                             />
                         </div>
                         <div className="mt-10 mb-5">
@@ -96,7 +141,7 @@ function AddAssignmentForm({ onClose, topic }) {
                         <button
                             className=" mt-5 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
-                            onClick={onClose}
+                            onClick={handleSubmit}
                         >
                             Add
                         </button>

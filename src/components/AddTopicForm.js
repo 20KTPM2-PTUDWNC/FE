@@ -5,14 +5,59 @@ import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/
 import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
 import { formatDateTime } from "../utils/formatDate.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getCookies, getUser } from "../features/user";
+import { addGradeComposition } from "../api/grade/grade.api.js";
+import Cookies from "universal-cookie";
 
 function AddTopicForm({ onClose }) {
     const [name, setName] = useState("");
-    const [gradeStructure, setGradeStructure] = useState("");
+    const [scale, setScale] = useState("");
     const [error, setError] = useState("");
+    const [images, setImages] = useState([]);
 
-    const [images, setImages] = useState([])
+    const navigate = useNavigate();
+    const user = getUser();
+    const cookie = new Cookies();
+    const params = useParams();
+    const classId = params.classId;
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/grade/addGradeStructure/${classId}` });
+        }
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!name || !scale) {
+            return setError("Please fill all field!");
+        }
+
+        let gradeScale = Number(scale);
+
+        let newGrade = {
+            name, gradeScale
+        };
+
+        try {
+            const response = await addGradeComposition(classId, newGrade);
+            if (response.status === 200) {
+                alert("Add new grade composition successfully!");
+                onClose();
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            alert(error.response.data.message)
+            console.log(error);
+            
+        }
+    };
+
     useEffect(() => {
 
         loadImg();
@@ -65,17 +110,17 @@ function AddTopicForm({ onClose }) {
                             <p className="text-[#5f27cd] font-semibold mb-1">Description</p>
                             <input
                                 type="text"
-                                name="subject"
-                                id="subject"
+                                name="scale"
+                                id="scale"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                                value={gradeStructure}
-                                onChange={(e) => setGradeStructure(e.target.value)}
+                                value={scale}
+                                onChange={(e) => setScale(e.target.value)}
                             />
                         </div>
                         <button
                             className="absolute bottom-[0px] w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
-                            onClick={onClose}
+                            onClick={handleSubmit}
                         >
                             Add
                         </button>

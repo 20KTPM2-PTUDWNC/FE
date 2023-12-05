@@ -5,10 +5,55 @@ import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/
 import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
 import { formatDateTime } from "../utils/formatDate.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getCookies, getUser } from "../features/user";
+import { joinClass } from "../api/class/class.api.js";
+import Cookies from "universal-cookie";
 
 function JoinClass({ onClose }) {
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState([]);
+    const [code, setCode] = useState("");
+    const [userId, setUserId] = useState("");
+    const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+    const user = getUser();
+    const cookie = new Cookies();
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/class/joinClass` });
+        }
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!code || !userId) {
+            return setError("Please fill all field!");
+        }
+
+        let joinNewClass = {
+            code, userId
+        };
+
+        try {
+            const response = await joinClass(joinNewClass);
+            if (response.status === 200) {
+                alert("Join new class successfully!");
+                onClose()
+                navigate('/home');
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            alert(error.response.data.message)
+            console.log(error);
+            
+        }
+    };
     // useEffect(() => {
 
     //     loadImg();
@@ -52,27 +97,28 @@ function JoinClass({ onClose }) {
                             <p className="text-[#5f27cd] font-semibold mb-1">Enter Room ID</p>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
+                                name="code"
+                                id="code"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            // value={name}
-                            // onChange={(e) => setName(e.target.value)}
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
                             />
                         </div>
                         <div className="mt-5">
                             <p className="text-[#5f27cd] font-semibold mb-1">Student ID</p>
                             <input
                                 type="text"
-                                name="name"
-                                id="name"
+                                name="userId"
+                                id="userId"
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            // value={name}
-                            // onChange={(e) => setName(e.target.value)}
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
                             />
                         </div>
                         <button
                             className="absolute bottom-[20px] w-11/12 bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-
+                            type="submit"
+                            onClick={handleSubmit}
                         >
                             Add
                         </button>

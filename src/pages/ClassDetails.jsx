@@ -369,7 +369,7 @@ function ClassDetails() {
                                             <div key={grade._id}>
                                                 <Link to="/class/classId">
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}</p>
+                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
                                                     </div>
                                                 </Link>
                                             </div>
@@ -382,7 +382,7 @@ function ClassDetails() {
                                             <div key={grade._id}>
                                                 <div>
                                                     <div className="flex ml-5 mt-2">
-                                                        <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}</p>
+                                                        <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}%</p>
                                                         <button
                                                             className="font-bold hover:opacity-90 rounded duration-200"
                                                             onClick={() => setShowTopicOption(true)}
@@ -391,24 +391,14 @@ function ClassDetails() {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                {images.map((assignment, index) =>
-                                                    <div key={index}>
 
-                                                        <Link to="/class/assingment/assignmentID">
-                                                            <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                <p className="text-lg font-bold">assignment - {index}</p>
-                                                            </div>
-                                                        </Link>
-
-                                                    </div>
-                                                )}
 
                                                 {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
                                                         {assignment.gradeId === grade._id && (
                                                             <Link to="/class/classId">
                                                                 <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}</p>
+                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
                                                                 </div>
                                                             </Link>
                                                         )}
@@ -458,11 +448,17 @@ function ClassDetails() {
                         onClose={closeTab.topicTab.close}
                         onClick={() => setAction(1 - action)}
                     />}
-                {showAddAssigment &&
-                    <AddAssignmentForm
-                        onClose={closeTab.assignmentTab.close}
-                        onClick={() => setAction(1 - action)}
-                    />}
+                {gradeList.map((grade) => (
+                    <div key={grade._id}>
+                        {showAddAssigment && (
+                            <AddAssignmentForm
+                                onClose={closeTab.assignmentTab.close}
+                                onClick={() => setAction(1 - action)}
+                                _gradeStructureId={grade._id} // Truyền grade._id cho mỗi grade
+                            />
+                        )}
+                    </div>
+                ))}
                 {showTopicOption && <Options data={topicOption} onClose={closeTab.topicOptions.close} />}
             </div>
         );

@@ -40,6 +40,7 @@ function ClassDetails() {
     const [memberList, setMemberList] = useState([]);
     const [gradeList, setGradeList] = useState([]);
     const [assignmentList, setAssignmentList] = useState([]);
+    const [action, setAction] = useState(0);
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -51,6 +52,7 @@ function ClassDetails() {
     const addAssignment = () => {
         alert("add assignment");
         setShowAssignmentOption(false);
+        setShowTopicOption(false)
         setShowAddAssigment(true)
     }
     // const addGradeStructure = () => {
@@ -130,7 +132,7 @@ function ClassDetails() {
     }
 
     useEffect(() => {
-        if (showAssignmentOption || showTopicOption || showApply) {
+        if (showAssignmentOption || showTopicOption || showApply || showAddAssigment || showAddTopic) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
@@ -153,7 +155,7 @@ function ClassDetails() {
             }
         }
 
-    }, []);
+    }, [action]);
 
     useEffect(() => {
         if (gradeList.length > 0) {
@@ -445,9 +447,22 @@ function ClassDetails() {
                     </div>
                 </div>
                 {showInvitationByEmailForm && <InvitationByEmailForm onClose={closeTab.ivitationEmail.close} />}
-                {showAssignmentOption && <Options data={assignmentOption} onClose={closeTab.asssignmentOptions.close} />}
-                {showAddTopic && <AddTopicForm onClose={closeTab.topicTab.close} />}
-                {showAddAssigment && <AddAssignmentForm onClose={closeTab.assignmentTab.close} />}
+                {showAssignmentOption &&
+                    <Options
+                        data={assignmentOption}
+                        onClose={closeTab.asssignmentOptions.close}
+
+                    />}
+                {showAddTopic &&
+                    <AddTopicForm
+                        onClose={closeTab.topicTab.close}
+                        onClick={() => setAction(1 - action)}
+                    />}
+                {showAddAssigment &&
+                    <AddAssignmentForm
+                        onClose={closeTab.assignmentTab.close}
+                        onClick={() => setAction(1 - action)}
+                    />}
                 {showTopicOption && <Options data={topicOption} onClose={closeTab.topicOptions.close} />}
             </div>
         );

@@ -10,7 +10,7 @@ import { getCookies, getUser } from "../features/user";
 import { addAssignment } from "../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 
-function AddAssignmentForm({ onClose, topic }) {
+function AddAssignmentForm({ onClose, topic, onClick }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -50,6 +50,7 @@ function AddAssignmentForm({ onClose, topic }) {
             if (response.status === 200) {
                 alert("Add new grade composition successfully!");
                 onClose();
+                onClick()
             }
         } catch (error) {
             setError(error.response.data.message);
@@ -109,7 +110,7 @@ function AddAssignmentForm({ onClose, topic }) {
                             />
                         </div>
                         <div className="mt-5">
-                            <p className="text-[#5f27cd] font-semibold mb-1">Description</p>
+                            <p className="text-[#5f27cd] font-semibold mb-1">Grade percentage</p>
                             <input
                                 type="text"
                                 name="_scale"

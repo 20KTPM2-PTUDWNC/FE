@@ -36,12 +36,13 @@ function Home() {
     const [showAddNewClass, setShowAddNewClass] = useState(false);
     const [showJoinClass, setShowJoinClass] = useState(false);
     const [listClass, setListClass] = useState([]);
+    const [isAddClass, setIsAddClass] = useState(0)
 
     useEffect(() => {
         if (!user) {
             navigate("/signin")
         }
-        else{
+        else {
             cookie.set('token', getCookies(), { path: `/v1/class/getAllClassById` });
         }
     }, [])
@@ -73,17 +74,17 @@ function Home() {
 
     useEffect(() => {
         async function fetchClasses() {
-          try {
-            const response = await getAllClassById();
-            if (response.status === 200) {
-              setListClass(response.data);
+            try {
+                const response = await getAllClassById();
+                if (response.status === 200) {
+                    setListClass(response.data);
+                }
+            } catch (error) {
+                console.log("Error: ", error);
             }
-          } catch (error) {
-            console.log("Error: ", error);
-          }
         }
         fetchClasses();
-      }, []);
+    }, [isAddClass]);
 
     return (
         <div name="home" className="bg-white w-full h-full text-black">
@@ -125,7 +126,7 @@ function Home() {
                                     <div class="absolute rounded-lg bottom-0 px-4 py-3 bg-[#5f27cd] w-full">
                                         <h1 class="text-white font-semibold text-2xl">{_class.name}</h1>
                                         <p class="text-gray-200">
-                                        {_class.subject}
+                                            {_class.subject}
                                         </p>
                                     </div>
                                 </div>
@@ -135,7 +136,7 @@ function Home() {
 
                 </div>
             </div>
-            {showAddNewClass && <AddNewClass onClose={() => setShowAddNewClass(false)} />}
+            {showAddNewClass && <AddNewClass onClose={() => setShowAddNewClass(false)} onClick={() => setIsAddClass(1 - isAddClass)} />}
             {showJoinClass && <JoinClass onClose={() => setShowJoinClass(false)} />}
         </div>
     );

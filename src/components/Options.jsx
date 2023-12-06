@@ -81,10 +81,7 @@ function Options({ onClose, data }) {
                                 onClick={item.todo}
                             >
                                 <p
-                                    className="font-bold hover:text-[#00ADB5]"
-                                    onClick={() => {
-                                        onClose();
-                                    }}
+                                    className="font-bold hover:text-[#00ADB5]"                                    
                                 >
                                     - {item.name}
                                 </p>

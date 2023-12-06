@@ -10,7 +10,7 @@ import { getCookies, getUser } from "../features/user";
 import { addGradeComposition } from "../api/grade/grade.api.js";
 import Cookies from "universal-cookie";
 
-function AddTopicForm({ onClose }) {
+function AddTopicForm({ onClose, onClick }) {
     const [name, setName] = useState("");
     const [scale, setScale] = useState("");
     const [error, setError] = useState("");
@@ -56,24 +56,25 @@ function AddTopicForm({ onClose }) {
             console.log(error);
             
         }
+        onClick()
     };
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        loadImg();
+    //     loadImg();
 
 
-        return () => {
-            console.log("useEffect done");
-        }
-    }, [])
-    async function loadImg() {
+    //     return () => {
+    //         console.log("useEffect done");
+    //     }
+    // }, [])
+    // async function loadImg() {
 
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-        const imgJson = await res.json()
-        setImages(imgJson.results)
+    //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
+    //     const imgJson = await res.json()
+    //     setImages(imgJson.results)
 
-    }
+    // }
 
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
@@ -107,7 +108,7 @@ function AddTopicForm({ onClose }) {
                             />
                         </div>
                         <div className="mt-5">
-                            <p className="text-[#5f27cd] font-semibold mb-1">Description</p>
+                            <p className="text-[#5f27cd] font-semibold mb-1">Grade percentage</p>
                             <input
                                 type="text"
                                 name="scale"

@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { createClass } from "../api/class/class.api.js";
 import Cookies from "universal-cookie";
 
-function AddNewClass({ onClose }) {
+function AddNewClass({ onClose, onClick }) {
     const [name, setName] = useState("");
     const [subject, setSubject] = useState("");
     const [error, setError] = useState("");
@@ -40,6 +40,7 @@ function AddNewClass({ onClose }) {
             if (response.status === 200) {
                 alert("Create new class successfully!");
                 onClose()
+                onClick()
                 navigate('/home');
             }
         } catch (error) {

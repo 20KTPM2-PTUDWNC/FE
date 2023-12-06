@@ -6,6 +6,7 @@ import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
 import { formatDateTime } from "../utils/formatDate.js";
 import { Link } from "react-router-dom";
+import { getProfile } from "../api/user/user.api";
 
 function InvitationByEmailForm({ onClose, topic }) {
     const [email, setEmail] = useState("");

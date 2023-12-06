@@ -10,22 +10,22 @@ import { Link } from "react-router-dom";
 function InvitationByEmailForm({ onClose, topic }) {
     const [email, setEmail] = useState("");
     const [searchResult, setSearchResult] = useState(null);
-
+    const [profile, setProfile] = useState(null);
     const [file, setFile] = useState(null);
     const [error, setError] = useState("");
     const handleInputChange = (event) => {
         setEmail(event.target.value);
     };
     const [images, setImages] = useState([])
-    useEffect(() => {
+    // useEffect(() => {
 
-        handleSearch()
+    //     handleSearch()
 
 
-        return () => {
-            console.log("useEffect done");
-        }
-    }, [email])
+    //     return () => {
+    //         console.log("useEffect done");
+    //     }
+    // }, [email])
 
     const handleSearch = async () => {
         try {
@@ -37,12 +37,25 @@ function InvitationByEmailForm({ onClose, topic }) {
                 return;
             }
 
-           
+
             setSearchResult(response.result);
         } catch (error) {
             console.error('Error searching for email:', error);
         }
     };
+    async function getUserProfile(userId) {
+        try {
+            const response = await getProfile(userId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setProfile(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
             <div className="w-[600px] h-[300px] bg-white rounded-lg p-8 max-w-[1100px]">

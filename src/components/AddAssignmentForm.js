@@ -10,7 +10,7 @@ import { getCookies, getUser } from "../features/user";
 import { addAssignment } from "../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 
-function AddAssignmentForm({ onClose, topic, onClick }) {
+function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -21,7 +21,7 @@ function AddAssignmentForm({ onClose, topic, onClick }) {
     const user = getUser();
     const cookie = new Cookies();
     const params = useParams();
-    const gradeStructureId = params.gradeStructureId;
+    const gradeStructureId = _gradeStructureId;
 
     useEffect(() => {
         if (!user) {
@@ -30,7 +30,7 @@ function AddAssignmentForm({ onClose, topic, onClick }) {
         else {
             cookie.set('token', getCookies(), { path: `/v1/assignment/addAssignment/${gradeStructureId}` });
         }
-    }, []);
+    }, [_gradeStructureId ]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +48,7 @@ function AddAssignmentForm({ onClose, topic, onClick }) {
         try {
             const response = await addAssignment(gradeStructureId, newAssignment);
             if (response.status === 200) {
-                alert("Add new grade composition successfully!");
+                alert("Add new assignment successfully!");
                 onClose();
                 onClick()
             }
@@ -148,9 +148,6 @@ function AddAssignmentForm({ onClose, topic, onClick }) {
                         </button>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     );

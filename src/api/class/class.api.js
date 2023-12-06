@@ -55,3 +55,25 @@ export const joinClass = async (data) => {
         throw err;
     }
 };
+
+export const createInvitationLink = async (data) => {
+
+    try {
+        return await axiosPrivate.post('/v1/class/createInvitationLink', data, {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const acceptInvitation = async (data) => {
+
+    try {
+        return await axiosPrivate.post('/v1/class/acceptInvitation', data, {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};

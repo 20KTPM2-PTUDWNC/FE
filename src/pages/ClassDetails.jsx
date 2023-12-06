@@ -348,7 +348,7 @@ function ClassDetails() {
                             </div>
                             <div className="flex justify-center mt-4 p-2">
 
-                                <InvitationLinkButton textToCopy={"CopyLink"}></InvitationLinkButton>
+                                <InvitationLinkButton></InvitationLinkButton>
 
                             </div>
                             <div className="flex justify-center mt-2 p-2">
@@ -357,7 +357,7 @@ function ClassDetails() {
                                 <button
                                     className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                                     onClick={() => setShowInvitationByEmailForm(true)}>
-                                    Copy link ivitation name
+                                    Copy link invitation name
                                 </button>
                             </div>
                         </div>

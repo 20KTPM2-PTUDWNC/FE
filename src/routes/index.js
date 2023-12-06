@@ -21,6 +21,8 @@ import EditProfile from "../pages/EditProfile";
 import ResetPassword from "../pages/ResetPassword";
 import ClassDetails from "../pages/ClassDetails";
 import AssignmentDetails from "../pages/AssignmentDetails";
+import AcceptInvitation from "../pages/AcceptInvitation";
+
 
 // Public Routes
 const publicRoutes = [
@@ -34,7 +36,8 @@ const publicRoutes = [
     { path: "/loginSuccess/:token", component: SignInSuccess },
     { path: "/forgetPassword", component: ForgetPassword },
     { path: "/resetPassword/:token", component: ResetPassword },
-  
+    { path: "/acceptInvitation/:token", component: AcceptInvitation },
+
     { path: "/user/:id", component: Profile },
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },

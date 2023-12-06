@@ -52,10 +52,10 @@ function InvitationByEmailForm({ onClose, topic }) {
                     </div>
 
                     <button
-                        className="absolute top-[0px] right-[0px] bg-[#5f27cd] text-white px-3 py-1 font-bold rounded"
+                        className="absolute top-[0px] right-[0px] bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
                         onClick={onClose}
                     >
-                        Back
+                        X
                     </button>
                 </div>
 
@@ -89,7 +89,7 @@ function InvitationByEmailForm({ onClose, topic }) {
 
 
                         <button
-                            className=" mt-5 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                            className=" mt-10 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
                             onClick={onClose}
                         >

@@ -18,19 +18,21 @@ import Cookies from "universal-cookie";
 import { getCookies, getUser } from "../features/user";
 import AddTopicForm from "../components/AddTopicForm";
 import AddAssignmentForm from "../components/AddAssignmentForm";
+import InvitationLinkButton from "../components/InvitationLinkButton";
+import InvitationByEmailForm from "../components/InvitationByEmailForm";
 
 function ClassDetails() {
     const user = getUser()
     const params = useParams();
     const classId = params.classId;
     const [job, setJob] = useState({});
-
     const [showAssignmentOption, setShowAssignmentOption] = useState(false);
     const [showTopicOption, setShowTopicOption] = useState(false);
     const [showAddTopic, setShowAddTopic] = useState(false);
     const [showAddAssigment, setShowAddAssigment] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false);
     const [showApply, setShowApply] = useState(false);
+    const [showInvitationByEmailForm, setShowInvitationByEmailForm] = useState(false)
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
     const [images, setImages] = useState([]);
@@ -100,6 +102,12 @@ function ClassDetails() {
             close: function () {
                 setShowAssignmentOption(true)
                 setShowAddAssigment(false)
+
+            }
+        },
+        ivitationEmail: {
+            close: function () {
+                setShowInvitationByEmailForm(false)
 
             }
         }
@@ -336,6 +344,20 @@ function ClassDetails() {
                                 </p>
 
                             </div>
+                            <div className="flex justify-center mt-4 p-2">
+
+                                <InvitationLinkButton textToCopy={"CopyLink"}></InvitationLinkButton>
+
+                            </div>
+                            <div className="flex justify-center mt-4 p-2">
+
+
+                                <button
+                                    className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                    onClick={() => setShowInvitationByEmailForm(true)}>
+                                    Copy link ivitation name
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <div className="text-base mt-10">
@@ -422,6 +444,7 @@ function ClassDetails() {
                         </div>
                     </div>
                 </div>
+                {showInvitationByEmailForm && <InvitationByEmailForm onClose={closeTab.ivitationEmail.close} />}
                 {showAssignmentOption && <Options data={assignmentOption} onClose={closeTab.asssignmentOptions.close} />}
                 {showAddTopic && <AddTopicForm onClose={closeTab.topicTab.close} />}
                 {showAddAssigment && <AddAssignmentForm onClose={closeTab.assignmentTab.close} />}

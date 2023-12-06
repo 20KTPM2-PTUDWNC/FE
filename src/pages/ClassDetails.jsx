@@ -351,7 +351,7 @@ function ClassDetails() {
                                 <InvitationLinkButton textToCopy={"CopyLink"}></InvitationLinkButton>
 
                             </div>
-                            <div className="flex justify-center mt-4 p-2">
+                            <div className="flex justify-center mt-2 p-2">
 
 
                                 <button

@@ -5,19 +5,29 @@ import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/
 import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
 import { formatDateTime } from "../utils/formatDate.js";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../api/user/user.api";
+import { getCookies, getUser } from "../features/user";
+import { invitationByEmail } from "../api/class/class.api.js";
+import { storeEmail } from "../features/user";
+import Cookies from "universal-cookie";
 
 function InvitationByEmailForm({ onClose, topic }) {
     const [email, setEmail] = useState("");
     const [searchResult, setSearchResult] = useState(null);
     const [profile, setProfile] = useState(null);
-    const [file, setFile] = useState(null);
+    const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const handleInputChange = (event) => {
         setEmail(event.target.value);
     };
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState([]);
+
+    const navigate = useNavigate();
+    const user = getUser();
+    const cookie = new Cookies();
+    const params = useParams();
+    const classId = params.classId;
     // useEffect(() => {
 
     //     handleSearch()
@@ -57,6 +67,36 @@ function InvitationByEmailForm({ onClose, topic }) {
 
         }
     }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!email) {
+            return setError("Please fill all field!");
+        }
+
+        const role = 0;
+
+        let joinNewClass = {
+            classId, email, role
+        };
+
+        try {
+            const response = await invitationByEmail(joinNewClass);
+            if (response.status === 200) {
+                storeEmail(email)
+                setSuccess(response.data.message);
+                alert(response.data.message);
+                console.log(response);
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            alert(error.response.data.message)
+            console.log(error);
+            
+        }
+    };
+
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
             <div className="w-[600px] h-[300px] bg-white rounded-lg p-8 max-w-[1100px]">
@@ -105,7 +145,7 @@ function InvitationByEmailForm({ onClose, topic }) {
                         <button
                             className=" mt-10 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"
-                            onClick={onClose}
+                            onClick={handleSubmit}
                         >
                             Invite
                         </button>

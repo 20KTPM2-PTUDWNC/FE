@@ -411,7 +411,7 @@ function ClassDetails() {
                                 )}
                                 {tab === 3 && (
                                     <div>
-                                        {memberList.teachers.map((teacher) =>
+                                        {memberList && memberList.teachers && memberList.teachers.map((teacher) =>
                                             <div key={teacher._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
@@ -421,7 +421,7 @@ function ClassDetails() {
                                             </div>
                                         )}
 
-                                        {memberList.students.map((student) =>
+                                        {memberList && memberList.students && memberList.students.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">

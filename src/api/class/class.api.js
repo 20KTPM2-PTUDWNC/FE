@@ -77,3 +77,15 @@ export const acceptInvitation = async (data) => {
         throw err;
     }
 };
+
+export const invitationByEmail = async (data) => {
+
+    try {
+        return await axiosPrivate.post('/v1/class/invitationByEmail', data, {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+

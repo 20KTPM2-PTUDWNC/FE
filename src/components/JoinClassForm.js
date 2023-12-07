@@ -13,7 +13,6 @@ import Cookies from "universal-cookie";
 function JoinClass({ onClose }) {
     const [images, setImages] = useState([]);
     const [code, setCode] = useState("");
-    const [userId, setUserId] = useState("");
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
@@ -32,9 +31,11 @@ function JoinClass({ onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!code || !userId) {
+        if (!code) {
             return setError("Please fill all field!");
         }
+
+        const userId = user._id;
 
         let joinNewClass = {
             code, userId
@@ -104,17 +105,7 @@ function JoinClass({ onClose }) {
                             onChange={(e) => setCode(e.target.value)}
                             />
                         </div>
-                        <div className="mt-5">
-                            <p className="text-[#5f27cd] font-semibold mb-1">Student ID</p>
-                            <input
-                                type="text"
-                                name="userId"
-                                id="userId"
-                                className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
-                            />
-                        </div>
+            
                         <button
                             className="absolute bottom-[20px] w-11/12 bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                             type="submit"

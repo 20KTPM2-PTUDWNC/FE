@@ -45,6 +45,17 @@ export const showMemberList = async (id) => {
     }
 };
 
+export const exportStudentList = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/grade/exportStudentList/${id}`, {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const joinClass = async (data) => {
 
     try {

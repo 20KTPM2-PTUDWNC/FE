@@ -20,6 +20,7 @@ import AddTopicForm from "../components/AddTopicForm";
 import AddAssignmentForm from "../components/AddAssignmentForm";
 import InvitationLinkButton from "../components/InvitationLinkButton";
 import InvitationByEmailForm from "../components/InvitationByEmailForm";
+import ExportStudentListForm from "../components/ExportStudentListForm";
 
 function ClassDetails() {
     const user = getUser()
@@ -32,7 +33,10 @@ function ClassDetails() {
     const [showAddAssigment, setShowAddAssigment] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false);
     const [showApply, setShowApply] = useState(false);
+    const [showMemberListToption, setShowMemberListToption] = useState(false)
     const [showInvitationByEmailForm, setShowInvitationByEmailForm] = useState(false)
+    const [showExportStudentListForm, setShowExportStudentListForm] = useState(false)
+
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
     const [images, setImages] = useState([]);
@@ -55,6 +59,10 @@ function ClassDetails() {
         setShowTopicOption(false)
         setShowAddAssigment(true)
     }
+    const exportStudentList = () => {
+        setShowMemberListToption(false)
+        setShowExportStudentListForm(true)
+    }
     // const addGradeStructure = () => {
     //     alert("add grade structure");
     // }
@@ -71,6 +79,12 @@ function ClassDetails() {
         //     name: "Add Topic",
         //     todo: addGradeStructure
         // }
+    ]
+    const memberListOption = [
+        {
+            name: "Export Student List",
+            todo: exportStudentList
+        }
     ]
     const topicOption = [
         {
@@ -112,6 +126,16 @@ function ClassDetails() {
                 setShowInvitationByEmailForm(false)
 
             }
+        },
+        memberListForm: {
+            close: function () {
+                setShowMemberListToption(false)
+            }
+        },
+        exportStudentList: {
+            close: function () {
+                setShowExportStudentListForm(false)
+            }
         }
     }
     useEffect(() => {
@@ -132,12 +156,27 @@ function ClassDetails() {
     }
 
     useEffect(() => {
-        if (showAssignmentOption || showTopicOption || showApply || showAddAssigment || showAddTopic) {
+        if (showAssignmentOption
+            || showTopicOption
+            || showApply
+            || showAddAssigment
+            || showAddTopic
+            || showTopicOption
+            || showExportStudentListForm
+            || showInvitationByEmailForm) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
         }
-    }, [showAssignmentOption, showUpdate, showApply]);
+    }, [showAssignmentOption,
+        showUpdate,
+        showApply,
+        showAddAssigment,
+        showAddTopic,
+        showTopicOption,
+        showExportStudentListForm,
+        showInvitationByEmailForm
+    ]);
 
     useEffect(() => {
         if (!user) {
@@ -312,7 +351,14 @@ function ClassDetails() {
                                         >
                                             <p>Member List</p>
                                         </button>
-
+                                        <div className="ml-5 mt-2">
+                                            <button
+                                                className="font-bold hover:opacity-90 rounded duration-200"
+                                                onClick={() => setShowMemberListToption(true)}
+                                            >
+                                                <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                            </button>
+                                        </div>
                                     </>
                                     )}
 
@@ -459,7 +505,21 @@ function ClassDetails() {
                         )}
                     </div>
                 ))}
-                {showTopicOption && <Options data={topicOption} onClose={closeTab.topicOptions.close} />}
+                {showTopicOption &&
+                    <Options
+                        data={topicOption}
+                        onClose={closeTab.topicOptions.close}
+                    />}
+                {showMemberListToption &&
+                    <Options data={memberListOption}
+                        onClose={closeTab.memberListForm.close}
+
+                    />}
+                {showExportStudentListForm &&
+                    <ExportStudentListForm
+                        onClose={closeTab.exportStudentList.close}
+                        classId={classId}
+                    />}
             </div>
         );
     } else {

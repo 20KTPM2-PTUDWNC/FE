@@ -15,7 +15,7 @@ const InvitationLinkButton = () => {
 
     const [invitationLink, setInvitationLink] = useState('');
     const textAreaRef = useRef(null);
-    const [buttonText, setButtonText] = useState('Copy link invitation name');
+    const [buttonText, setButtonText] = useState('Invitation by link');
 
     useEffect(() => {
         if (!user) {

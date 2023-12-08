@@ -23,6 +23,8 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const params = useParams();
     const gradeStructureId = _gradeStructureId;
 
+    console.log(gradeStructureId)
+
     useEffect(() => {
         if (!user) {
             navigate("/signin");

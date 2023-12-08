@@ -60,27 +60,7 @@ function AcceptInvitation() {
 
 
     const cancel = async (e) => {
-        try {
-            if (!email || !password) {
-                throw new Error("Please fill all fields!");
-            }
-
-            const userAuth = {
-                email,
-                password,
-            };
-
-            const signInResponse = await signIn(userAuth);
-
-            if (signInResponse.status === 200) {
-                console.log(signInResponse.data);
-                signin(signInResponse.data.token);
-                navigate("/home");
-            }
-        } catch (error) {
-            console.error("Error: ", error.message);
-            setError(error.message);
-        }
+        navigate("/signin")
     };
     
     return (
@@ -89,8 +69,10 @@ function AcceptInvitation() {
                 <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-white text-center">
-                        Do you agree to join the class?
-                        </h1>
+                        Do you agree to join the class?</h1>
+                        <h4 className="text-xl font-bold leading-tight tracking-tight text-white md:text-l dark:text-white text-center">
+                        If you agree, enter your email and password to join the class
+                        </h4>
                         {error && (
                             <p className="bg-[#D14D72] text-sm text-white font-bold py-3 px-4 rounded">{error}</p>
                         )}

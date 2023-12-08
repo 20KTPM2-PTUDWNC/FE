@@ -45,6 +45,7 @@ function ClassDetails() {
     const [gradeList, setGradeList] = useState([]);
     const [assignmentList, setAssignmentList] = useState([]);
     const [action, setAction] = useState(0);
+    const [selectedGrade, setSelectedGrade] = useState(null);
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -404,7 +405,7 @@ function ClassDetails() {
                                 <button
                                     className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                                     onClick={() => setShowInvitationByEmailForm(true)}>
-                                    Copy link invitation name
+                                    Invitation by email
                                 </button>
                             </div>
                         </div>
@@ -432,7 +433,11 @@ function ClassDetails() {
                                                         <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}%</p>
                                                         <button
                                                             className="font-bold hover:opacity-90 rounded duration-200"
-                                                            onClick={() => setShowTopicOption(true)}
+                                                            onClick={() => {
+                                                                setSelectedGrade(grade); // Set the selected grade
+                                                                setShowTopicOption(true);
+                                                            }}
+                                                            
                                                         >
                                                             <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"20px"} />
                                                         </button>
@@ -495,17 +500,14 @@ function ClassDetails() {
                         onClose={closeTab.topicTab.close}
                         onClick={() => setAction(1 - action)}
                     />}
-                {gradeList.map((grade) => (
-                    <div key={grade._id}>
-                        {showAddAssigment && (
-                            <AddAssignmentForm
-                                onClose={closeTab.assignmentTab.close}
-                                onClick={() => setAction(1 - action)}
-                                _gradeStructureId={grade._id} // Truyền grade._id cho mỗi grade
-                            />
-                        )}
-                    </div>
-                ))}
+                {showAddAssigment && selectedGrade && (
+                    <AddAssignmentForm
+                        onClose={closeTab.assignmentTab.close}
+                        onClick={() => setAction(1 - action)}
+                        _gradeStructureId={selectedGrade._id} // Pass the selected grade's id
+                    />
+                )}
+
                 {showTopicOption &&
                     <Options
                         data={topicOption}

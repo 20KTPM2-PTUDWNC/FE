@@ -135,6 +135,7 @@ function ClassDetails() {
         exportStudentList: {
             close: function () {
                 setShowExportStudentListForm(false)
+                setShowMemberListToption(true)
             }
         }
     }

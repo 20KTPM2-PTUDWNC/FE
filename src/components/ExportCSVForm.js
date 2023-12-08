@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
-import CsvDownloader from 'react-csv-downloader';
+import { CSVLink, CSVDownload } from "react-csv";
 import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../api/cv/cv.api.js";
 import { sendEmail } from "../api/email/email.api.js";
 import { selectUser } from "../features/userSlice.js";
@@ -14,9 +14,10 @@ function ExportCSVForm({ list, fileName, className }) {
     const headerSet = new Set(list.flatMap(obj => Object.keys(obj)))
     const header = Array.from(headerSet)
     const body = list.map(obj => Object.values(obj))
+    const listData = [header, ...body]
     useEffect(() => {
-        console.log("list: ",list)
-    },[])
+        console.log("list: ", list)
+    }, [])
     if (list.length != 0)
         return (
             <>
@@ -59,22 +60,25 @@ function ExportCSVForm({ list, fileName, className }) {
 
                 </div>
                 <div className="mt-5">
-                    <CsvDownloader
-                        datas={list}
-                        text={"Download"}
+
+                    <CSVLink
+                        data={listData}
                         filename={fileName}
+                        target="_blank"
                         className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-                    />
+                    >
+                        Download me
+                    </CSVLink>
                 </div>
             </>
         );
-        else return (
-            <div className={className}>
-                <p className="text-xl text-[#5f27cd] font-bold flex justify-center items-center">
-                    No students found
-                </p>
-            </div>
-        );
+    else return (
+        <div className={className}>
+            <p className="text-xl text-[#5f27cd] font-bold flex justify-center items-center">
+                No students found
+            </p>
+        </div>
+    );
 }
 
 export default ExportCSVForm;

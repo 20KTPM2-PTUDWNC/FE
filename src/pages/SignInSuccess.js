@@ -6,7 +6,7 @@ import { getProfile } from "../api/user/user.api";
 import { signin } from "../features/user";
 import Cookies from 'universal-cookie/es6';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import FacebookLogin from 'react-facebook-login';
+
 function SignInSuccess() {
     const cookies = new Cookies();
     const navigate = useNavigate();

@@ -38,16 +38,15 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
             const response = await exportStudentList(classId);
             const data = [
                 {
-                    studentId:"12345",
-                    name:"Nguyen Van A"
+                    "studentId": "12345",
+                    "name": "Nguyen Van A"
                 },
                 {
-                    studentId:"12345",
-                    name:"Nguyen Van A"
-                },
-                {
-                    studentId:"12345",
-                    name:"Nguyen Van A"
+                    "studentId": "12345",
+                    "name": "Nguyen Van A"
+                }, {
+                    "studentId": "12345",
+                    "name": "Nguyen Van A"
                 },
             ]
             console.log("list student: ", data)
@@ -122,7 +121,7 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
 
 
 
-                <div className="relative overflow-y-auto w-full font-sans">
+                <div className="relative overflow-y-auto w-full h-full font-sans">
                     <ExportCSVForm
                         list={listStudent}
                         fileName={"studentList"}

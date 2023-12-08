@@ -36,8 +36,22 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
     const getStudentList = async () => {
         try {
             const response = await exportStudentList(classId);
-            console.log("list student: ", response)
-            setListStudent(response);
+            const data = [
+                {
+                    studentId:"12345",
+                    name:"Nguyen Van A"
+                },
+                {
+                    studentId:"12345",
+                    name:"Nguyen Van A"
+                },
+                {
+                    studentId:"12345",
+                    name:"Nguyen Van A"
+                },
+            ]
+            console.log("list student: ", data)
+            setListStudent(data);
 
         }
         catch (err) {
@@ -45,33 +59,33 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
         }
 
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
 
-        if (!name || !_scale) {
-            return setError("Please fill all field!");
-        }
+    //     if (!name || !_scale) {
+    //         return setError("Please fill all field!");
+    //     }
 
-        let scale = Number(_scale);
+    //     let scale = Number(_scale);
 
-        let newAssignment = {
-            name, scale
-        };
+    //     let newAssignment = {
+    //         name, scale
+    //     };
 
-        try {
-            const response = await addAssignment(gradeStructureId, newAssignment);
-            if (response.status === 200) {
-                alert("Add new assignment successfully!");
-                onClose();
-                onClick()
-            }
-        } catch (error) {
-            setError(error.response.data.message);
-            alert(error.response.data.message)
-            console.log(error);
+    //     try {
+    //         const response = await addAssignment(gradeStructureId, newAssignment);
+    //         if (response.status === 200) {
+    //             alert("Add new assignment successfully!");
+    //             onClose();
+    //             onClick()
+    //         }
+    //     } catch (error) {
+    //         setError(error.response.data.message);
+    //         alert(error.response.data.message)
+    //         console.log(error);
 
-        }
-    };
+    //     }
+    // };
 
     useEffect(() => {
 
@@ -112,7 +126,7 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
                     <ExportCSVForm
                         list={listStudent}
                         fileName={"studentList"}
-                        className="m-5 border-2 rounded-lg"
+                        className="m-5 border-2 "
                     >
 
                     </ExportCSVForm>

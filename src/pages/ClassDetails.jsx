@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 
 import { IoSettingsOutline } from "react-icons/io5";
-
+import { CiCircleMinus } from "react-icons/ci";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { closeJobEmployer, deleteJob, getJob, openJobEmployer } from "../api/post/post.api.js";
 import ApplyForm from "../components/ApplyForm.jsx";
@@ -12,7 +12,7 @@ import UpdateForm from "../components/UpdateForm.jsx";
 import { formatDate, formatDateLeft } from "../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../utils/splitTextWithLineBreaks.js";
 import { showClassDetail, showMemberList } from "../api/class/class.api.js";
-import { addGradeComposition, showGradeStructure } from "../api/grade/grade.api.js";
+import { addGradeComposition, deleteGradeComposition, showGradeStructure } from "../api/grade/grade.api.js";
 import { addAssignment, showAssignmentList } from "../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 import { getCookies, getUser } from "../features/user";
@@ -21,6 +21,7 @@ import AddAssignmentForm from "../components/AddAssignmentForm";
 import InvitationLinkButton from "../components/InvitationLinkButton";
 import InvitationByEmailForm from "../components/InvitationByEmailForm";
 import ExportStudentListForm from "../components/ExportStudentListForm";
+import EditGradeCompForm from "../components/EditGradeCompForm";
 
 function ClassDetails() {
     const user = getUser()
@@ -36,6 +37,7 @@ function ClassDetails() {
     const [showMemberListToption, setShowMemberListToption] = useState(false)
     const [showInvitationByEmailForm, setShowInvitationByEmailForm] = useState(false)
     const [showExportStudentListForm, setShowExportStudentListForm] = useState(false)
+    const [showEditGradeComposition, setShowEditGradeComposition] = useState(false)
 
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
@@ -63,6 +65,10 @@ function ClassDetails() {
     const exportStudentList = () => {
         setShowMemberListToption(false)
         setShowExportStudentListForm(true)
+    }
+    const editGradeComposition = () => {
+        setShowEditGradeComposition(true)
+        setShowTopicOption(false)
     }
     // const addGradeStructure = () => {
     //     alert("add grade structure");
@@ -92,6 +98,10 @@ function ClassDetails() {
             name: "Add Assignment",
             todo: addAssignment
         },
+        {
+            name: "Edit Grade Composition",
+            todo: editGradeComposition
+        }
         // {
         //     name: "Add Topic",
         //     todo: addGradeStructure
@@ -138,17 +148,24 @@ function ClassDetails() {
                 setShowExportStudentListForm(false)
                 setShowMemberListToption(true)
             }
+        },
+        editGradeComposition: {
+            close: function () {
+                setShowEditGradeComposition(false)
+                setShowTopicOption(true)
+            }
         }
     }
-    useEffect(() => {
+    // useEffect(() => {
 
-        loadImg();
+    //     loadImg();
 
 
-        return () => {
-            console.log("useEffect done");
-        }
-    }, [])
+    //     return () => {
+    //         console.log("useEffect done");
+    //     }
+    // }, [])
+
     async function loadImg() {
 
         const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
@@ -205,7 +222,22 @@ function ClassDetails() {
             });
         }
     }, [gradeList]);
+    const handleDelete = async (e, gradeId) => {
+        e.preventDefault();
 
+        try {
+            const response = await deleteGradeComposition(classId, gradeId);
+            if (response.status === 200) {
+                alert("Delete successfully!");
+
+            }
+        } catch (error) {
+            alert(error.response.data.message)
+            console.log(error);
+
+        }
+        setAction(1 - action)
+    };
     async function getClassDetail(classId) {
         try {
             const response = await showClassDetail(classId);
@@ -415,11 +447,20 @@ function ClassDetails() {
                                     <div>
                                         {gradeList.map((grade) =>
                                             <div key={grade._id}>
-                                                <Link to="/class/classId">
-                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
+
+
+
+                                                {assignmentList.map((assignment) =>
+                                                    <div key={assignment._id}>
+                                                        {assignment.gradeId === grade._id && (
+                                                            <Link to="/class/assingment/123">
+                                                                <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
+                                                                </div>
+                                                            </Link>
+                                                        )}
                                                     </div>
-                                                </Link>
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -437,9 +478,15 @@ function ClassDetails() {
                                                                 setSelectedGrade(grade); // Set the selected grade
                                                                 setShowTopicOption(true);
                                                             }}
-                                                            
+
                                                         >
                                                             <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"20px"} />
+                                                        </button>
+                                                        <button
+                                                            className=" ml-3 font-bold hover:opacity-90 rounded duration-200"
+                                                            onClick={(e) => handleDelete(e, grade._id)}
+                                                        >
+                                                            <CiCircleMinus className="text-[#5f27cd] duration-200" size={"20px"} />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -448,7 +495,7 @@ function ClassDetails() {
                                                 {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
                                                         {assignment.gradeId === grade._id && (
-                                                            <Link to="/class/classId">
+                                                            <Link to="/class/assingment/123">
                                                                 <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
                                                                     <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
                                                                 </div>
@@ -500,6 +547,7 @@ function ClassDetails() {
                         onClose={closeTab.topicTab.close}
                         onClick={() => setAction(1 - action)}
                     />}
+
                 {showAddAssigment && selectedGrade && (
                     <AddAssignmentForm
                         onClose={closeTab.assignmentTab.close}
@@ -507,6 +555,30 @@ function ClassDetails() {
                         _gradeStructureId={selectedGrade._id} // Pass the selected grade's id
                     />
                 )}
+
+
+                {gradeList.map((grade) => (
+                    <div key={grade._id}>
+                        {showAddAssigment && (
+                            <AddAssignmentForm
+                                onClose={closeTab.assignmentTab.close}
+                                onClick={() => setAction(1 - action)}
+                                _gradeStructureId={grade._id} // Truyền grade._id cho mỗi grade
+                            />
+                        )}
+                        {showEditGradeComposition &&
+                            <EditGradeCompForm
+                                onClose={closeTab.editGradeComposition.close}
+                                onClick={() => setAction(1 - action)}
+                                _gradeStructureId={grade._id}
+                                oldData={{
+                                    name: grade.name,
+                                    gradeScale: grade.gradeScale,
+                                }}
+                            />
+                        }
+                    </div>
+                ))}
 
                 {showTopicOption &&
                     <Options
@@ -523,6 +595,7 @@ function ClassDetails() {
                         onClose={closeTab.exportStudentList.close}
                         classId={classId}
                     />}
+
             </div>
         );
     } else {

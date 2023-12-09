@@ -6,8 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, updateAvatar } from "../api/user/user.api";
 import { getCookies, getUser } from "../features/user";
 import { selectUser } from "../features/userSlice";
-
-let skill_list = [];
+import { IoSettingsOutline } from "react-icons/io5";
+import Options from "../components/Options.jsx";
 
 function splitStr(a) {
     let re = "";
@@ -16,7 +16,54 @@ function splitStr(a) {
     }
     return re;
 }
+const Content = ({ content }) => {
+    return (
+        <div className="content-text mb-8 ">
+            <h2 className="text-2xl font-bold mb-4 ">Assignment Name</h2>
+            <p className="text-[#6F1E51]">{content}</p>
+        </div>
+    );
+};
 
+const TextInput = ({ onInputChange, value }) => {
+    return (
+        <div className="text-input mb-8">
+            <input
+                className="w-full border p-2 text-[#6F1E51]"
+                value={value}
+                onChange={(e) => onInputChange(e.target.value)}
+            />
+        </div>
+    );
+};
+
+const CommentSection = ({ comments }) => {
+    return (
+        <div className="comment-section mb-8">
+            <h2 className="text-2xl font-bold mb-4">Comment</h2>
+            <ul>
+                {comments.map((comment, index) => (
+                    <li key={index} className="mb-2 text-[#6F1E51]"><span className="font-bold">User name: </span>{comment}</li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+const StudentSubmit = () => {
+    return (
+        <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
+
+            <p className="font-bold mb-2">Student Submit:</p>
+           
+            <button
+                className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+
+            >
+                Submit
+            </button>
+        </div>
+    );
+}
 function AssignmentDetails() {
     const user = getUser();
     const navigate = useNavigate();
@@ -24,196 +71,101 @@ function AssignmentDetails() {
     useEffect(() => {
         if (!user)
             navigate("/signin")
-        else {
-            const cookie = new Cookies()
-            cookie.set('token', getCookies(), { path: `/v1/user/${id}` });
-        }
-
     }, [])
-    const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
-
 
     const [avatar, setAvatar] = useState(null);
     const [name, setName] = useState("");
-    const [experience, setExperience] = useState([]);
-    const [academicLevel, setAcademicLevel] = useState([]);
-    const [skills, setSkills] = useState([]);
+
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
-    const [description, setDescription] = useState("");
     const [error, setError] = useState("");
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getProfile(user?._id);
-
-                setAvatar(response.data.avatar || "");
-                setName(response.data.name);
-                setAddress(response.data.address);
-                setPhone(response.data.phone);
-
-                console.log(response.data);
-            } catch (error) {
-                console.error(error);
-                setError(error.response?.data?.message || "Failed to fetch profile");
-            }
-        };
-
-        fetchData();
-    }, [user?._id]);
-    // useEffect(() => {
-    //     return () => {
-    //         avatar && URL.revokeObjectURL(avatar.previewURL)
-    //     }
-    // },[avatar])
-    // const handleCheckBoxs = (check, value) => {
-    //     if ((check === true) & !skill_list.includes(value)) {
-    //         skill_list.push(value);
-    //     }
-    //     if ((check === false) & skill_list.includes(value)) {
-    //         skill_list.splice(skill_list.indexOf(value), 1);
-    //     }
-    // };
-    const handleAvatar = async (e) => {
-        e.preventDefault();
-        const file = e.target.files[0]
-        // file.previewURl = URL.createObjectURL(file)
-        setAvatar(file)
-    }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const data = {
-            name,
-            address,
-            phone,
-        };
-
-        const Avatar = new FormData();
-        if (avatar) {
-            Avatar.append("user-avatar", avatar)
-        }
-        console.log(avatar)
-        // if (typeof experience === "string") {
-        //     data.experience = experience.split("\n");
-        // }
-
-        // if (typeof academicLevel === "string") {
-        //     data.academicLevel = academicLevel.split("\n");
-        // }
-
-        // if (
-        //     !data.avatar ||
-        //     !data.name ||
-        //     !data.address ||
-        //     !data.phone ||
-        //     !data.description ||
-        //     data.skills.length === 0 ||
-        //     data.experience.length === 0
-        // ) {
-        //     return setError("Please fill all fields!");
-        // }
-
-        setError("");
-
-        try {
-            await updateProfile(user?._id, data);
-            if (avatar)
-                await updateAvatar(user?._id, Avatar)
-            alert("Update profile successfully!");
-            skill_list = []
-            navigate(`/user/${user?._id}`);
-        } catch (error) {
-            console.log(error);
-            setError(error.response?.data?.message || "Failed to update profile");
-        }
+    const [text, setText] = useState('');
+    const [comments, setComments] = useState([]);
+    const [showAssignmentOption, setShowAssignmentOption] = useState(false);
+    const handleInputChange = (inputText) => {
+        setText(inputText);
     };
+    const closeTab = {
+        asssignmentOptions: {
+            close: function () {
+                setShowAssignmentOption(false)
+            }
+        },
+    }
+    const handleAddComment = () => {
+        setComments([...comments, text]);
+        setText('');
+    };
+    const deleteAssignment = () => {
+        alert("Delete this assignment")
+    }
+    const assignmentOption = [
 
+        {
+            name: "Delete Assignment",
+            todo: deleteAssignment
+        },
+        // {
+        //     name: "Add Topic",
+        //     todo: addGradeStructure
+        // }
+    ]
     return (
-        <div name="editProfile" className="w-full h-screen">
-            <div className="pt-[120px] pb-[50px] max-w-[900px] mx-auto p-4 flex flex-col justify-center w-full h-full">
+        <div className="w-full h-full relative" >
+            <div className="h-full pt-[120px] pb-[50px] max-w-[900px] text-[#5f27cd] mx-auto p-4  justify-center w-full h-full">
                 <div className="pb-4 mb-5">
                     <p className="text-4xl font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">
                         Assignment Details
                     </p>
+
+                    <button
+                        className="ml-5 font-bold hover:opacity-90 rounded duration-200"
+                        onClick={() => setShowAssignmentOption(true)}
+                    >
+                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                    </button>
+
                 </div>
 
                 {error && (
                     <p className="bg-[#D14D72] text-sm text-white font-bold py-4 px-4 rounded mb-8 w-4/12">{error}</p>
                 )}
 
-                <div className="flex flex-col">
-                    <div className="flex flex-col md:flex-row md:space-x-4">
-                        <div className="flex flex-col w-full font-sans">
-                            <div className="flex">
-                                <div className="w-6/12">
-                                    <p className="text-[#5f27cd] font-semibold mb-1">Name</p>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        id="name"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-11/12"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </div>
 
-                                <div className="w-6/12">
-                                    <p className="text-[#5f27cd] font-semibold mb-1">Address</p>
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        id="address"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-                                        value={address}
-                                        onChange={(e) => setAddress(e.target.value)}
-                                    />
-                                </div>
+                <div className="flex p-8 ">
+                    <div className="flex-1 pr-8">
+                        <Content content="Assignment Content" />
+                        <div className="rounded-lg border-2 border-[#5f27cd] p-5">
+                            <CommentSection comments={comments} />
+                            <div className="my-10">
+                                <TextInput value={text} onInputChange={handleInputChange} />
                             </div>
-
-                            <div className="flex mt-4">
-                                <div className="w-6/12">
-                                    <p className="text-[#5f27cd] font-semibold mb-1">Phone</p>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        id="phone"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-11/12"
-                                        value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
-                                    />
-                                </div>
-
-                                {/* <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Avatar</p>
-                                    <input
-                                        type="file"
-                                        name="avatar"
-                                        id="avatar"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
-
-                                        onChange={handleAvatar}
-                                    />
-                                </div> */}
-                            </div>
-
-
+                            <button
+                                className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                                onClick={handleAddComment}
+                            >
+                                Comment
+                            </button>
                         </div>
+
                     </div>
 
-                    <div className="mt-8">
-                        <button
-                            type="submit"
-                            className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
-                            onClick={handleSubmit}
-                        >
-                            Update Profile
-                        </button>
-                    </div>
+
                 </div>
+
+
             </div>
-        </div>
+            <div className="absolute top-[110px] right-[20px] h-full">
+                <StudentSubmit />
+            </div>
+            {showAssignmentOption &&
+                <Options
+                    data={assignmentOption}
+                    onClose={closeTab.asssignmentOptions.close}
+                    
+                />
+            }
+        </div >
     );
 }
 export default AssignmentDetails;

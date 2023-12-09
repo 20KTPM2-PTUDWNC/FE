@@ -555,9 +555,19 @@ function ClassDetails() {
                         _gradeStructureId={selectedGrade._id} // Pass the selected grade's id
                     />
                 )}
+                {showEditGradeComposition && selectedGrade && (
+                    <EditGradeCompForm
+                                onClose={closeTab.editGradeComposition.close}
+                                onClick={() => setAction(1 - action)}
+                                _gradeStructureId={selectedGrade._id}
+                                oldData={{
+                                    name: selectedGrade.name,
+                                    gradeScale: selectedGrade.gradeScale,
+                                }}
+                            />
+                )}
 
-
-                {gradeList.map((grade) => (
+                {/* {gradeList.map((grade) => (
                     <div key={grade._id}>
                         {showAddAssigment && (
                             <AddAssignmentForm
@@ -578,7 +588,7 @@ function ClassDetails() {
                             />
                         }
                     </div>
-                ))}
+                ))} */}
 
                 {showTopicOption &&
                     <Options

@@ -447,20 +447,11 @@ function ClassDetails() {
                                     <div>
                                         {gradeList.map((grade) =>
                                             <div key={grade._id}>
-
-
-
-                                                {assignmentList.map((assignment) =>
-                                                    <div key={assignment._id}>
-                                                        {assignment.gradeId === grade._id && (
-                                                            <Link to="/class/assingment/123">
-                                                                <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
-                                                                </div>
-                                                            </Link>
-                                                        )}
+                                                <Link to="/class/classId">
+                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
                                                     </div>
-                                                )}
+                                                </Link>
                                             </div>
                                         )}
                                     </div>
@@ -557,14 +548,14 @@ function ClassDetails() {
                 )}
                 {showEditGradeComposition && selectedGrade && (
                     <EditGradeCompForm
-                                onClose={closeTab.editGradeComposition.close}
-                                onClick={() => setAction(1 - action)}
-                                _gradeStructureId={selectedGrade._id}
-                                oldData={{
-                                    name: selectedGrade.name,
-                                    gradeScale: selectedGrade.gradeScale,
-                                }}
-                            />
+                        onClose={closeTab.editGradeComposition.close}
+                        onClick={() => setAction(1 - action)}
+                        _gradeStructureId={selectedGrade._id}
+                        oldData={{
+                            name: selectedGrade.name,
+                            gradeScale: selectedGrade.gradeScale,
+                        }}
+                    />
                 )}
 
                 {/* {gradeList.map((grade) => (

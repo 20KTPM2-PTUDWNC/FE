@@ -37,7 +37,7 @@ export const updateGradeComposition = async (classId, gradeId, data) => {
 export const deleteGradeComposition = async (classId, gradeId) => {
 
     try {
-        return await axiosPrivate.delete(`/v1/grade/${classId}/deleteteGradeComposition/${gradeId}`, {
+        return await axiosPrivate.delete(`/v1/grade/${classId}/deleteGradeComposition/${gradeId}`, {
             "Authorization": getCookies()
         });
     } catch (err) {

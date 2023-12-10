@@ -7,13 +7,14 @@ import Search from "../app/Search";
 import { getUser, singout } from "../../features/user";
 import { signOut } from "../../api/auth/auth.api";
 import { SiGoogleclassroom } from "react-icons/si";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaBan, FaMapMarkerAlt } from "react-icons/fa";
 function NavbarAdmin() {
     const user = getUser();
 
     const [keyword, setKeyword] = useState("");
 
     const [tab, setTab] = useState(1)
+    const [accountsManage, setAccountsManage] = useState(1)
     const navigate = useNavigate();
 
     const handleLogout = async (e) => {
@@ -36,22 +37,121 @@ function NavbarAdmin() {
 
     return (
         <aside className="fixed inset-y-0 left-0 top- bg-white shadow-md max-h-screen w-100">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col items-center h-full">
                 <div className="flex-grow">
                     <div className="px-4 py-6 text-center border-b">
                         <h1 className="text-xl font-bold leading-none"><span className="text-yellow-700">Class Room</span> Management</h1>
                     </div>
-                    <div className="p-4">
+                    <div className="p-4 ">
                         <ul className="space-y-1">
                             {tab === 1 &&
                                 <>
-                                    <li onClick={() => setTab(1)}>
-                                        <Link to="/admin/account" className="flex items-center bg-yellow-200 rounded-xl font-bold text-sm text-yellow-900 py-3 px-4">
+                                    <li onClick={() => setTab(1)} className="transition-all duration-500">
+                                        <div
+                                            className="flex items-center bg-yellow-200 rounded-xl font-bold text-sm text-yellow-900 py-3 px-4"
+                                            
+                                        >
                                             <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4" >
                                                 {/* <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /> */}
                                                 <FaUser />
                                             </svg>Accounts
-                                        </Link>
+                                        </div>
+                                        <ul className="space-y-1 my-1">
+                                            {accountsManage === 1 &&
+                                                <>
+                                                    <li onClick={() => setAccountsManage(1)} className="transition-all duration-500">
+                                                        <div
+                                                            className="flex items-center bg-yellow-100 rounded-xl font-bold text-sm text-yellow-900 py-3 px-4"
+                                                            
+                                                        >
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4" >
+                                                                {/* <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /> */}
+                                                                <FaUser />
+                                                            </svg>Manage accounts
+                                                        </div>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(2)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-white hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaBan />
+                                                            </svg>Ban/Unban Accounts
+                                                        </Link>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(3)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-white hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaMapMarkerAlt />
+                                                            </svg>Map/Unmap StudentId
+                                                        </Link>
+                                                    </li>
+                                                </>
+                                            }
+                                            {accountsManage === 2 &&
+                                                <>
+                                                    <li onClick={() => setAccountsManage(1)} className="transition-all duration-500">
+                                                        <div
+                                                            className="flex items-center bg-white rounded-xl font-bold text-sm text-yellow-900 py-3 px-4"
+                                                           
+                                                        >
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4" >
+                                                                {/* <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /> */}
+                                                                <FaUser />
+                                                            </svg>Manage accounts
+                                                        </div>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(2)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-yellow-100 hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaBan />
+                                                            </svg>Ban/Unban Accounts
+                                                        </Link>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(3)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-white hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaMapMarkerAlt />
+                                                            </svg>Map/Unmap StudentId
+                                                        </Link>
+                                                    </li>
+                                                </>
+                                            }
+                                            {accountsManage === 3 &&
+                                                <>
+                                                    <li onClick={() => setAccountsManage(1)} className="transition-all duration-500">
+                                                        <div
+                                                            className="flex items-center bg-white rounded-xl font-bold text-sm text-yellow-900 py-3 px-4"
+                                                            
+                                                        >
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4" >
+                                                                {/* <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /> */}
+                                                                <FaUser />
+                                                            </svg>Manage accounts
+                                                        </div>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(2)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-white hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaBan />
+                                                            </svg>Ban/Unban Accounts
+                                                        </Link>
+                                                    </li>
+                                                    <li onClick={() => setAccountsManage(3)}>
+                                                        <Link to="/admin/class" className="flex items-center bg-yellow-100 hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
+                                                            <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                {/* <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z" /> */}
+                                                                <FaMapMarkerAlt />
+                                                            </svg>Map/Unmap StudentId
+                                                        </Link>
+                                                    </li>
+                                                </>
+                                            }
+                                        </ul>
+
                                     </li>
                                     <li onClick={() => setTab(2)}>
                                         <Link to="/admin/class" className="flex items-center bg-white hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
@@ -66,12 +166,15 @@ function NavbarAdmin() {
                             {tab === 2 &&
                                 <>
                                     <li onClick={() => setTab(1)}>
-                                        <Link to="/admin/account"  className="flex items-center rounded-xl font-bold text-sm text-yellow-900 py-3 px-4">
+                                        <div
+                                            className="flex items-center rounded-xl font-bold text-sm text-yellow-900 py-3 px-4"
+                                         
+                                        >
                                             <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4" >
                                                 {/* <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /> */}
                                                 <FaUser />
                                             </svg>Accounts
-                                        </Link>
+                                        </div>
                                     </li>
                                     <li onClick={() => setTab(2)}>
                                         <Link to="/admin/class" className="flex items-center bg-yellow-200 hover:bg-yellow-50 rounded-xl font-bold text-sm text-gray-900 py-3 px-4">
@@ -101,11 +204,12 @@ function NavbarAdmin() {
                     </div>
                 </div>
                 <div className="p-4">
-                    <button type="button" className="inline-flex items-center justify-center h-9 px-4 rounded-xl bg-gray-900 text-gray-300 hover:text-white text-sm font-semibold transition">
+                    <button type="button" className="flex items-center  h-9 px-12 rounded-xl bg-gray-900 text-gray-300 hover:text-white text-sm font-semibold transition">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="" viewBox="0 0 16 16">
                             <path d="M12 1a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2a1 1 0 0 1 1-1h8zm-2 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
                         </svg>
-                    </button> <span className="font-bold text-sm ml-2">Logout</span>
+                        <span className="font-bold text-sm ml-2">Logout</span>
+                    </button>
                 </div>
             </div>
         </aside>

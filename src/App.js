@@ -6,7 +6,7 @@ import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
 import Navbar from "./components/app/Navbar";
 import Footer from "./components/app/Footer";
 import { getUser } from "./features/user";
-import NavbarAdmin from "./components/admin/NavbarAdmin";
+import NavbarAdmin from "./components/admin/Navbar.admin";
 
 const ScrollToTop = ({ children }) => {
     const location = useLocation();

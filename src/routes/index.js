@@ -1,28 +1,37 @@
-import Home from "../pages/Home";
-import LandingPage from "../pages/Welcome";
+import Home from "../pages/app/Home";
+import LandingPage from "../pages/app/Welcome";
 // import SearchJob from "../pages/SearchJob";
-import SignIn from "../pages/SignIn";
-import SignUp from "../pages/SignUp";
-import SignInSuccess from "../pages/SignInSuccess";
+import SignIn from "../pages/app/SignIn";
+import SignUp from "../pages/app/SignUp";
+import SignInSuccess from "../pages/app/SignInSuccess";
 // import JobDetail from "../pages/JobDetail";
 // import Approve from "../pages/Approve";
 // import CreateJob from "../pages/CreateJob";
 // import HotJob from "../pages/HotJob";
-import Profile from "../pages/Profile";
+import Profile from "../pages/app/Profile";
 // import CompanyProfile from "../pages/CompanyProfile";
-import ForgetPassword from "../pages/ForgetPassword";
+import ForgetPassword from "../pages/app/ForgetPassword";
 // import History from "../pages/History";
 
 
 // import Notification from "../pages/Notification";
 // import Notification_details from "../pages/Noti_details";
-import EditProfile from "../pages/EditProfile";
+import EditProfile from "../pages/app/EditProfile";
 // import EditCompanyProfile from "../pages/EditCompanyProfile";
-import ResetPassword from "../pages/ResetPassword";
-import ClassDetails from "../pages/ClassDetails";
-import AssignmentDetails from "../pages/AssignmentDetails";
-import AcceptInvitation from "../pages/AcceptInvitation";
-import Admin from "../pages/admin";
+// <<<<<<< HEAD
+// import ResetPassword from "../pages/ResetPassword";
+// import ClassDetails from "../pages/ClassDetails";
+// import AssignmentDetails from "../pages/AssignmentDetails";
+// import AcceptInvitation from "../pages/AcceptInvitation";
+// import Admin from "../pages/admin";
+// =======
+import ResetPassword from "../pages/app/ResetPassword";
+import ClassDetails from "../pages/app/ClassDetails";
+import AssignmentDetails from "../pages/app/AssignmentDetails";
+import AcceptInvitation from "../pages/app/AcceptInvitation";
+import AdminPage from "../pages/admin/Home.admin";
+
+
 
 // Public Routes
 const publicRoutes = [
@@ -41,17 +50,19 @@ const publicRoutes = [
     { path: "/user/:id", component: Profile },
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },
-    {path: "/class/assingment/:assignmentID", component: AssignmentDetails},
+
+    { path: "/class/assingment/:assignmentID", component: AssignmentDetails },
     { path: "/verifyAccount/:token", component: SignInSuccess },
+
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
     // { path: "/company_profile/:companyId", component: CompanyProfile },
-
-    { path: "/admin", component: Admin },
 ];
 
 const privateRoutes = [
-    { path: "/user/edit", component: EditProfile },
+    { path: "/admin", component: AdminPage },
+    { path: "/admin/account", component: AdminPage },
+    { path: "/admin/class", component: AdminPage }
 
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

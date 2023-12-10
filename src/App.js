@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
 import { Navigate, Route, HashRouter as Router, Routes, useLocation } from "react-router-dom";
 import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import LandingPage from "./pages/Welcome";
+import Navbar from "./components/app/Navbar";
+import Footer from "./components/app/Footer";
 import { getUser } from "./features/user";
+import NavbarAdmin from "./components/admin/NavbarAdmin";
 
 const ScrollToTop = ({ children }) => {
     const location = useLocation();
@@ -49,10 +49,23 @@ function App() {
                                 <>
                                     <Navbar />
                                     <Page />
+                                    <Footer />
                                 </>} />
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}
+                        {privateRoutes.map((route, index) => {
+                            const Page = route.component;
+                            if (route.path !== "/") return <Route key={index} path={route.path} element={
+                                <div className="bg-white w-full h-full text-black">
 
+                                    <div className="relative bg-yellow-50 overflow-hidden max-h-screen">
+                                        <NavbarAdmin />
+                                        <Page />
+                                    </div>
+                                </div>
+                            } />
+                            return <Route key={index} path={route.path} element={<Page />} />;
+                        })}
                         {/* {user &&
                             privateRoutes.map((route, index) => {
                                 const Page = route.component;
@@ -81,7 +94,7 @@ function App() {
 
                         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
                     </Routes>
-                    <Footer />
+
                 </div>
             </ScrollToTop>
         </Router>

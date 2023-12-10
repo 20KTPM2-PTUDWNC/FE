@@ -22,7 +22,7 @@ import ResetPassword from "../pages/ResetPassword";
 import ClassDetails from "../pages/ClassDetails";
 import AssignmentDetails from "../pages/AssignmentDetails";
 import AcceptInvitation from "../pages/AcceptInvitation";
-
+import Admin from "../pages/admin";
 
 // Public Routes
 const publicRoutes = [
@@ -42,10 +42,12 @@ const publicRoutes = [
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },
     {path: "/class/assingment/:assignmentID", component: AssignmentDetails},
-    { path: "/verifyAccount/:token", component: SignInSuccess }
+    { path: "/verifyAccount/:token", component: SignInSuccess },
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
     // { path: "/company_profile/:companyId", component: CompanyProfile },
+
+    { path: "/admin", component: Admin },
 ];
 
 const privateRoutes = [

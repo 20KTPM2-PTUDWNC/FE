@@ -30,6 +30,7 @@ import ClassDetails from "../pages/app/ClassDetails";
 import AssignmentDetails from "../pages/app/AssignmentDetails";
 import AcceptInvitation from "../pages/app/AcceptInvitation";
 import AdminPage from "../pages/admin/Home.admin";
+import ClassAdminPage from "../pages/admin/Class.admin";
 
 
 
@@ -62,7 +63,7 @@ const publicRoutes = [
 const privateRoutes = [
     { path: "/admin", component: AdminPage },
     { path: "/admin/account", component: AdminPage },
-    { path: "/admin/class", component: AdminPage }
+    { path: "/admin/class", component: ClassAdminPage }
 
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

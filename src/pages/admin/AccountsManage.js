@@ -190,9 +190,9 @@ function AccountsManage() {
                                                     <td className="px-6 py-4">
                                                         <button
                                                             className="font-medium px-5 py-2 text-white bg-yellow-900 rounded-lg dark:text-blue-500 hover:bg-[#00ADB5]"
-                                                            onClick={() => alert("Edit grade")}
+                                                            onClick={() => alert("Ban/Unban Account")}
                                                         >
-                                                            Edit
+                                                            Ban
                                                         </button>
                                                     </td>
                                                 </tr>

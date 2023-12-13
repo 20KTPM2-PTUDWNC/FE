@@ -100,3 +100,13 @@ export const invitationByEmail = async (data) => {
     }
 };
 
+export const getAllClass = async () => {
+
+    try {
+        return await axiosPrivate.get('/v1/class/getAllClass', {
+            "Authorization": getCookies()
+        });
+    } catch (err) {
+        throw err;
+    }
+};

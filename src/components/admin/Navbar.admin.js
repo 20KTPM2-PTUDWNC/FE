@@ -9,6 +9,7 @@ import { signOut } from "../../api/auth/auth.api";
 import { SiGoogleclassroom } from "react-icons/si";
 import { FaUser, FaBan, FaMapMarkerAlt } from "react-icons/fa";
 import { GoTriangleUp } from "react-icons/go";
+import { MdManageAccounts } from "react-icons/md";
 function NavbarAdmin() {
     const user = getUser();
 
@@ -83,12 +84,12 @@ function NavbarAdmin() {
                                                 className={`flex items-center ${accountsManage===2 ? 'bg-yellow-200' :'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-gray-900 py-3 px-4`}
                                             >
                                                 <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
-                                                    <FaBan />
-                                                </svg>Ban/Unban Accounts
+                                                    <MdManageAccounts />
+                                                </svg>Manage Accounts
                                             </Link>
                                         </li>
                                         <li onClick={() => setAccountsManage(3)}>
-                                            <Link to="/admin/account/banAccount"
+                                            <Link to="/admin/account/mapStudentID"
                                                 className={`flex items-center ${accountsManage===3 ? 'bg-yellow-200' :'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-gray-900 py-3 px-4`}
                                             >
                                                 <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">

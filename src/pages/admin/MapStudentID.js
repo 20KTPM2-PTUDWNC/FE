@@ -10,8 +10,10 @@ import AddNewClass from "../../components/app/AddNewClassForm";
 import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
 import { FaLock, FaUnlock, FaCheck } from "react-icons/fa";
+import { FaFileCsv } from "react-icons/fa6";
+import UploadFileForm from "../../components/public/UploadFileForm.js";
 
-function AccountsManage() {
+function MapStudentID() {
     // const [jobs, setJobs] = useState([]);
     // const [pageNumber, setPageNumber] = useState(1);
     // const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +36,7 @@ function AccountsManage() {
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
+    const [editedStudentId, setEditedStudentId] = useState('');
     const list = [
         {
             "studentId": "12345",
@@ -56,6 +59,7 @@ function AccountsManage() {
     const body = list.map(obj => Object.values(obj))
     const listData = [header, ...body]
     const [status, setStatus] = useState(false)
+    const [showMappingCSV, setShowMappingCSV] = useState(false)
     // useEffect(() => {
     //     if (!user) {
     //         navigate("/signin")
@@ -64,13 +68,13 @@ function AccountsManage() {
     //         cookie.set('token', getCookies(), { path: `/v1/className/getAllClassById` });
     //     }
     // }, [])
-    // useEffect(() => {
-    //     if (showAddNewClass || showJoinClass) {
-    //         document.body.classList.add("overflow-hidden");
-    //     } else {
-    //         document.body.classList.remove("overflow-hidden");
-    //     }
-    // }, [showAddNewClass, showJoinClass]);
+    useEffect(() => {
+        if (showMappingCSV) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+    }, [showMappingCSV]);
     // const [images, setImages] = useState([])
 
     // useEffect(() => {
@@ -89,41 +93,23 @@ function AccountsManage() {
 
     return (
         <>
-            {/* <header className="fixed right-0 top-0 left-60 bg-yellow-50 py-3 px-4 h-16">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <button type="button" className="flex items-center focus:outline-none rounded-lg text-gray-600 hover:text-yellow-600 focus:text-yellow-600 font-semibold p-2 border border-transparent hover:border-yellow-300 focus:border-yellow-300 transition">
-                                    <span className="inline-flex items-center justify-center w-6 h-6 text-gray-600 text-xs rounded bg-white transition mr-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                                        </svg>
-                                    </span>
-                                    <span className="text-sm">Archive</span>
-                                </button>
-                            </div>
-                            <div className="text-lg font-bold">Today's Plan</div>
-                            <div>
-                                <button type="button" className="flex items-center focus:outline-none rounded-lg text-gray-600 hover:text-yellow-600 focus:text-yellow-600 font-semibold p-2 border border-transparent hover:border-yellow-300 focus:border-yellow-300 transition">
-                                    <span className="text-sm">This week</span>
-                                    <span className="inline-flex items-center justify-center w-6 h-6 text-gray-600 text-xs rounded bg-white transition ml-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-chevron-right" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                        </svg>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header> */}
-
-
-
-            <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
+            <main className=" ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-4xl mx-auto">
                         <div className="bg-white rounded-3xl p-8 mb-5">
-                            <h1 className="text-3xl font-bold mb-10">Account Management</h1>
+                            <div className="flex flex-row justify-between">
+                                <h1 className="text-3xl font-bold mb-10">Mapping Student ID</h1>
+                                <button
+                                    className="rounded-lg px-7 py-2 h-9 items-center bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
+                                    onClick={() => setShowMappingCSV(!showMappingCSV)}
+                                >
+                                    <p className="flex flex-row font-semibold">
+                                        <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                            <FaFileCsv />
+                                        </svg> Mapping with CSV
+                                    </p>
+                                </button>
+                            </div>
                             {/* <div className="flex items-center justify-between">
                                 <div className="flex items-stretch">
                                     <div className="text-gray-400 text-xs">Members<br />connected</div>
@@ -163,45 +149,62 @@ function AccountsManage() {
                                                         {col}
                                                     </th>
                                                 ))}
-                                                
+                                                <th scope="col" className="px-6 py-3 text-center">
+                                                    Action
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {body.map((row, rowIndex) => (
                                                 <tr
                                                     key={rowIndex}
-                                                    className={`${rowIndex % 2 === 0
+                                                    className={`text-center ${rowIndex % 2 === 0
                                                         ? 'even:bg-gray-50 even:dark:bg-gray-800'
                                                         : 'odd:bg-white odd:dark:bg-gray-900'
                                                         } border-b dark:border-gray-700`}
                                                 >
                                                     {row.map((data, colIndex) => (
-                                                        <td key={colIndex} className="px-6 py-4 text-center">
-                                                            {colIndex === row.length - 1 ? (data ?
-                                                                <button
-                                                                    className="rounded-lg px-5 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
-                                                                    onClick={() => alert("Ban/Unban Account")}
-                                                                >
-                                                                    <p className="flex flex-row">
-                                                                        <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
-                                                                            <FaCheck />
-                                                                        </svg> Active
-                                                                    </p>
-                                                                </button>
-                                                                :
-                                                                <button
-                                                                    className="rounded-lg px-7 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
-                                                                    onClick={() => alert("Ban/Unban Account")}
-                                                                >
-                                                                    <p className="flex flex-row">
-                                                                        <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
-                                                                            <FaLock />
-                                                                        </svg> Ban
-                                                                    </p>
-                                                                </button>) : data}
+                                                        <td key={colIndex} className="px-6 py-4">
+                                                            {colIndex === 0 ? (
+                                                                <input
+                                                                    type="text"
+                                                                    value={editedStudentId === rowIndex ? editedStudentId : data}
+                                                                    onChange={(e) => setEditedStudentId(e.target.value)}
+                                                                    className="text-center"
+                                                                />
+                                                            ) : colIndex === row.length - 1 ? (
+                                                                data ? (
+                                                                    'Active'
+                                                                ) : (
+                                                                    'Banned'
+                                                                )
+                                                            ) : (
+                                                                data
+                                                            )}
                                                         </td>
                                                     ))}
-                                                    
+                                                    <td className="px-6 py-4 text-center">
+                                                        <button
+                                                            className="rounded-lg px-7 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
+                                                            onClick={() => alert("Ban/Unban Account")}
+                                                        >
+                                                            <p className="flex flex-row">
+                                                                <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                    <FaLock />
+                                                                </svg> Map
+                                                            </p>
+                                                        </button>
+                                                        <button
+                                                            className="rounded-lg ml-3 px-7 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
+                                                            onClick={() => alert("Ban/Unban Account")}
+                                                        >
+                                                            <p className="flex flex-row">
+                                                                <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
+                                                                    <FaUnlock />
+                                                                </svg> Un Map
+                                                            </p>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -279,10 +282,16 @@ function AccountsManage() {
                         </div>
                     </div>
                 </div>
+                {showMappingCSV &&
+                    <UploadFileForm
+                        onClose={() => setShowMappingCSV(!showMappingCSV)}
+
+                    />}
             </main>
+
 
         </>
     );
 }
 
-export default AccountsManage;
+export default MapStudentID;

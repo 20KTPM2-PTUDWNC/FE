@@ -58,7 +58,7 @@ function App() {
                             if (route.path !== "/") return <Route key={index} path={route.path} element={
                                 <div className="bg-white w-full h-full text-black">
 
-                                    <div className="relative bg-yellow-50 overflow-hidden max-h-screen">
+                                    <div className="relative overflow-hidden max-h-screen">
                                         <NavbarAdmin />
                                         <Page />
                                     </div>

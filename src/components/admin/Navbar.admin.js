@@ -68,7 +68,7 @@ function NavbarAdmin() {
                                         className="space-y-1 my-1"
                                     >
 
-                                        <li onClick={() => setAccountsManage(1)}>
+                                        {/* <li onClick={() => setAccountsManage(1)}>
                                             <Link to="/admin/account"
                                                 className={`flex items-center ${accountsManage===1 ? 'bg-yellow-200' :'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-yellow-900 py-3 px-4`}
 
@@ -77,9 +77,9 @@ function NavbarAdmin() {
                                                     <FaUser />
                                                 </svg>Manage accounts
                                             </Link>
-                                        </li>
+                                        </li> */}
                                         <li onClick={() => setAccountsManage(2)}>
-                                            <Link to="/admin/account"
+                                            <Link to="/admin/account/banAccount"
                                                 className={`flex items-center ${accountsManage===2 ? 'bg-yellow-200' :'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-gray-900 py-3 px-4`}
                                             >
                                                 <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
@@ -88,7 +88,7 @@ function NavbarAdmin() {
                                             </Link>
                                         </li>
                                         <li onClick={() => setAccountsManage(3)}>
-                                            <Link to="/admin/account"
+                                            <Link to="/admin/account/banAccount"
                                                 className={`flex items-center ${accountsManage===3 ? 'bg-yellow-200' :'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-gray-900 py-3 px-4`}
                                             >
                                                 <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">

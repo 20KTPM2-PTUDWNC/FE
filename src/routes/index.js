@@ -30,6 +30,7 @@ import ClassDetails from "../pages/app/ClassDetails";
 import AssignmentDetails from "../pages/app/AssignmentDetails";
 import AcceptInvitation from "../pages/app/AcceptInvitation";
 import AdminPage from "../pages/admin/Home.admin";
+import AccountsManage from "../pages/admin/AccountsManage";
 
 
 
@@ -61,7 +62,7 @@ const publicRoutes = [
 
 const privateRoutes = [
     { path: "/admin", component: AdminPage },
-    { path: "/admin/account", component: AdminPage },
+    { path: "/admin/account/banAccount", component: AccountsManage },
     { path: "/admin/class", component: AdminPage }
 
     // { path: "/home", component: Home },

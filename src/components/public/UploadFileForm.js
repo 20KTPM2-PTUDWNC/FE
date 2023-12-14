@@ -54,10 +54,10 @@ function UploadFileForm({ onClose, onClick }) {
     }
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
-            <div className="w-[1000px] h-[600px] bg-white rounded-lg p-8 max-w-[1100px]">
+            <div className="w-[1000px] h-[450px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
-                        <span className="text-2xl text-[#5f27cd]  font-bold">Options</span>
+                        <span className="text-2xl text-[#5f27cd]  font-bold">Upload your file</span>
                     </div>
 
                     <button
@@ -74,7 +74,7 @@ function UploadFileForm({ onClose, onClick }) {
 
                     <div className="flex flex-col">
                         <div
-                            className="flex items-center justify-center w-full"
+                            className="flex items-center justify-center content-center w-full"
                             onDragOver={handleDragOver}
                             onDrop={handleDrop}
                         >
@@ -86,7 +86,7 @@ function UploadFileForm({ onClose, onClick }) {
                                     {getFileIcon()}
                                     {fileInfo ? (
                                         <>
-                                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="my-2 text-sm text-gray-500 dark:text-gray-400">
                                                 <span className="font-semibold">{fileInfo.name}</span>
                                             </p>
                                             <p className="text-xs text-gray-500 dark:text-gray-400">

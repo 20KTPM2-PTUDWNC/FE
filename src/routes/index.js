@@ -30,8 +30,14 @@ import ClassDetails from "../pages/app/ClassDetails";
 import AssignmentDetails from "../pages/app/AssignmentDetails";
 import AcceptInvitation from "../pages/app/AcceptInvitation";
 import AdminPage from "../pages/admin/Home.admin";
+
 import ClassAdminPage from "../pages/admin/Class.admin";
 import MemberClassAdminPage from "../pages/admin/MemberOfClass";
+
+import AccountsManage from "../pages/admin/AccountsManage";
+import MapStudentID from "../pages/admin/MapStudentID";
+
+
 
 
 // Public Routes
@@ -62,9 +68,15 @@ const publicRoutes = [
 
 const privateRoutes = [
     { path: "/admin", component: AdminPage },
+
     { path: "/admin/account", component: AdminPage },
     { path: "/admin/class", component: ClassAdminPage },
-    { path: "/admin/class/member-details/:classId", component: MemberClassAdminPage }
+    { path: "/admin/class/member-details/:classId", component: MemberClassAdminPage },
+
+    { path: "/admin/account/banAccount", component: AccountsManage },
+    { path: "/admin/account/mapStudentID", component: MapStudentID },
+    { path: "/admin/class", component: AdminPage }
+
 
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

@@ -49,6 +49,20 @@ function AccountsManage() {
             "studentId": "12345",
             "name": "Nguyen Van A",
             "status": false
+        }, {
+            "studentId": "12345",
+            "name": "Nguyen Van A",
+            "status": true
+        },
+        {
+            "studentId": "12345",
+            "name": "Nguyen Van A",
+            "status": true
+        },
+        {
+            "studentId": "12345",
+            "name": "Nguyen Van A",
+            "status": false
         },
     ]
     const headerSet = new Set(list.flatMap(obj => Object.keys(obj)))
@@ -122,7 +136,7 @@ function AccountsManage() {
             <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-4xl mx-auto">
-                        <div className="bg-white rounded-3xl p-8 mb-5">
+                        <div className="bg-white max-h-[600px] rounded-3xl p-8 mb-5">
                             <h1 className="text-3xl font-bold mb-10">Account Management</h1>
                             {/* <div className="flex items-center justify-between">
                                 <div className="flex items-stretch">
@@ -153,9 +167,9 @@ function AccountsManage() {
 
                             {/* <div className="grid grid-cols-2 gap-x-20"> */}
                             <div>
-                                <div className="relative overflow-x-auto shadow-md sm:rounded-lg border-2">
+                                <div className="relative max-h-[389px] overflow-x-auto shadow-md sm:rounded-lg border-2">
 
-                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <table className="w-full  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 {header.map((col, index) => (

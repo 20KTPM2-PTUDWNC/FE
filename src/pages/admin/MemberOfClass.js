@@ -8,7 +8,7 @@ import Cookies from "universal-cookie";
 import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import DataTable from "react-data-table-component"
-function ClassAdminPage() {
+function MemberOfClass() {
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
@@ -108,24 +108,17 @@ function ClassAdminPage() {
         fetchData();
     }, []);
 
-    const handleFilter = (e) => {
-        const newData = records.filter(row => row.name.toLowerCase().includes(e.target.value.toLowerCase()));
-        setRecords(newData);
-    }
-
     const handleEyeClick = (rowId) => {
         console.log("Eye clicked for row:", rowId);
-        navigate(`/admin/class/member-details/${rowId}`);
     };
 
     return (
         <>
             <main className="ml-60 pt-16 max-h-screen overflow-auto">
                 <div className="px-6 py-8">
-                    <div style={{display: 'flex', justifyContent: 'right'}}>
-                        <input type="text" placeholder="Search..." onChange={handleFilter}></input>
-                    </div>
                     <div className="max-w-5xl mx-auto bg-white rounded-3xl p-8 mb-5">
+                    <h3 className="text-3xl font-bold mb-10">Class name: {records.name}</h3>
+                    <h5 className="text-xl font-bold mb-10">List of members</h5>
                         <DataTable
                             columns = {column}
                             data = {records}
@@ -138,4 +131,4 @@ function ClassAdminPage() {
     );
 }
 
-export default ClassAdminPage;
+export default MemberOfClass;

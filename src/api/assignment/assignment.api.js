@@ -12,10 +12,10 @@ export const addAssignment = async (id, data) => {
     }
 };
 
-export const showAssignmentList = async (id, data) => {
+export const showAssignmentList = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/assignment/showAssignmentList/${id}`, data, {
+        return await axiosPrivate.get(`/v1/assignment/showAssignmentList/${id}`, {
             "Authorization": getCookies()
         });
     } catch (err) {

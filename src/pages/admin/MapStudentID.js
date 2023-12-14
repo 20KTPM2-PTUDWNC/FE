@@ -164,13 +164,13 @@ function MapStudentID() {
                                                         } border-b dark:border-gray-700`}
                                                 >
                                                     {row.map((data, colIndex) => (
-                                                        <td key={colIndex} className="px-6 py-4">
+                                                        <td key={colIndex} className="px-6 py-4 text-center">
                                                             {colIndex === 0 ? (
                                                                 <input
                                                                     type="text"
                                                                     value={editedStudentId === rowIndex ? editedStudentId : data}
                                                                     onChange={(e) => setEditedStudentId(e.target.value)}
-                                                                    className="text-center"
+                                                                    className="text-center py-2 border-2 rounded-lg"
                                                                 />
                                                             ) : colIndex === row.length - 1 ? (
                                                                 data ? (

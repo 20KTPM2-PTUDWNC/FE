@@ -9,7 +9,7 @@ import Logo from "../../assets/cover.jpg";
 import AddNewClass from "../../components/app/AddNewClassForm";
 import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
-import { FaLock, FaUnlock, FaCheck } from "react-icons/fa";
+import { FaBan , FaCheck } from "react-icons/fa";
 
 function AccountsManage() {
     // const [jobs, setJobs] = useState([]);
@@ -195,7 +195,7 @@ function AccountsManage() {
                                                                 >
                                                                     <p className="flex flex-row">
                                                                         <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">
-                                                                            <FaLock />
+                                                                            <FaBan />
                                                                         </svg> Ban
                                                                     </p>
                                                                 </button>) : data}

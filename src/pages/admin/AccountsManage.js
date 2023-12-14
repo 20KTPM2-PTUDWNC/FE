@@ -9,7 +9,7 @@ import Logo from "../../assets/cover.jpg";
 import AddNewClass from "../../components/app/AddNewClassForm";
 import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
-import { FaBan , FaCheck } from "react-icons/fa";
+import { FaBan, FaCheck } from "react-icons/fa";
 
 function AccountsManage() {
     // const [jobs, setJobs] = useState([]);
@@ -38,31 +38,31 @@ function AccountsManage() {
         {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": true
+            "deleted_date": true
         },
         {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": true
+            "deleted_date": true
         },
         {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": false
+            "deleted_date": false
         }, {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": true
+            "deleted_date": true
         },
         {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": true
+            "deleted_date": true
         },
         {
             "studentId": "12345",
             "name": "Nguyen Van A",
-            "status": false
+            "deleted_date": false
         },
     ]
     const headerSet = new Set(list.flatMap(obj => Object.keys(obj)))
@@ -174,10 +174,12 @@ function AccountsManage() {
                                             <tr>
                                                 {header.map((col, index) => (
                                                     <th key={index} scope="col" className="px-6 py-3 text-center">
-                                                        {col}
+                                                        {index === header.length - 1 ? "status" :
+                                                            col
+                                                        }
                                                     </th>
                                                 ))}
-                                                
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -193,7 +195,7 @@ function AccountsManage() {
                                                         <td key={colIndex} className="px-6 py-4 text-center">
                                                             {colIndex === row.length - 1 ? (data ?
                                                                 <button
-                                                                    className="rounded-lg px-5 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
+                                                                    className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
                                                                     onClick={() => alert("Ban/Unban Account")}
                                                                 >
                                                                     <p className="flex flex-row">
@@ -204,7 +206,7 @@ function AccountsManage() {
                                                                 </button>
                                                                 :
                                                                 <button
-                                                                    className="rounded-lg px-7 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"
+                                                                    className="rounded-lg px-7 py-2 bg-red-500 text-white dark:text-blue-500 hover:bg-red-600"
                                                                     onClick={() => alert("Ban/Unban Account")}
                                                                 >
                                                                     <p className="flex flex-row">
@@ -215,7 +217,7 @@ function AccountsManage() {
                                                                 </button>) : data}
                                                         </td>
                                                     ))}
-                                                    
+
                                                 </tr>
                                             ))}
                                         </tbody>

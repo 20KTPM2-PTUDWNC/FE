@@ -132,19 +132,25 @@ function ClassAdminPage() {
     async function getMemberList(classId) {
         try {
             const response = await showMemberList(classId);
-
+    
             if (response.status === 200) {
                 const listMember = response.data;
-                setMemberCounts(prevCounts => ({
-                        ...prevCounts,
-                        [classId]: listMember.students.length + listMember.teachers.length,
+                const studentsLength = listMember.students.length;
+                const teachersLength = listMember.teachers.length;
+    
+                console.log("Students length:", studentsLength);
+                console.log("Teachers length:", teachersLength);
+    
+                setMemberCounts((prevCounts) => ({
+                    ...prevCounts,
+                    [classId]: studentsLength + teachersLength,
                 }));
             }
         } catch (error) {
             console.log("Error123: ", error);
-
         }
     }
+    
 
     const handleFilter = (e) => {
         const newData = listClass.filter(row => row.name.toLowerCase().includes(e.target.value.toLowerCase()));

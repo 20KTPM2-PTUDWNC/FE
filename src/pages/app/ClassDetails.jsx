@@ -529,7 +529,6 @@ function ClassDetails() {
                     <Options
                         data={assignmentOption}
                         onClose={closeTab.asssignmentOptions.close}
-
                     />}
                 {showAddTopic &&
                     <AddTopicForm

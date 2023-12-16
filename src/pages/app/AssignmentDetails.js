@@ -9,7 +9,7 @@ import { selectUser } from "../../features/userSlice";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GrScorecard } from "react-icons/gr";
 import Options from "../../components/app/Options.jsx";
-import ShowGrade from "../../components/app/ShowGrade";
+import ShowGrade from "../../components/app/ShowAssignmentGrade";
 
 function splitStr(a) {
     let re = "";

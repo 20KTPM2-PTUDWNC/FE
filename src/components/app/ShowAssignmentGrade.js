@@ -25,6 +25,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
     const params = useParams();
     const [header, setHeader] = useState([]);
     const [body, setBody] = useState([])
+    const [edit, setEdit] = useState(false)
     useEffect(() => {
         if (!user) {
             navigate("/signin");
@@ -35,7 +36,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
     }, []);
     const getStudentList = async () => {
         try {
-            const response = await showAssignmentGrade(assignmentId);
+            // const response = await showAssignmentGrade(assignmentId);
             const data = [
                 {
                     "studentId": "12345",
@@ -55,7 +56,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
             setBody(data.map(obj => Object.values(obj)))
             // const listData = [header, ...body]
             // const [status, setStatus] = useState(false)
-            console.log("grade: ", response)
+            console.log("grade: ", data)
             setListStudent(data);
         }
         catch (err) {
@@ -160,6 +161,15 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
                             )}
                         </tbody>
                     </table>
+                    <div className="mt-10">
+
+                        <button
+                            className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                            onClick={() => setEdit(true)}
+                        >
+                            Download
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

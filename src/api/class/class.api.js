@@ -123,7 +123,9 @@ export const getAllClass = async () => {
 
     try {
         return await axiosPrivate.get('/v1/class/getAllClass', {
-            "Authorization": getCookies()
+            headers: {
+                "Authorization": getCookies()
+            }
         });
     } catch (err) {
         throw err;

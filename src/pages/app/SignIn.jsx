@@ -54,9 +54,13 @@ function SignIn() {
 
             if (response.status === 200) {
                 console.log(response.data.token);
-                signin(response.data.token);
-                navigate("/home");
-
+                const user = signin(response.data.token);
+                if (user.userFlag == 1){
+                    navigate("/home");
+                }
+                else{
+                    navigate("/admin");
+                }
             }
         } catch (error) {
             console.log("Error123: ", error.response.data.message);

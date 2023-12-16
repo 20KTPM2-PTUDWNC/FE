@@ -1,34 +1,42 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getAllClass } from "../../api/class/class.api.js";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { showClassDetail } from "../../api/class/class.api.js";
 import { getCookies, getUser } from "../../features/user";
 import Logo from "../../assets/cover.jpg";
 import Cookies from "universal-cookie";
 import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import DataTable from "react-data-table-component"
+import { showMemberList } from "../../api/class/class.api.js";
+
 function MemberOfClass() {
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
+    const params = useParams();
+    console.log(params);
+    const classId = params.classId;
     const [showAddNewClass, setShowAddNewClass] = useState(false);
     const [showJoinClass, setShowJoinClass] = useState(false);
     const [listClass, setListClass] = useState([]);
     const [images, setImages] = useState([])
     const [isAddClass, setIsAddClass] = useState(0)
     const [records, setRecords] = useState([])
+    const [classDetail, setClassDetail] = useState({});
+    const [teacherList, setTeacherList] = useState([]);
+    const [studentList, setStudentList] = useState([]);
 
-    // useEffect(() => {
-    //     if (!user) {
-    //         navigate("/signin")
-    //     }
-    //     else {
-    //         cookie.set('token', getCookies(), { path: `/v1/className/getAllClassById` });
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin")
+        }
+        else {
+            cookie.set('token', getCookies(), { path: `/v1/className/showClassDetail/${classId}` });
+        }
+    }, [])
 
-    const column = [
+    const columnTeacher = [
         {
             name: "No.",
             cell: (row, index) => <span>{index + 1}</span>,
@@ -39,26 +47,36 @@ function MemberOfClass() {
             sortable: true
         },
         {
-            name: "Description",
+            name: "Email",
             selector: row => row.email,
             sortable: true
         },
         {
-            name: "Code"
+            name: "Role",
+            selector: row => "Teacher",
+            sortable: true
+        }
+    ]
+
+    const columnStudent = [
+        {
+            name: "No.",
+            cell: (row, index) => <span>{index + 1}</span>,
         },
         {
-            name: "Author"
+            name: "Name",
+            selector: row => row.name,
+            sortable: true
         },
         {
-            name: "Status"
+            name: "Email",
+            selector: row => row.email,
+            sortable: true
         },
         {
-            name: "Number of members"
-        },
-        {
-            name: "List of members",
-            cell: row => <FaEye onClick={() => handleEyeClick(row.id)} />
-        },
+            name: "Role",
+            selector: row => "Student",
+        }
     ]
     useEffect(() => {
         if (showAddNewClass || showJoinClass) {
@@ -86,45 +104,67 @@ function MemberOfClass() {
     }
 
     useEffect(() => {
-        // async function fetchClasses() {
-        //     try {
-        //         const response = await getAllClass();
-        //         if (response.status === 200) {
-        //             setListClass(response.data);
-        //             console.log(response.data)
-        //         }
-        //     } catch (error) {
-        //         console.log("Error: ", error);
-        //     }
-        // }
-        // fetchClasses();
-
-        async function fetchData(){
-            axios.get('http://jsonplaceholder.typicode.com/users')
-            .then(res => setRecords(res.data))
-            .then(console.log(records))
-            .catch(err => console.log(err));
+        async function fetchClasses() {
+            try {
+                const response = await showClassDetail(classId);
+                if (response.status === 200) {
+                    setClassDetail(response.data);
+                    console.log(response.data)
+                }
+            } catch (error) {
+                console.log("Error: ", error);
+            }
         }
-        fetchData();
-    }, []);
+        
+        async function getMemberList(classId) {
+            try {
+                const response = await showMemberList(classId);
+        
+                if (response.status === 200) {
+                    setTeacherList(response.data.teachers);
+                    setStudentList(response.data.students);
+                    console.log(response.data)
+                }
+            } catch (error) {
+                console.log("Error123: ", error);
+            }
+        }
 
-    const handleEyeClick = (rowId) => {
-        console.log("Eye clicked for row:", rowId);
+        fetchClasses();
+        getMemberList(classId);
+    }, [classId]);
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+        return formattedDate;
     };
 
     return (
         <>
-            <main className="ml-60 pt-16 max-h-screen overflow-auto">
+            <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-5xl mx-auto bg-white rounded-3xl p-8 mb-5">
-                    <h3 className="text-3xl font-bold mb-10">Class name: {records.name}</h3>
-                    <h5 className="text-xl font-bold mb-10">List of members</h5>
+                        <div className="grid grid-cols-2 gap-x-20">
+                            <h3 className="text-2xl font-bold mb-10">Class name: {classDetail.name}</h3> 
+                            <h3 className="text-xl mb-10">Code: {classDetail.code}</h3>
+                            <h3 className="text-2xl font-bolds mb-10">Description: {classDetail.subject}</h3>
+                            <h3 className="text-xl mb-10">Creation date: {formatDate(classDetail.createdAt)}</h3>
+                        </div>
+                        
+                        <h5 className="text-xl font-bold mb-10">List of teachers</h5>
                         <DataTable
-                            columns = {column}
-                            data = {records}
+                            columns = {columnTeacher}
+                            data = {teacherList}
                             pagination>
                         </DataTable>
-                    </div>
+                        <h5 className="text-xl font-bold mb-10">List of students</h5>
+                        <DataTable
+                            columns = {columnStudent}
+                            data = {studentList}
+                            pagination>
+                        </DataTable>
+                        </div>
                 </div>
             </main>
         </>

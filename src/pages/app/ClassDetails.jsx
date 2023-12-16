@@ -120,14 +120,14 @@ function ClassDetails() {
         },
         topicTab: {
             close: function () {
-                setShowAssignmentOption(true)
+                setShowTopicOption(true)
                 setShowAddTopic(false)
 
             }
         },
         assignmentTab: {
             close: function () {
-                setShowAssignmentOption(true)
+
                 setShowAddAssigment(false)
 
             }
@@ -180,7 +180,6 @@ function ClassDetails() {
             || showApply
             || showAddAssigment
             || showAddTopic
-            || showTopicOption
             || showExportStudentListForm
             || showInvitationByEmailForm) {
             document.body.classList.add("overflow-hidden");
@@ -484,7 +483,7 @@ function ClassDetails() {
                                                 {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
                                                         {assignment.gradeId === grade._id && (
-                                                            <Link to="/class/assingment/123">
+                                                            <Link to={`/class/assingment/${assignment._id}`}>
                                                                 <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
                                                                     <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
                                                                 </div>

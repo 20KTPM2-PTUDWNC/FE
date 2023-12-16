@@ -8,11 +8,11 @@ import { sendEmail } from "../../api/email/email.api.js";
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCookies, getUser } from "../../features/user";
-import { addAssignment } from "../../api/assignment/assignment.api.js";
+import { addAssignment, showAssignmentGrade } from "../../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
-import { exportStudentList, showMemberList } from "../../api/class/class.api";
+import { exportStudentList } from "../../api/class/class.api";
 
-function ExportStudentListForm({ onClose, onClick, classId }) {
+function ShowGrade({ onClose, onClick, assignmentId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -23,41 +23,46 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
     const user = getUser();
     const cookie = new Cookies();
     const params = useParams();
-
+    const [header, setHeader] = useState([]);
+    const [body, setBody] = useState([])
     useEffect(() => {
         if (!user) {
             navigate("/signin");
         }
         else {
             getStudentList()
-
         }
     }, []);
     const getStudentList = async () => {
         try {
-            const response = await showMemberList(classId);
+            const response = await showAssignmentGrade(assignmentId);
             const data = [
                 {
                     "studentId": "12345",
-                    "name": "Nguyen Van A"
+                    "grade": 10
                 },
                 {
                     "studentId": "12345",
-                    "name": "Nguyen Van A"
+                    "grade": 10
                 }, {
                     "studentId": "12345",
-                    "name": "Nguyen Van A"
+                    "grade": 9
                 },
             ]
-            console.log("list student: ", response.data)
-            setListStudent(response.data.students);
 
+            const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
+            setHeader(Array.from(headerSet))
+            setBody(data.map(obj => Object.values(obj)))
+            // const listData = [header, ...body]
+            // const [status, setStatus] = useState(false)
+            console.log("grade: ", response)
+            setListStudent(data);
         }
         catch (err) {
             console.log(err)
         }
-
     }
+
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
 
@@ -95,17 +100,17 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
             console.log("useEffect done");
         }
     }, [])
-    async function loadImg() {
+    // async function loadImg() {
 
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-        const imgJson = await res.json()
-        setImages(imgJson.results)
+    //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
+    //     const imgJson = await res.json()
+    //     setImages(imgJson.results)
 
-    }
+    // }
 
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
-            <div className="w-[1000px] h-[600px] bg-white rounded-lg p-8 max-w-[1100px]">
+            <div className="w-[1000px] h-[400px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
                         <span className="text-2xl text-[#5f27cd]  font-bold">Options</span>
@@ -122,17 +127,43 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
 
 
                 <div className="relative overflow-y-auto w-full h-full font-sans">
-                    <ExportCSVForm
-                        list={listStudent}
-                        fileName={"studentList"}
-                        className="m-5 border-2 "
-                    >
-
-                    </ExportCSVForm>
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                {header.map((col, index) =>
+                                    <th scope="col" key={index} className="px-6 py-3">
+                                        {col}
+                                    </th>
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {body.map((row, index) =>
+                                <tr
+                                    key={index}
+                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                                >
+                                    {row.map((data, i) =>
+                                        <td key={i} className="px-6 py-4">
+                                            {data}
+                                        </td>
+                                    )}
+                                    {/* <td className="px-6 py-4">
+                                    <p
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        onClick={() => alert("Edit grade")}
+                                    >
+                                        Edit
+                                    </p>
+                                </td> */}
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     );
 }
 
-export default ExportStudentListForm;
+export default ShowGrade;

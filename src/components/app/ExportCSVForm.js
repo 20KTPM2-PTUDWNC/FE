@@ -27,7 +27,7 @@ function ExportCSVForm({ list, fileName, className }) {
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     {header.map((col, index) =>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th scope="col" key={index} className="px-6 py-3 text-center">
                                             {col}
                                         </th>
                                     )}
@@ -40,8 +40,8 @@ function ExportCSVForm({ list, fileName, className }) {
                                         className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                                     >
                                         {row.map((data, i) =>
-                                            <td key={i} className="px-6 py-4">
-                                                {data}
+                                            <td key={i} className="px-6 py-4 text-center">
+                                                {data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
                                             </td>
                                         )}
                                         {/* <td className="px-6 py-4">
@@ -59,7 +59,7 @@ function ExportCSVForm({ list, fileName, className }) {
                     </div>
 
                 </div>
-                <div className="mt-5">
+                <div className="mt-10">
 
                     <CSVLink
                         data={listData}
@@ -67,7 +67,7 @@ function ExportCSVForm({ list, fileName, className }) {
                         target="_blank"
                         className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
                     >
-                        Download me
+                        Download
                     </CSVLink>
                 </div>
             </>

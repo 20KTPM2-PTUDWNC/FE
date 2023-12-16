@@ -9,6 +9,7 @@ import Logo from "../../assets/cover.jpg";
 import AddNewClass from "../../components/app/AddNewClassForm";
 import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
+import { handleTitle } from "../../utils/handleTitle.js";
 
 function Home() {
     // const [jobs, setJobs] = useState([]);
@@ -124,9 +125,9 @@ function Home() {
                                 <div class="h-[250px] w-[300px] relative">
                                     <img src={Logo} alt="" className="rounded-lg" />
                                     <div class="absolute rounded-lg bottom-0 px-4 py-3 bg-[#5f27cd] w-full">
-                                        <h1 class="text-white font-semibold text-2xl">{_class.name}</h1>
+                                        <h1 class="text-white font-semibold text-2xl">{_class.name.length < 20 ? _class.name : handleTitle(_class.name)}</h1>
                                         <p class="text-gray-200">
-                                            {_class.subject}
+                                            {handleTitle(_class.subject)}
                                         </p>
                                     </div>
                                 </div>

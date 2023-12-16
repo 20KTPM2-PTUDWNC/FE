@@ -57,6 +57,7 @@ export const showMemberList = async (id) => {
 export const exportStudentList = async (id) => {
 
     try {
+        console.log(id)
         return await axiosPrivate.get(`/v1/grade/exportStudentList/${id}`, {
             headers: {
                 "Authorization": getCookies()

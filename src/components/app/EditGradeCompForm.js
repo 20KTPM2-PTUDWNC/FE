@@ -11,8 +11,8 @@ import { addGradeComposition, updateGradeComposition } from "../../api/grade/gra
 import Cookies from "universal-cookie";
 
 function EditGradeCompForm({ onClose, onClick, _gradeStructureId, oldData }) {
-    const [name, setName] = useState("");
-    const [scale, setScale] = useState("");
+    const [name, setName] = useState(oldData.name);
+    const [scale, setScale] = useState(oldData.gradeScale);
     const [error, setError] = useState("");
     const [images, setImages] = useState([]);
 
@@ -34,8 +34,8 @@ function EditGradeCompForm({ onClose, onClick, _gradeStructureId, oldData }) {
         let gradeScale = Number(scale);
 
         let newGrade = {
-            name: oldData.name,
-            gradeScale: oldData.gradeScale
+            name,
+            gradeScale
         };
 
         try {

@@ -9,7 +9,8 @@ import { selectUser } from "../../features/userSlice";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GrScorecard } from "react-icons/gr";
 import Options from "../../components/app/Options.jsx";
-import ShowGrade from "../../components/app/ShowAssignmentGrade";
+import ShowGrade from "../../components/app/AssignmentGradeForm";
+import StudentReviewForm from "../../components/app/StudentReviewForm";
 
 function splitStr(a) {
     let re = "";
@@ -51,32 +52,39 @@ const CommentSection = ({ comments }) => {
         </div>
     );
 };
-const StudentGrade = () => {
+const StudentGrade = ({ onClick }) => {
     return (
         <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
 
             <p className="font-bold mb-2">Your Grade:</p>
             <p className="font-bold mb-2 text-center text-2xl">10</p>
-
+            <button
+                className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                onClick={onClick}
+            >
+                Review
+            </button>
         </div>
     );
 }
+
 function AssignmentDetails() {
     const user = getUser();
     const navigate = useNavigate();
     const id = user._id
     const params = useParams()
     const assignmentId = params.assignmentId
+    const [openReview, setOpenReview] = useState(false)
     useEffect(() => {
         if (!user)
             navigate("/signin")
     }, [])
 
-    const [avatar, setAvatar] = useState(null);
-    const [name, setName] = useState("");
+    // const [avatar, setAvatar] = useState(null);
+    // const [name, setName] = useState("");
 
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
+    // const [address, setAddress] = useState("");
+    // const [phone, setPhone] = useState("");
     const [error, setError] = useState("");
     const [text, setText] = useState('');
     const [comments, setComments] = useState([]);
@@ -176,7 +184,7 @@ function AssignmentDetails() {
 
             </div>
             <div className="absolute top-[110px] right-[20px] h-full">
-                <StudentGrade />
+                <StudentGrade onClick={() => setOpenReview(!openReview)} />
             </div>
             {showAssignmentOption &&
                 <Options
@@ -189,6 +197,11 @@ function AssignmentDetails() {
                 <ShowGrade
                     onClose={closeTab.showGrade.close}
                     assignmentId={assignmentId}
+                />
+            }
+            {openReview &&
+                <StudentReviewForm
+                    onClose={() => setOpenReview(!openReview)}
                 />
             }
         </div >

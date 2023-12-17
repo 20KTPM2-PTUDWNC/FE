@@ -22,7 +22,7 @@ import InvitationLinkButton from "../../components/app/InvitationLinkButton";
 import InvitationByEmailForm from "../../components/app/InvitationByEmailForm";
 import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
-
+import { GrScorecard } from "react-icons/gr";
 function ClassDetails() {
     const user = getUser()
     const params = useParams();
@@ -48,6 +48,7 @@ function ClassDetails() {
     const [assignmentList, setAssignmentList] = useState([]);
     const [action, setAction] = useState(0);
     const [selectedGrade, setSelectedGrade] = useState(null);
+    const [showStudentGrade, setShowStudentGrade] = useState(false);
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -331,7 +332,14 @@ function ClassDetails() {
                                         >
                                             <p>Member List</p>
                                         </button>
-
+                                        <div className="ml-5 mt-2">
+                                            <button
+                                                className="font-bold hover:opacity-90 rounded duration-200"
+                                                onClick={() => setShowStudentGrade(true)}
+                                            >
+                                                <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                                            </button>
+                                        </div>
                                     </>
                                     )}
                                     {tab === 2 && (<>

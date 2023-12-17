@@ -15,10 +15,12 @@ function ExportCSVForm({ list, fileName, className }) {
     const header = Array.from(headerSet)
     const body = list.map(obj => Object.values(obj))
     const listData = [header, ...body]
+    const [editedStudentId, setEditedStudentId] = useState('');
+    const [editPos, setEditPos] = useState(-1)
     useEffect(() => {
-        console.log("list: ", list)
-    }, [])
-    if (list.length != 0)
+        console.log(editedStudentId)
+    }, [editedStudentId])
+    if (list.length !== 0)
         return (
             <>
                 <div className={className}>
@@ -31,6 +33,9 @@ function ExportCSVForm({ list, fileName, className }) {
                                             {col}
                                         </th>
                                     )}
+                                    {/* <th scope="col" className="px-6 py-3 text-center">
+                                        Mapping student ID
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,9 +46,17 @@ function ExportCSVForm({ list, fileName, className }) {
                                     >
                                         {row.map((data, i) =>
                                             <td key={i} className="px-6 py-4 text-center">
-                                                {data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
+                                                { data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
                                             </td>
                                         )}
+                                        {/* <td className="px-6 py-4 text-center">
+                                            <button
+                                                className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                                onClick={() => alert("abc")}
+                                            >
+                                                Map student ID
+                                            </button>
+                                        </td> */}
                                         {/* <td className="px-6 py-4">
                                     <p
                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -65,7 +78,7 @@ function ExportCSVForm({ list, fileName, className }) {
                         data={listData}
                         filename={fileName}
                         target="_blank"
-                        className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                        className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
                     >
                         Download
                     </CSVLink>

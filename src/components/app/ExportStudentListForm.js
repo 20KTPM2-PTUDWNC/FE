@@ -50,8 +50,8 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
                 },
             ]
             console.log("list student: ", response.data)
-            setListStudent(response.data.students);
-
+            // setListStudent(response.data.students);
+            setListStudent(response.data.students)
         }
         catch (err) {
             console.log(err)

@@ -132,3 +132,17 @@ export const getAllClass = async () => {
         throw err;
     }
 };
+
+export const activeClass = async (id, data) => {
+
+    try {
+        console.log(id)
+        return await axiosPrivate.put(`/v1/class/activeClass/${id}`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};

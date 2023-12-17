@@ -9,7 +9,7 @@ import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import DataTable from "react-data-table-component"
 import { getProfile } from "../../api/user/user.api";
-import { showMemberList } from "../../api/class/class.api.js";
+import { showMemberList, activeClass } from "../../api/class/class.api.js";
 
 function ClassAdminPage() {
     const navigate = useNavigate();
@@ -55,14 +55,24 @@ function ClassAdminPage() {
         },
         {
             name: "Status",
-            selector: row => row.status,
             cell: row => (
-                <span style={{ color: row.status === 0 ? "green" : "red" }}
-                    onClick={() => handleStatusChange(row._id)}>
+                <button
+                    style={{
+                        color: row.status === 0 ? "green" : "red",
+                        cursor: "pointer",
+                        border: "1px solid black",
+                        background: "yellow",
+                        padding: 0,
+                        textDecoration: "none",
+                        padding: "5px",
+                        borderRadius: "5px"
+                    }}
+                    onClick={() => changeStatus(row._id)}
+                >
                     {row.status === 0 ? "Active" : "Inactive"}
-                </span>
+                </button>
             )
-        },
+        },        
         {
             name: "Number of members",
             cell: row => <span>{memberCounts[row._id] || 0}</span>
@@ -162,26 +172,43 @@ function ClassAdminPage() {
         navigate(`/admin/class/member-details/${rowId}`);
     };
 
-    const handleStatusChange = async (classId) => {
-        //try {
-        //   const response = await updateClassStatus(classId);
-        //   if (response.status === 200) {
-            setListClass((prevList) =>
-                prevList.map((item) =>
-                    item._id === classId ? { ...item, status: 1 - item.status } : item
-                )
-            );
-        //}
-        // } catch (error) {
-        //   console.error("Error updating status:", error);
-        // }
-      };
+    const changeStatus = async (classId) => {
+        try {
+            // Lấy trạng thái hiện tại của lớp học
+            const currentStatus = listClass.find(item => item._id === classId).status;
+    
+            // Hiển thị hộp thoại xác nhận cho người dùng
+            const confirmed = window.confirm(`Are you sure you want to change the status to ${currentStatus === 0 ? 'Inactive' : 'Active'}?`);
+    
+            if (confirmed) {
+                // Gọi API với trạng thái ngược lại
+                const newStatus = currentStatus === 0 ? 1 : 0;
+                const response = await activeClass(classId, { status: newStatus });
+    
+                if (response.status === 200) {
+                    // Cập nhật trạng thái local với trạng thái mới
+                    setListClass((prevList) =>
+                        prevList.map((item) =>
+                            item._id === classId ? { ...item, status: newStatus } : item
+                        )
+                    );
+    
+                    // Hiển thị thông báo thành công cho người dùng
+                    alert("Status changed successfully!");
+                }
+            }
+        } catch (error) {
+            console.error("Error updating status:", error);
+        }
+    };
+    
 
     return (
         <>
             <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-5xl mx-auto bg-white rounded-3xl p-8 mb-5">
+                        <h1 className="text-3xl font-bold mb-10">Manage Classes</h1>
                         <div style={{display: 'flex', justifyContent: 'right'}}>
                             <input type="text" placeholder="Search..." onChange={handleFilter} 
                             style={{ border: '1px solid black', borderRadius: '4px', padding: '8px' }}></input>

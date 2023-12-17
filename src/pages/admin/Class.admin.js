@@ -194,7 +194,7 @@ function ClassAdminPage() {
                     );
     
                     // Hiển thị thông báo thành công cho người dùng
-                    alert("Status changed successfully!");
+                    alert("Status changed successfully!!");
                 }
             }
         } catch (error) {

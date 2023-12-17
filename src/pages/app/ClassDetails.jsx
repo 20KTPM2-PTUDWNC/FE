@@ -355,12 +355,16 @@ function ClassDetails() {
                                             <p>Member List</p>
                                         </button>
                                         <div className="ml-5 mt-2">
-                                            <button
-                                                className="font-bold hover:opacity-90 rounded duration-200"
-                                                onClick={() => setShowAssignmentOption(true)}
-                                            >
-                                                <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                            </button>
+                                            {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
+                                                <>
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowAssignmentOption(true)}
+                                                >
+                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                                </>
+                                            )}
                                         </div>
                                     </>
                                     )}
@@ -385,12 +389,16 @@ function ClassDetails() {
                                             <p>Member List</p>
                                         </button>
                                         <div className="ml-5 mt-2">
-                                            <button
-                                                className="font-bold hover:opacity-90 rounded duration-200"
-                                                onClick={() => setShowMemberListToption(true)}
-                                            >
-                                                <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                            </button>
+                                            {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
+                                            <>
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowMemberListToption(true)}
+                                                >
+                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                            </>
+                                            )}
                                         </div>
                                     </>
                                     )}
@@ -460,22 +468,26 @@ function ClassDetails() {
                                                 <div>
                                                     <div className="flex ml-5 mt-2">
                                                         <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}%</p>
-                                                        <button
-                                                            className="font-bold hover:opacity-90 rounded duration-200"
-                                                            onClick={() => {
-                                                                setSelectedGrade(grade); // Set the selected grade
-                                                                setShowTopicOption(true);
-                                                            }}
+                                                        {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
+                                                            <>
+                                                                <button
+                                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                                    onClick={() => {
+                                                                        setSelectedGrade(grade); // Set the selected grade
+                                                                        setShowTopicOption(true);
+                                                                    }}
 
-                                                        >
-                                                            <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"20px"} />
-                                                        </button>
-                                                        <button
-                                                            className=" ml-3 font-bold hover:opacity-90 rounded duration-200"
-                                                            onClick={(e) => handleDelete(e, grade._id)}
-                                                        >
-                                                            <CiCircleMinus className="text-[#5f27cd] duration-200" size={"20px"} />
-                                                        </button>
+                                                                >
+                                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"20px"} />
+                                                                </button>
+                                                                <button
+                                                                    className=" ml-3 font-bold hover:opacity-90 rounded duration-200"
+                                                                    onClick={(e) => handleDelete(e, grade._id)}
+                                                                >
+                                                                    <CiCircleMinus className="text-[#5f27cd] duration-200" size={"20px"} />
+                                                                </button>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
 

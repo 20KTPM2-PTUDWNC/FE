@@ -60,6 +60,7 @@ function MapStudentID() {
     const listData = [header, ...body]
     const [status, setStatus] = useState(false)
     const [showMappingCSV, setShowMappingCSV] = useState(false)
+    const [editPos, setEditPos] = useState(-1)
     // useEffect(() => {
     //     if (!user) {
     //         navigate("/signin")
@@ -168,8 +169,13 @@ function MapStudentID() {
                                                             {colIndex === 0 ? (
                                                                 <input
                                                                     type="text"
-                                                                    value={editedStudentId === rowIndex ? editedStudentId : data}
+                                                                    value={editPos === rowIndex ? editedStudentId : data}
                                                                     onChange={(e) => setEditedStudentId(e.target.value)}
+                                                                    onClick={() => setEditPos(rowIndex)}
+                                                                    onBlur={() => {
+                                                                        setEditPos(-1)
+                                                                        setEditedStudentId('')
+                                                                    }}
                                                                     className="text-center py-2 border-2 rounded-lg"
                                                                 />
                                                             ) : colIndex === row.length - 1 ? (

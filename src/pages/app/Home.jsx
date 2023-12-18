@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllClassById } from "../../api/class/class.api.js";
+import { getAllClass, getAllClassById } from "../../api/class/class.api.js";
 import Filter from "../../components/app/Filter";
 import Jobs from "../../components/app/Jobs";
 import { getCookies, getUser } from "../../features/user";
@@ -76,7 +76,7 @@ function Home() {
     useEffect(() => {
         async function fetchClasses() {
             try {
-                const response = await getAllClassById();
+                const response = await getAllClass();
                 if (response.status === 200) {
                     setListClass(response.data);
                 }

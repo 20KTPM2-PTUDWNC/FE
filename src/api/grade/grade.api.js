@@ -65,3 +65,16 @@ export const arrangeGradeComposition = async (classId, gradeId, position) => {
         throw err;
     }
 };
+
+export const exportGradeBoard = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/grade/exportGradeBoard/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};

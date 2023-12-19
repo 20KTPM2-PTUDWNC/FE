@@ -76,7 +76,7 @@ function Home() {
     useEffect(() => {
         async function fetchClasses() {
             try {
-                const response = await getAllClass();
+                const response = await getAllClassById();
                 if (response.status === 200) {
                     setListClass(response.data);
                 }
@@ -122,7 +122,7 @@ function Home() {
                     {listClass.map((_class, index) =>
                         <div key={index}>
                             <Link to={`/class/${_class._id}`}>
-                                <div class="h-[250px] w-[300px] relative">
+                                <div className={`h-[250px] w-[300px] relative ${_class.status === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                                     <img src={Logo} alt="" className="rounded-lg" />
                                     <div class="absolute rounded-lg bottom-0 px-4 py-3 bg-[#5f27cd] w-full">
                                         <h1 class="text-white font-semibold text-2xl">{_class.name.length < 20 ? _class.name : handleTitle(_class.name)}</h1>

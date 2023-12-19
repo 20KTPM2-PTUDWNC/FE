@@ -44,9 +44,6 @@ import MapStudentID from "../pages/admin/MapStudentID";
 const publicRoutes = [
     { path: "/", component: LandingPage },
     { path: "/home", component: Home },
-    // { path: "/job/:jobId", component: JobDetail },
-    // { path: "/hotjobs", component: HotJob },
-    // { path: "/search/:keyword", component: SearchJob },
     { path: "/signin", component: SignIn },
     { path: "/signup", component: SignUp },
     { path: "/loginSuccess/:token", component: SignInSuccess },

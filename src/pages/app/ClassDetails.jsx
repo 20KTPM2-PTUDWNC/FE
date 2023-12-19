@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import Logo from "../../assets/logo.png";
-
+import { useDrag, useDrop } from 'react-dnd';
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleMinus } from "react-icons/ci";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { closeJobEmployer, deleteJob, getJob, openJobEmployer } from "../../api/post/post.api.js";
-import ApplyForm from "../../components/app/ApplyForm.jsx";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import Options from "../../components/app/Options.jsx";
-import UpdateForm from "../../components/app/UpdateForm.jsx";
+
 import { formatDate, formatDateLeft } from "../../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks.js";
 import { showClassDetail, showMemberList } from "../../api/class/class.api.js";
@@ -23,6 +23,67 @@ import InvitationByEmailForm from "../../components/app/InvitationByEmailForm";
 import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
+// const Assignment = ({ assignment, isDragging, grade }) => {
+
+//     const [{ opacity }, drag] = useDrag({
+//         type: 'assignment',
+//         item: { id: assignment._id, type: 'assignment', gradeId: grade._id }, // Include gradeId
+//         collect: (monitor) => ({
+//             opacity: monitor.isDragging() ? 0.5 : 1,
+//         }),
+//     });
+
+//     return (
+//         <div ref={drag} style={{ opacity }}>
+//             {assignment.gradeId === grade._id && (
+//                 <Link to={`/class/assingment/${assignment._id}`}>
+//                     <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+//                         <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
+//                     </div>
+//                 </Link>
+//             )}
+//         </div>
+//     );
+// };
+const Assignment = ({ assignment, isDragging, grade }) => {
+    const opacity = isDragging ? 0.5 : 1;
+
+    return (
+        <div style={{ opacity }}>
+            {assignment.gradeId === grade._id && (
+                <Link to={`/class/assingment/${assignment._id}`}>
+                    <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                        <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
+                    </div>
+                </Link>
+            )}
+        </div>
+    );
+};
+
+const SortableAssignment = ({ assignment, index, moveAssignment, grade }) => {
+    const [{ isDragging }, drag] = useDrag({
+        type: 'assignment',
+        item: { index },
+    });
+
+    const [, drop] = useDrop({
+        accept: 'assignment',
+        hover: (item, monitor) => {
+            if (item.index !== index) {
+                moveAssignment(item.index, index);
+                item.index = index;
+            }
+        },
+    });
+
+    return (
+        <div ref={(node) => drag(drop(node))}>
+            <Assignment assignment={assignment} isDragging={isDragging} grade={grade} />
+        </div>
+    );
+};
+
 function ClassDetails() {
     const user = getUser()
     const params = useParams();
@@ -302,7 +363,16 @@ function ClassDetails() {
         }
     }
 
+    const moveAssignment = (dragIndex, hoverIndex) => {
+        const draggedAssignment = assignmentList[dragIndex];
 
+        setAssignmentList((prevAssignments) => {
+            const newAssignments = [...prevAssignments];
+            newAssignments.splice(dragIndex, 1);
+            newAssignments.splice(hoverIndex, 0, draggedAssignment);
+            return newAssignments;
+        });
+    };
     if (classDetail && memberList && gradeList && assignmentList) {
         return (
             <div className="w-full h-full text-black overflow-hidden">
@@ -462,7 +532,7 @@ function ClassDetails() {
                                     </div>
                                 )}
                                 {tab === 2 && (
-                                    <div>
+                                    <DndProvider backend={HTML5Backend}>
                                         {gradeList.map((grade) =>
                                             <div key={grade._id}>
                                                 <div>
@@ -488,7 +558,7 @@ function ClassDetails() {
                                                 </div>
 
 
-                                                {assignmentList.map((assignment) =>
+                                                {/* {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
                                                         {assignment.gradeId === grade._id && (
                                                             <Link to={`/class/assingment/${assignment._id}`}>
@@ -498,11 +568,20 @@ function ClassDetails() {
                                                             </Link>
                                                         )}
                                                     </div>
-                                                )}
+                                                )} */}
+                                                {assignmentList.map((assignment, index) => (
+                                                    <SortableAssignment
+                                                        key={assignment._id}
+                                                        index={index}
+                                                        assignment={assignment}
+                                                        moveAssignment={moveAssignment}
+                                                        grade={grade}
+                                                    />
+                                                ))}
                                             </div>
                                         )}
 
-                                    </div>
+                                    </DndProvider>
                                 )}
                                 {tab === 3 && (
                                     <div>

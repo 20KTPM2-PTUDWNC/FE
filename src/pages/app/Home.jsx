@@ -76,7 +76,7 @@ function Home() {
     useEffect(() => {
         async function fetchClasses() {
             try {
-                const response = await getAllClass();
+                const response = await getAllClassById();
                 if (response.status === 200) {
                     setListClass(response.data);
                 }

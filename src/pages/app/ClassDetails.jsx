@@ -1,5 +1,17 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
+import {
+    DndContext,
+    closestCenter
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy
+} from "@dnd-kit/sortable";
+
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import Logo from "../../assets/logo.png";
 import { useDrag, useDrop } from 'react-dnd';
 import { IoSettingsOutline } from "react-icons/io5";
@@ -23,6 +35,7 @@ import InvitationByEmailForm from "../../components/app/InvitationByEmailForm";
 import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
+import { SortableItem } from "../../components/public/SortableList";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -373,6 +386,32 @@ function ClassDetails() {
             return newAssignments;
         });
     };
+    function handleDragEnd(e) {
+        console.log(e);
+        const { active, over } = e;
+        console.log("ACTIVE: " + active.id);
+        console.log("OVER :" + over.id);
+
+        if (active.id !== over.id) {
+            setAssignmentList((items) => {
+                const oldIndex = items.findIndex((i) => i._id === active.id);
+                const newIndex = items.findIndex((i) => i._id === over.id);
+                return arrayMove(items, oldIndex, newIndex);
+                // items: [2, 3, 1]   0  -> 2
+                // [1, 2, 3] oldIndex: 0 newIndex: 2  -> [2, 3, 1] 
+            });
+
+        }
+        // if (!e.destination) return;
+
+        // const items = Array.from(assignmentList);
+        // const [reorderedItem] = items.splice(e.source.index, 1);
+        // items.splice(e.destination.index, 0, reorderedItem);
+
+        // setAssignmentList(items);
+        console.log(e);
+    }
+
     if (classDetail && memberList && gradeList && assignmentList) {
         return (
             <div className="w-full h-full text-black overflow-hidden">
@@ -532,10 +571,10 @@ function ClassDetails() {
                                     </div>
                                 )}
                                 {tab === 2 && (
-                                    <DndProvider backend={HTML5Backend}>
+                                    <div>
                                         {gradeList.map((grade) =>
-                                            <div key={grade._id}>
-                                                <div>
+                                            <div key={grade._id} className="relative">
+                                                <div >
                                                     <div className="flex ml-5 mt-2">
                                                         <p className="text-4xl mr-5 font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">{grade.name} - {grade.gradeScale}%</p>
                                                         <button
@@ -556,8 +595,46 @@ function ClassDetails() {
                                                         </button>
                                                     </div>
                                                 </div>
+                                                {/* <DragDropContext onDragEnd={handleDragEnd}>
+                                                    <Droppable droppableId="droppable-1">
+                                                        {(provided, _) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.droppableProps}
+                                                            >
+                                                                {assignmentList.map((assignment, i) =>
+                                                                    <Draggable
+                                                                        key={assignment._id}
+                                                                        draggableId={assignment._id}
+                                                                        index={i}
+                                                                        className="flex flex-row"
+                                                                    >
+                                                                        {(provided, _) => {
+                                                                            <div
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                            >
+
+                                                                                {assignment.gradeId === grade._id && (
+                                                                                    <Link to={`/class/assingment/${assignment._id}`}>
+                                                                                        <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                                                            <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
+                                                                                        </div>
+                                                                                    </Link>
+                                                                                )}
+                                                                            </div>
+                                                                        }}
 
 
+                                                                    </Draggable>
+                                                                )}
+                                                                {provided.placeholder}
+                                                            </div>
+
+                                                        )}
+                                                    </Droppable>
+                                                </DragDropContext> */}
                                                 {/* {assignmentList.map((assignment) =>
                                                     <div key={assignment._id}>
                                                         {assignment.gradeId === grade._id && (
@@ -569,19 +646,28 @@ function ClassDetails() {
                                                         )}
                                                     </div>
                                                 )} */}
-                                                {assignmentList.map((assignment, index) => (
-                                                    <SortableAssignment
-                                                        key={assignment._id}
-                                                        index={index}
-                                                        assignment={assignment}
-                                                        moveAssignment={moveAssignment}
-                                                        grade={grade}
-                                                    />
-                                                ))}
+                                                <DndContext
+                                                    collisionDetection={closestCenter}
+                                                    onDragEnd={handleDragEnd}
+                                                >
+
+
+                                                    <SortableContext
+                                                        items={assignmentList}
+                                                        strategy={verticalListSortingStrategy}
+                                                    >
+
+                                                        {assignmentList.map((assignment) =>
+                                                            <SortableItem key={assignment._id} assignment={assignment} grade={grade} />
+                                                        )}
+
+                                                    </SortableContext>
+
+                                                </DndContext>
                                             </div>
                                         )}
 
-                                    </DndProvider>
+                                    </div>
                                 )}
                                 {tab === 3 && (
                                     <div>

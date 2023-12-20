@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { handleTitle } from "../../utils/handleTitle";
 import ExportCSVForm from "./ExportCSVForm";
-import { approveCV, getCVByPostId, inviteCV, pendingCV, rejectCV } from "../../api/cv/cv.api.js";
-import { sendEmail } from "../../api/email/email.api.js";
+
 
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link, useNavigate, useParams } from "react-router-dom";

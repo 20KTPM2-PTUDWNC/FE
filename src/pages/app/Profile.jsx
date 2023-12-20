@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../assets/logo.png";
-import { useSelector } from "react-redux";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
-import { selectUser } from "../../features/userSlice";
+
 import Cookies from "universal-cookie";
 function Profile() {
     const user = getUser()

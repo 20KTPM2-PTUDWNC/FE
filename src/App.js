@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "./features/userSlice";
+
 import { Navigate, Route, HashRouter as Router, Routes, useLocation } from "react-router-dom";
 import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
 import Navbar from "./components/app/Navbar";

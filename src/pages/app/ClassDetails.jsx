@@ -670,7 +670,9 @@ function ClassDetails() {
                                                     >
 
                                                         {assignmentList.map((assignment) =>
-                                                            <SortableItem key={assignment._id} assignment={assignment} grade={grade} />
+                                                            <div className="transition-all transition-300">
+                                                                <SortableItem key={assignment._id} assignment={assignment} grade={grade} />
+                                                            </div>
                                                         )}
 
                                                     </SortableContext>

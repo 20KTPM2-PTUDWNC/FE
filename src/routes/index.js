@@ -55,7 +55,7 @@ const publicRoutes = [
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },
 
-    { path: "/class/assingment/:assignmentId", component: AssignmentDetails },
+    { path: "/class/assignment/:assignmentId", component: AssignmentDetails },
     { path: "/verifyAccount/:token", component: SignInSuccess },
 
     // { path: "/notification", component: Notification },

@@ -184,7 +184,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
                             )}
                         </tbody>
                     </table>
-                    <div className="mt-10">
+                    <div className="mt-10 flex flex-row">
 
                         <CSVLink
                             data={list}
@@ -194,6 +194,13 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
                         >
                             Download
                         </CSVLink>
+
+                        <button
+                            className="ml-10 bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+                            onClick={() => alert("abc")}
+                        >
+                            Mark Grade
+                        </button>
                     </div>
                 </div>
             </div>

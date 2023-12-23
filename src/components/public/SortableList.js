@@ -77,7 +77,7 @@ export function SortableItem({ assignment, grade }) {
 
                 {assignment.gradeId === grade._id && (
 
-                    <Link to={`/class/assingment/${assignment._id}`}
+                    <Link to={`/class/assignment/${assignment._id}`}
                         className="flex align-center border-2 hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow transition-all duration-300 transform "
                     >
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-import { logout, selectUser } from "../../features/userSlice";
-import { getProfile } from "../../api/user/user.api";
+
 import Search from "../app/Search";
 import { getUser, singout } from "../../features/user";
 import { signOut } from "../../api/auth/auth.api";

@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-import { useSelector } from "react-redux";
+
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, updateAvatar } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
-import { selectUser } from "../../features/userSlice";
+
 
 let skill_list = [];
 

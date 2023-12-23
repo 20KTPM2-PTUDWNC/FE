@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-import { logout, selectUser } from "../../features/userSlice";
+
 import { getProfile } from "../../api/user/user.api";
 import Search from "./Search";
 import { getUser, singout } from "../../features/user";
@@ -13,7 +13,7 @@ function Navbar() {
 
     const [keyword, setKeyword] = useState("");
     const [notiOpen, setNotiOpen] = useState(false)
-    const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
     const handleLogout = async (e) => {

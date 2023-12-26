@@ -88,6 +88,15 @@ function ShowGradeBoard({ onClose, onClick, classId }) {
     },
   ];
 
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: 'bold',
+        color: 'black',
+      },
+    },
+  };
+
   const csvData = gradeBoard && gradeBoard.gradeCompositions ? gradeBoard.gradeCompositions.reduce((acc, composition) => {
     const assignments = composition.assignments.map(assignment => ({
       "Grade Composition": composition.name,
@@ -131,7 +140,12 @@ function ShowGradeBoard({ onClose, onClick, classId }) {
                     Export to CSV
                     </CSVLink>
                 </div>
-                {gradeBoard && <DataTable columns={columns} data={gradeBoard.gradeCompositions} />}
+                {gradeBoard && 
+                  <DataTable 
+                    columns={columns} 
+                    data={gradeBoard.gradeCompositions} 
+                    customStyles={customStyles}
+                    pagination/>}
             </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { getAllClass, getAllClassById } from "../../api/class/class.api.js";
 import { getCookies, getUser } from "../../features/user";
 import Logo from "../../assets/cover.jpg";
 import Cookies from "universal-cookie";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaCheck, FaBan } from "react-icons/fa";
 import axios from "axios";
 import DataTable from "react-data-table-component"
 import { getProfile } from "../../api/user/user.api";
@@ -34,54 +34,78 @@ function ClassAdminPage() {
         {
             name: "No.",
             cell: (row, index) => <span>{index + 1}</span>,
+            width: "50px"
         },
         {
             name: "Name",
             selector: row => row.name,
-            sortable: true
+            sortable: true,
+            width: "150px"
         },
         {
             name: "Description",
             selector: row => row.subject,
-            sortable: true
+            sortable: true,
+            width: "150px"
         },
         {
             name: "Code",
             selector: row => row.code,
+            width: "80px"
         },
         {
             name: "Author",
             selector: row => row.author,
+            width: "150px"
         },
         {
             name: "Status",
             cell: row => (
                 <button
-                    style={{
-                        color: row.status === 0 ? "green" : "red",
-                        cursor: "pointer",
-                        border: "1px solid black",
-                        background: "yellow",
-                        padding: 0,
-                        textDecoration: "none",
-                        padding: "5px",
-                        borderRadius: "5px"
-                    }}
+                    className={`flex items-center rounded-lg px-2 py-2 ${
+                        row.status === 0 ? "bg-green-500" : "bg-red-500"
+                    } text-white hover:bg-opacity-80 transition`}
                     onClick={() => changeStatus(row._id)}
                 >
-                    {row.status === 0 ? "Active" : "Inactive"}
+                    {row.status === 0 ? (
+                        <>
+                            <span className="mr-1">
+                                <FaCheck />
+                            </span>
+                            Active
+                        </>
+                    ) : (
+                        <>
+                            <span className="mr-1">
+                                <FaBan />
+                            </span>
+                            Inactive
+                        </>
+                    )}
                 </button>
-            )
+            ),
+            width: "150px"
         },        
         {
             name: "Number of members",
-            cell: row => <span>{memberCounts[row._id] || 0}</span>
+            cell: row => <span>{memberCounts[row._id] || 0}</span>,
+            width: "80px"
         },
         {
             name: "List of members",
-            cell: row => <FaEye onClick={() => handleEyeClick(row._id)} />
+            cell: row => <FaEye onClick={() => handleEyeClick(row._id)} />,
+            width: "100px"
         },
     ]
+
+    const customStyles = {
+        headCells: {
+          style: {
+            fontWeight: 'bold',
+            color: 'black',
+          },
+        },
+    };
 
 
     useEffect(() => {
@@ -216,6 +240,7 @@ function ClassAdminPage() {
                         <DataTable
                             columns = {column}
                             data = {listClass}
+                            customStyles={customStyles}
                             pagination>
                         </DataTable>
                     </div>

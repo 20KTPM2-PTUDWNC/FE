@@ -230,9 +230,7 @@ function ClassDetails() {
         },
         gradeBoardTab: {
             close: function () {
-                setShowTopicOption(true)
                 setShowGradeBoard(false)
-
             }
         }
     }

@@ -120,9 +120,9 @@ function Home() {
                 </div>
                 <div className="grid grid-cols-3 grid-flow-row gap-10 text-center">
                     {listClass.map((_class, index) =>
-                        <div key={index}>
+                        <div key={index} className={`${_class.status === 1 ? 'pointer-events-none' : ''}`}>
                             <Link to={`/class/${_class._id}`}>
-                                <div className={`h-[250px] w-[300px] relative ${_class.status === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
+                                <div className={`h-[250px] w-[300px] relative ${_class.status === 1 ? 'opacity-50' : ''}`}>
                                     <img src={Logo} alt="" className="rounded-lg" />
                                     <div class="absolute rounded-lg bottom-0 px-4 py-3 bg-[#5f27cd] w-full">
                                         <h1 class="text-white font-semibold text-2xl">{_class.name.length < 20 ? _class.name : handleTitle(_class.name)}</h1>

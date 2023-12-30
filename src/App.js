@@ -6,6 +6,7 @@ import Navbar from "./components/app/Navbar";
 import Footer from "./components/app/Footer";
 import { getUser } from "./features/user";
 import NavbarAdmin from "./components/admin/Navbar.admin";
+import ChatComponent from "./components/app/ChatForm";
 
 const ScrollToTop = ({ children }) => {
     const location = useLocation();
@@ -31,7 +32,7 @@ function App() {
         <Router>
             <ScrollToTop>
                 <div
-                    className="App"
+                    className="App font-sans"
                     style={{
                         display: "flex",
                         flexDirection: "column",
@@ -47,8 +48,10 @@ function App() {
                             if (route.path !== "/") return <Route key={index} path={route.path} element={
                                 <>
                                     <Navbar />
+                                    <ChatComponent />
                                     <Page />
-                                    <Footer />
+                                    
+                                    {/* <Footer /> */}
                                 </>} />
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}

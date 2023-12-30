@@ -67,7 +67,7 @@ function Options({ onClose, data }) {
                     </button>
                 </div>
 
-                {/* Render CV list */}
+                
 
                 <div className="overflow-y-auto w-full h-64 font-sans">
                     <div className="flex flex-col">

@@ -78,3 +78,41 @@ export const exportGradeBoard = async (id) => {
         throw err;
     }
 };
+
+export const getClassGrade = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/grade/showStudentGradeByTeacher/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const showGradeById = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/grade/showGradeById/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+export const giveStudentGrade = async (data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/grade/studentGrade`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};

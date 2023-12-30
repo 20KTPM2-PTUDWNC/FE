@@ -10,10 +10,8 @@ import {
     verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import Logo from "../../assets/logo.png";
-import { useDrag, useDrop } from 'react-dnd';
+
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleMinus } from "react-icons/ci";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -34,7 +32,12 @@ import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
 import { SortableItem } from "../../components/public/SortableList";
+
+import StudentGradeForm from "../../components/app/StudentGradeForm";
+
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
+import UserGradeFrom from "../../components/app/UserGradeFrom";
+
 import InvitationTeacherByEmailForm from "../../components/app/InvitationTeacherByEmailForm";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
@@ -74,28 +77,8 @@ const Assignment = ({ assignment, isDragging, grade }) => {
     );
 };
 
-const SortableAssignment = ({ assignment, index, moveAssignment, grade }) => {
-    const [{ isDragging }, drag] = useDrag({
-        type: 'assignment',
-        item: { index },
-    });
 
-    const [, drop] = useDrop({
-        accept: 'assignment',
-        hover: (item, monitor) => {
-            if (item.index !== index) {
-                moveAssignment(item.index, index);
-                item.index = index;
-            }
-        },
-    });
 
-    return (
-        <div ref={(node) => drag(drop(node))}>
-            <Assignment assignment={assignment} isDragging={isDragging} grade={grade} />
-        </div>
-    );
-};
 
 function ClassDetails() {
     const user = getUser()
@@ -125,6 +108,7 @@ function ClassDetails() {
     const [action, setAction] = useState(0);
     const [selectedGrade, setSelectedGrade] = useState(null);
     const [showStudentGrade, setShowStudentGrade] = useState(false);
+    const [showUserGrade, setShowUserGrade] = useState(false)
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -202,9 +186,7 @@ function ClassDetails() {
         },
         assignmentTab: {
             close: function () {
-
                 setShowAddAssigment(false)
-
             }
         },
         ivitationEmail: {
@@ -230,6 +212,12 @@ function ClassDetails() {
                 setShowTopicOption(true)
             }
         },
+
+        studentGrade: {
+            close: function () {
+                setShowStudentGrade(false)
+            }
+        },
         gradeBoardTab: {
             close: function () {
                 setShowGradeBoard(false)
@@ -239,6 +227,11 @@ function ClassDetails() {
             close: function () {
                 setShowInvitationTeacherByEmailForm(false)
 
+            }
+        },
+        userGrade: {
+            close: function () {
+                setShowUserGrade(false)
             }
         }
     }
@@ -456,14 +449,26 @@ function ClassDetails() {
                                         >
                                             <p>Member List</p>
                                         </button>
-                                        <div className="ml-5 mt-2">
-                                            <button
-                                                className="font-bold hover:opacity-90 rounded duration-200"
-                                                onClick={() => setShowStudentGrade(true)}
-                                            >
-                                                <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
-                                            </button>
-                                        </div>
+                                        {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) &&
+                                            <div className="ml-5 mt-2">
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowStudentGrade(true)}
+                                                >
+                                                    <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                            </div>
+                                        }
+                                        {user && memberList && memberList.students && memberList.students.some(teacher => teacher._id === user._id) &&
+                                            <div className="ml-5 mt-2">
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowUserGrade(true)}
+                                                >
+                                                    <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                            </div>
+                                        }
                                     </>
                                     )}
                                     {tab === 2 && (<>
@@ -489,12 +494,12 @@ function ClassDetails() {
                                         <div className="ml-5 mt-2">
                                             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
                                                 <>
-                                                <button
-                                                    className="font-bold hover:opacity-90 rounded duration-200"
-                                                    onClick={() => setShowAssignmentOption(true)}
-                                                >
-                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                                </button>
+                                                    <button
+                                                        className="font-bold hover:opacity-90 rounded duration-200"
+                                                        onClick={() => setShowAssignmentOption(true)}
+                                                    >
+                                                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                    </button>
                                                 </>
                                             )}
                                         </div>
@@ -522,14 +527,14 @@ function ClassDetails() {
                                         </button>
                                         <div className="ml-5 mt-2">
                                             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
-                                            <>
-                                                <button
-                                                    className="font-bold hover:opacity-90 rounded duration-200"
-                                                    onClick={() => setShowMemberListToption(true)}
-                                                >
-                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                                </button>
-                                            </>
+                                                <>
+                                                    <button
+                                                        className="font-bold hover:opacity-90 rounded duration-200"
+                                                        onClick={() => setShowMemberListToption(true)}
+                                                    >
+                                                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                    </button>
+                                                </>
                                             )}
                                         </div>
                                     </>
@@ -552,11 +557,11 @@ function ClassDetails() {
                                 />
                             </div>
                             <div className="flex justify-center pt-4 pb-2">
-                                <Link to={`/company_profile/${job?.userId?._id}`}>
-                                    <p className="text-3xl text-center text-[#5f27cd] ">
-                                        {classDetail.name}
-                                    </p>
-                                </Link>
+
+                                <p className="text-3xl text-center text-[#5f27cd] ">
+                                    {classDetail.name}
+                                </p>
+
                             </div>
                             <div className="flex justify-center mt-4 p-1 border-2 border-[#5f27cd] rounded-lg">
 
@@ -595,11 +600,11 @@ function ClassDetails() {
                                     <div>
                                         {gradeList.map((grade) =>
                                             <div key={grade._id}>
-                                                <Link to="/class/classId">
-                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
-                                                    </div>
-                                                </Link>
+
+                                                <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                    <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
+                                                </div>
+
                                             </div>
                                         )}
                                     </div>
@@ -696,7 +701,9 @@ function ClassDetails() {
                                                     >
 
                                                         {assignmentList.map((assignment) =>
-                                                            <SortableItem key={assignment._id} assignment={assignment} grade={grade} />
+                                                            <div className="transition-all transition-300">
+                                                                <SortableItem key={assignment._id} assignment={assignment} grade={grade} classId={classId} />
+                                                            </div>
                                                         )}
 
                                                     </SortableContext>
@@ -804,11 +811,26 @@ function ClassDetails() {
                         onClose={closeTab.exportStudentList.close}
                         classId={classId}
                     />}
+
+                {showStudentGrade &&
+                    <StudentGradeForm
+                        onClose={closeTab.studentGrade.close}
+                        classId={classId}
+                    />
+                }
+
                 {_showGradeBoard &&
                     <ShowGradeBoard
                         onClose={closeTab.gradeBoardTab.close}
                         onClick={() => setAction(1 - action)}
                         classId={classId}
+                    />}
+
+                {showUserGrade &&
+                    <UserGradeFrom
+                        onClose={closeTab.userGrade.close}
+                        onClick={() => setAction(1 - action)}
+                        userId={user._id}
                     />}
 
             </div>

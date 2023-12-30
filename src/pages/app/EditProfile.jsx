@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
-import { getProfile, updateProfile, updateAvatar } from "../../api/user/user.api";
+import { getProfile, updateProfile, updateAvatar, updateId } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
 
 
@@ -32,7 +32,7 @@ function EditProfile() {
     }, [])
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
 
-
+    const [studentId, setStudentId] = useState('')
     const [avatar, setAvatar] = useState(null);
     const [name, setName] = useState("");
     const [experience, setExperience] = useState([]);
@@ -89,38 +89,44 @@ function EditProfile() {
             address,
             phone,
         };
-
-        const Avatar = new FormData();
-        if (avatar) {
-            Avatar.append("user-avatar", avatar)
+        const studentIdMapping = {
+            studentId,
+            userId: user._id
         }
-        console.log(avatar)
-        // if (typeof experience === "string") {
-        //     data.experience = experience.split("\n");
-        // }
+        if (studentId === 0 || studentId.trim() === "0")
+            return setError("StudentId is not accepted");
+            // const Avatar = new FormData();
+            // if (avatar) {
+            //     Avatar.append("user-avatar", avatar)
+            // }
+            // console.log(avatar)
+            // if (typeof experience === "string") {
+            //     data.experience = experience.split("\n");
+            // }
 
-        // if (typeof academicLevel === "string") {
-        //     data.academicLevel = academicLevel.split("\n");
-        // }
+            // if (typeof academicLevel === "string") {
+            //     data.academicLevel = academicLevel.split("\n");
+            // }
 
-        // if (
-        //     !data.avatar ||
-        //     !data.name ||
-        //     !data.address ||
-        //     !data.phone ||
-        //     !data.description ||
-        //     data.skills.length === 0 ||
-        //     data.experience.length === 0
-        // ) {
-        //     return setError("Please fill all fields!");
-        // }
+            // if (
+            //     !data.avatar ||
+            //     !data.name ||
+            //     !data.address ||
+            //     !data.phone ||
+            //     !data.description ||
+            //     data.skills.length === 0 ||
+            //     data.experience.length === 0
+            // ) {
+            //     return setError("Please fill all fields!");
+            // }
 
-        setError("");
+            setError("");
 
         try {
             await updateProfile(user?._id, data);
-            if (avatar)
-                await updateAvatar(user?._id, Avatar)
+            await updateId(studentIdMapping)
+            // if (avatar)
+            //     await updateAvatar(user?._id, Avatar)
             alert("Update profile successfully!");
             skill_list = []
             navigate(`/user/${user?._id}`);
@@ -185,17 +191,16 @@ function EditProfile() {
                                     />
                                 </div>
 
-                                {/* <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Avatar</p>
+                                <div className="w-6/12">
+                                    <p className="text-[#5f27cd] font-semibold mb-1">StudentId</p>
                                     <input
-                                        type="file"
-                                        name="avatar"
-                                        id="avatar"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
+                                        type="text"
 
-                                        onChange={handleAvatar}
+                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
+                                        value={studentId}
+                                        onChange={(e) => setStudentId(e.target.value)}
                                     />
-                                </div> */}
+                                </div>
                             </div>
 
 

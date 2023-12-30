@@ -56,7 +56,7 @@ const publicRoutes = [
     { path: "/user/edit", component: EditProfile },
     { path: "/class/:classId", component: ClassDetails },
 
-    { path: "/class/assignment/:assignmentId", component: AssignmentDetails },
+    { path: "/class/:classId/:assignmentId", component: AssignmentDetails },
     { path: "/verifyAccount/:token", component: SignInSuccess },
 
     // { path: "/notification", component: Notification },
@@ -65,16 +65,15 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: "/admin", component: AdminPage },
+    { path: "/admin", component: AccountsManage },
 
-    { path: "/admin/account", component: AdminPage },
     { path: "/admin/class", component: ClassAdminPage },
     { path: "/admin/class/member-details/:classId", component: MemberClassAdminPage },
 
     { path: "/admin/account/banAccount", component: AccountsManage },
     { path: "/admin/account/mapStudentID", component: MapStudentID },
-    { path: "/admin/class", component: AdminPage },
-    { path: "/admin/CSKH", component: CSKH }
+    // { path: "/admin/class", component: AdminPage },
+    { path: "/admin/CSKH/:customerId", component: CSKH }
 
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

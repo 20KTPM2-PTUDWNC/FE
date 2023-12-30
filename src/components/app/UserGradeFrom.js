@@ -10,7 +10,7 @@ import { getCookies, getUser } from "../../features/user";
 import { addAssignment, showAssignmentGrade } from "../../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 import { exportStudentList } from "../../api/class/class.api";
-import { getClassGrade } from "../../api/grade/grade.api";
+import { getClassGrade, showGradeById } from "../../api/grade/grade.api";
 const dataEx = [
     {
         "gradeCompositionName": "Excercise",
@@ -28,7 +28,7 @@ const dataEx = [
         "grade": 8
     }
 ]
-function StudentGradeForm({ onClose, onClick, classId }) {
+function UserGradeFrom({ onClose, onClick, userId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -54,9 +54,9 @@ function StudentGradeForm({ onClose, onClick, classId }) {
     }, []);
     const getStudentList = async () => {
         try {
-            const response = await getClassGrade(classId);
-            setData(response.data)
-            console.log(response)
+            const res = await showGradeById(userId);
+            setData(res.data)
+            console.log(res.data)
             // const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
             // setHeader(Array.from(headerSet))
             // setBody(data.map(obj => Object.values(obj)))
@@ -139,21 +139,20 @@ function StudentGradeForm({ onClose, onClick, classId }) {
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr className="bg-gray-200">
-                                    <th className="px-6 py-3 text-center border">User ID</th>
-                                    <th className="px-6 py-3 text-center border">Name</th>
-                                    <th className="px-6 py-3 text-center border">Student ID</th>
-                                    <th className="px-6 py-3 text-center border">Assignments</th>
-                                    <th className="px-6 py-3 text-center border">Total</th>
+                                    <th className="px-6 py-3 text-center border">GradeComposition Name</th>
+                                    <th className="px-6 py-3 text-center border">Assignment Name</th>
+                                    <th className="px-6 py-3 text-center border">Grade</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map((item, index) => (
                                     <tr key={index}
                                         className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}>
-                                        <td className="px-6 py-3 text-center border">{item.userId._id}</td>
-                                        <td className="px-6 py-3 text-center border">{item.userId.name}</td>
-                                        <td className="px-6 py-3 text-center border">{item.userId.studentId}</td>
-                                        <td className="px-6 py-3 text-center border">
+                                        <td className="px-6 py-3 text-center border">{item.gradeCompositionName}</td>
+                                        <td className="px-6 py-3 text-center border">{item.assignmentName}</td>
+                                        <td className="px-6 py-3 text-center border">{item.grade}</td>
+                                        {/* <td className="px-6 py-3 text-center border">
                                             <ul className="list-disc list-inside">
                                                 {item.assignments.map((assignment, i) => (
                                                     <li key={i}>
@@ -162,7 +161,7 @@ function StudentGradeForm({ onClose, onClick, classId }) {
                                                 ))}
                                             </ul>
                                         </td>
-                                        <td className="border p-2">{item.total}</td>
+                                        <td className="border p-2">{item.total}</td> */}
                                     </tr>
                                 ))}
                             </tbody>
@@ -184,4 +183,4 @@ function StudentGradeForm({ onClose, onClick, classId }) {
     );
 }
 
-export default StudentGradeForm;
+export default UserGradeFrom;

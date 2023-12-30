@@ -34,7 +34,7 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
     }, []);
     const getStudentList = async () => {
         try {
-            const response = await showMemberList(classId);
+            const response = await exportStudentList(classId);
             const data = [
                 {
                     "studentId": "12345",
@@ -50,7 +50,7 @@ function ExportStudentListForm({ onClose, onClick, classId }) {
             ]
             console.log("list student: ", response.data)
             // setListStudent(response.data.students);
-            setListStudent(response.data.students)
+            setListStudent(response.data)
         }
         catch (err) {
             console.log(err)

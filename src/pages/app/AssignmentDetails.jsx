@@ -12,6 +12,7 @@ import Options from "../../components/app/Options.jsx";
 import ShowGrade from "../../components/app/AssignmentGradeForm";
 import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
+import { showMemberList } from "../../api/class/class.api";
 
 function splitStr(a) {
     let re = "";
@@ -45,6 +46,7 @@ const StudentSearch = ({ data, setStudentId }) => {
     const [showId, setShowId] = useState(false)
     const [filteredStudentIds, setFilteredStudentIds] = useState([]);
     const searchContainerRef = useRef(null);
+
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
         setSearchTerm(inputValue);
@@ -148,6 +150,7 @@ function AssignmentDetails() {
     const id = user._id
     const params = useParams()
     const assignmentId = params.assignmentId
+    const classId = params.classId
     const [openReview, setOpenReview] = useState(false)
     useEffect(() => {
         if (!user)
@@ -166,6 +169,7 @@ function AssignmentDetails() {
     const [showGrade, setShowGrade] = useState(false)
     const [showReviews, setShowReviews] = useState(false)
     const [review, setReview] = useState(null)
+    const [memberList, setMemberList] = useState([])
     const studentReviews = [
         {
             "_id": "6575bad10d638bbf98c96b5c",
@@ -328,6 +332,22 @@ function AssignmentDetails() {
             }
         },
     }
+    async function getMemberList(classId) {
+        try {
+            const response = await showMemberList(classId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setMemberList(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    }
+    useEffect(() => {
+        getMemberList(classId)
+    }, [])
     const [studentIdComment, setStudentIdComment] = useState(studentReviews[0].studentId)
     useEffect(() => {
         const review = studentReviews.find((item) => item.studentId === parseInt(studentIdComment))
@@ -385,12 +405,14 @@ function AssignmentDetails() {
                     >
                         <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
                     </button>
-                    <button
-                        className="ml-5 font-bold hover:opacity-90 rounded duration-200"
-                        onClick={() => setShowGrade(true)}
-                    >
-                        <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
-                    </button>
+                    {user && memberList && memberList.students && memberList.teachers.some(teacher => teacher._id === user._id) &&
+                        <button
+                            className="ml-5 font-bold hover:opacity-90 rounded duration-200"
+                            onClick={() => setShowGrade(true)}
+                        >
+                            <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                        </button>
+                    }
                 </div>
 
                 {error && (
@@ -425,9 +447,11 @@ function AssignmentDetails() {
 
 
             </div>
-            <div className="absolute top-[110px] right-[20px] h-full">
-                <StudentGrade onClick={() => setOpenReview(!openReview)} />
-            </div>
+            {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
+                <div className="absolute top-[110px] right-[20px] h-full">
+                    <StudentGrade onClick={() => setOpenReview(!openReview)} />
+                </div>
+            }
             {showAssignmentOption &&
                 <Options
                     data={assignmentOption}

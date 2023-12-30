@@ -11,7 +11,6 @@ import Cookies from "universal-cookie";
 function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
-    const [content, setContent] = useState("");
     const [error, setError] = useState("");
     const [images, setImages] = useState([]);
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo.png";
-
+// import Logo from "../../assets/logo.png";
+import Logo from "../../assets/idol.jpg"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
@@ -69,9 +69,9 @@ function Profile() {
                                 <div className="mb-2 text-blueGray-600 mt-10">
                                     <i className="fas fa-briefcase mr-2 text-lg "></i>
                                     <span className="font-semibold leading-normal mb-2 mb-2">
-                                        StudentID: 
+                                        StudentID:
                                     </span>{" "}
-                                    {profile.studentId?profile.studentId:"None"}
+                                    {profile.studentId ? profile.studentId : "None"}
                                 </div>
                                 <div className="mb-2 text-blueGray-600">
                                     <i className="fas fa-briefcase mr-2 text-lg "></i>

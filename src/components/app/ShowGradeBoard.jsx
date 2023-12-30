@@ -104,49 +104,50 @@ function ShowGradeBoard({ onClose, onClick, classId }) {
       "Assignment Name": assignment.name,
       "Scale": assignment.scale,
     }));
-  
+
     return acc.concat(assignments);
   }, []) : [];
 
   return (
     <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
-        <div className="w-[1000px] h-[500px] bg-white rounded-lg p-8 max-w-[1100px]">
-            <div className="relative flex justify-between items-center">
-                <div className="flex justify-between items-center mb-4 w-full">
-                    <span className="text-2xl text-[#5f27cd] font-bold">Grade Board</span>
-                </div>
+      <div className="w-[1000px] h-[500px] bg-white rounded-lg p-8 max-w-[1100px]">
+        <div className="relative flex justify-between items-center">
+          <div className="flex justify-between items-center mb-4 w-full">
+            <span className="text-2xl text-[#5f27cd] font-bold">Grade Board</span>
+          </div>
 
-                <button
-                    className="absolute top-[-16px] right-[-16px] bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
-                    onClick={onClose}
-                >
-                    X
-                </button>
-            </div>
+          <button
+            className="absolute top-[-16px] right-[-16px] bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
+            onClick={onClose}
+          >
+            X
+          </button>
+        </div>
 
-            <div className="overflow-y-auto w-full h-[400px] font-sans">
-                <div className="mb-3">
-                    <CSVLink
-                    data={csvData}
-                    headers={[
-                        { label: "Grade Composition", key: "Grade Composition" },
-                        { label: "Grade Scale", key: "Grade Scale" },
-                        { label: "Assignment Name", key: "Assignment Name" },
-                        { label: "Scale", key: "Scale" },
-                    ]}
-                    filename={`grade_board_${classId}.csv`}
-                    className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                    >
-                    Export to CSV
-                    </CSVLink>
-                </div>
-                {gradeBoard && 
-                  <DataTable 
-                    columns={columns} 
-                    data={gradeBoard.gradeCompositions} 
-                    customStyles={customStyles}
-                    pagination/>}
-            </div>
+        <div className="overflow-y-auto w-full h-[400px] font-sans">
+
+          {gradeBoard &&
+            <DataTable
+              columns={columns}
+              data={gradeBoard.gradeCompositions}
+              customStyles={customStyles}
+              pagination />}
+          <div className="mb-3">
+            <CSVLink
+              data={csvData}
+              headers={[
+                { label: "Grade Composition", key: "Grade Composition" },
+                { label: "Grade Scale", key: "Grade Scale" },
+                { label: "Assignment Name", key: "Assignment Name" },
+                { label: "Scale", key: "Scale" },
+              ]}
+              filename={`grade_board_${classId}.csv`}
+              className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+            >
+              Export to CSV
+            </CSVLink>
+          </div>
+        </div>
       </div>
     </div>
   );

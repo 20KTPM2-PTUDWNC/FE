@@ -67,3 +67,16 @@ export const updateId = async (data) => {
         throw error;
     }
 };
+
+export const getAllUser = async () => {
+
+    try {
+        return await axiosPrivate.get(`/v1/user`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

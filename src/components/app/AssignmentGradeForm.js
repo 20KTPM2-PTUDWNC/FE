@@ -11,7 +11,24 @@ import { addAssignment, showAssignmentGrade } from "../../api/assignment/assignm
 import Cookies from "universal-cookie";
 import { exportStudentList } from "../../api/class/class.api";
 import { CSVLink } from "react-csv";
-
+import { giveStudentGrade } from "../../api/grade/grade.api";
+const studentEx = [
+    {
+        "studentId": null,
+        "_id": "6564bba8eeb5819d77c4d119",
+        "userFlag": 1,
+        "email": "tintombolon@gmail.com",
+        "password": null,
+        "phone": "123",
+        "address": "123",
+        "name": "A",
+        "deleteAt": null,
+        "verified": true,
+        "createdAt": "2023-11-27T15:54:16.110Z",
+        "updatedAt": "2023-12-07T02:02:24.445Z",
+        "__v": 0
+    }
+]
 function ShowGrade({ onClose, onClick, assignmentId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
@@ -38,7 +55,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
     }, []);
     const getStudentList = async () => {
         try {
-            // const response = await showAssignmentGrade(assignmentId);
+            // const res = await showAssignmentGrade(assignmentId);
             const data = [
                 {
                     "studentId": "12345",
@@ -52,7 +69,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
                     "grade": 9
                 },
             ]
-
+            //const data = res.data
             const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
             setHeader(Array.from(headerSet))
             setBody(data.map(obj => Object.values(obj)))
@@ -95,15 +112,15 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
     //     }
     // };
 
-    useEffect(() => {
-
-        // loadImg();
-
-
-        return () => {
-            console.log("useEffect done");
+    const handleStudentGrade = async () => {
+        const studentData = {
+            "assignmentId": assignmentId,
+            "mark": "0",
+            "userId": studentEx._id,
+            "grade": "9"
         }
-    }, [])
+        await giveStudentGrade(studentData);
+    }
     // async function loadImg() {
 
     //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
@@ -183,7 +200,7 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
                                     <td className="px-6 py-4 text-center border">
                                         <button
                                             className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => alert('abc')}
+                                            onClick={() => handleStudentGrade()}
                                         >
                                             Edit Grade
                                         </button>

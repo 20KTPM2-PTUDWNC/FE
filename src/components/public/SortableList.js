@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Link } from "react-router-dom";
 
-export function SortableItem({ assignment, grade }) {
+export function SortableItem({ assignment, grade, classId }) {
 
     const {
         attributes,
@@ -19,31 +19,31 @@ export function SortableItem({ assignment, grade }) {
     };
 
     return (
-        
-            <div
-                ref={setNodeRef}
-                style={dragStyles}
-                draggable={true}
-                {...attributes}
-                {...listeners}
 
-            >
+        <div
+            ref={setNodeRef}
+            style={dragStyles}
+            draggable={true}
+            {...attributes}
+            {...listeners}
 
-                {assignment.gradeId === grade._id && (
+        >
 
-                    <Link to={`/class/assignment/${assignment._id}`}
-                        className="flex align-center border-2 hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow"
-                    >
+            {assignment.gradeId === grade._id && (
 
-
-                        <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
+                <Link to={`/class/${classId}/${assignment._id}`}
+                    className="flex align-center border-2 hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow"
+                >
 
 
-                    </Link>
+                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
 
-                )}
-            </div>
 
-        
+                </Link>
+
+            )}
+        </div>
+
+
     )
 }

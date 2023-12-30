@@ -102,66 +102,13 @@ function AccountsManage() {
     // }, [isAddClass]);
 
     return (
-        <>
-            {/* <header className="fixed right-0 top-0 left-60 bg-yellow-50 py-3 px-4 h-16">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <button type="button" className="flex items-center focus:outline-none rounded-lg text-gray-600 hover:text-yellow-600 focus:text-yellow-600 font-semibold p-2 border border-transparent hover:border-yellow-300 focus:border-yellow-300 transition">
-                                    <span className="inline-flex items-center justify-center w-6 h-6 text-gray-600 text-xs rounded bg-white transition mr-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                                        </svg>
-                                    </span>
-                                    <span className="text-sm">Archive</span>
-                                </button>
-                            </div>
-                            <div className="text-lg font-bold">Today's Plan</div>
-                            <div>
-                                <button type="button" className="flex items-center focus:outline-none rounded-lg text-gray-600 hover:text-yellow-600 focus:text-yellow-600 font-semibold p-2 border border-transparent hover:border-yellow-300 focus:border-yellow-300 transition">
-                                    <span className="text-sm">This week</span>
-                                    <span className="inline-flex items-center justify-center w-6 h-6 text-gray-600 text-xs rounded bg-white transition ml-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-chevron-right" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                        </svg>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header> */}
-
-
-
+        <>           
             <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-4xl mx-auto">
                         <div className="bg-white max-h-[600px] rounded-3xl p-8 mb-5">
                             <h1 className="text-3xl font-bold mb-10">Account Management</h1>
-                            {/* <div className="flex items-center justify-between">
-                                <div className="flex items-stretch">
-                                    <div className="text-gray-400 text-xs">Members<br />connected</div>
-                                    <div className="h-100 border-l mx-4"></div>
-                                    <div className="flex flex-nowrap -space-x-3">
-                                        <div className="h-9 w-9">
-                                            <img className="object-cover w-full h-full rounded-full" src="https://ui-avatars.com/api/?background=random" />
-                                        </div>
-                                        <div className="h-9 w-9">
-                                            <img className="object-cover w-full h-full rounded-full" src="https://ui-avatars.com/api/?background=random" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-x-2">
-                                    <button type="button" className="inline-flex items-center justify-center h-9 px-3 rounded-xl border hover:border-gray-400 text-gray-800 hover:text-gray-900 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
-                                            <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z" />
-                                        </svg>
-                                    </button>
-                                    <button type="button" className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-gray-900 text-gray-300 hover:text-white text-sm font-semibold transition">
-                                        Open
-                                    </button>
-                                </div>
-                            </div> */}
+
 
                             <hr className="mb-10" />
 

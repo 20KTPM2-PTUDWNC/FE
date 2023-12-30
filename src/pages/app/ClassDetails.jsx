@@ -36,6 +36,7 @@ import { SortableItem } from "../../components/public/SortableList";
 import StudentGradeForm from "../../components/app/StudentGradeForm";
 
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
+import UserGradeFrom from "../../components/app/UserGradeFrom";
 
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
@@ -105,6 +106,7 @@ function ClassDetails() {
     const [action, setAction] = useState(0);
     const [selectedGrade, setSelectedGrade] = useState(null);
     const [showStudentGrade, setShowStudentGrade] = useState(false);
+    const [showUserGrade, setShowUserGrade] = useState(false)
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -217,6 +219,11 @@ function ClassDetails() {
         gradeBoardTab: {
             close: function () {
                 setShowGradeBoard(false)
+            }
+        },
+        userGrade: {
+            close: function () {
+                setShowUserGrade(false)
             }
         }
     }
@@ -446,7 +453,7 @@ function ClassDetails() {
                                             <div className="ml-5 mt-2">
                                                 <button
                                                     className="font-bold hover:opacity-90 rounded duration-200"
-                                                    onClick={() => setShowStudentGrade(true)}
+                                                    onClick={() => setShowUserGrade(true)}
                                                 >
                                                     <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
                                                 </button>
@@ -540,11 +547,11 @@ function ClassDetails() {
                                 />
                             </div>
                             <div className="flex justify-center pt-4 pb-2">
-                                <Link to={`/company_profile/${job?.userId?._id}`}>
-                                    <p className="text-3xl text-center text-[#5f27cd] ">
-                                        {classDetail.name}
-                                    </p>
-                                </Link>
+
+                                <p className="text-3xl text-center text-[#5f27cd] ">
+                                    {classDetail.name}
+                                </p>
+
                             </div>
                             <div className="flex justify-center mt-4 p-2 border-2 border-[#5f27cd] rounded-lg">
 
@@ -572,11 +579,11 @@ function ClassDetails() {
                                     <div>
                                         {gradeList.map((grade) =>
                                             <div key={grade._id}>
-                                                <Link to="/class/classId">
-                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
-                                                    </div>
-                                                </Link>
+
+                                                <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
+                                                    <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
+                                                </div>
+
                                             </div>
                                         )}
                                     </div>
@@ -674,7 +681,7 @@ function ClassDetails() {
 
                                                         {assignmentList.map((assignment) =>
                                                             <div className="transition-all transition-300">
-                                                                <SortableItem key={assignment._id} assignment={assignment} grade={grade} />
+                                                                <SortableItem key={assignment._id} assignment={assignment} grade={grade} classId={classId} />
                                                             </div>
                                                         )}
 
@@ -795,6 +802,13 @@ function ClassDetails() {
                         onClose={closeTab.gradeBoardTab.close}
                         onClick={() => setAction(1 - action)}
                         classId={classId}
+                    />}
+
+                {showUserGrade &&
+                    <UserGradeFrom
+                        onClose={closeTab.userGrade.close}
+                        onClick={() => setAction(1 - action)}
+                        userId={user._id}
                     />}
 
             </div>

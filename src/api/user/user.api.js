@@ -20,9 +20,9 @@ export const updateAvatar = async (id, data) => {
 
             headers: {
                 'Content-Type': 'multipart/form-data',
-               
+
                 "Authorization": getCookies()
-           
+
             },
 
         });
@@ -47,6 +47,18 @@ export const getAvatar = async (id) => {
 
     try {
         return await axiosPrivate.get(`/v1/user/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+export const updateId = async (data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/user/mappingStudentId`, data, {
             headers: {
                 "Authorization": getCookies()
             }

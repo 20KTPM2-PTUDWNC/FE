@@ -131,57 +131,65 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
 
 
                 <div className="relative overflow-y-auto w-full h-full font-sans">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                {header.map((col, index) =>
-                                    <th scope="col" key={index} className="px-6 py-3 text-center">
+                                {header.map((col, index) => (
+                                    <th scope="col" key={index} className="px-6 py-3 text-center border">
                                         {col}
                                     </th>
-                                )}
-                                <th scope="col" className="px-6 py-3 text-center">
+                                ))}
+                                <th scope="col" className="px-6 py-3 text-center border">
                                     Edit Grade
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {body.map((row, index) =>
+                            {body.map((row, index) => (
                                 <tr
                                     key={index}
-                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                                    className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}
                                 >
-                                    {/* {row.map((data, i) =>
-                                        <td key={i} className="px-6 py-4">
-                                            {data}
-                                        </td>
-                                    )} */}
-                                    {row.map((data, i) =>
-                                        <td key={i} className="px-6 py-4 text-center">
-                                            {i === row.length - 1 ?
+                                    {row.map((data, i) => (
+                                        <td
+                                            key={i}
+                                            className={`px-6 py-4 text-center border ${i === row.length - 1 ? 'border-r-2' : ''}`}
+                                        >
+                                            {i === row.length - 1 ? (
                                                 <input
                                                     type="number"
                                                     value={editPos === index ? editedGrade : data}
                                                     onChange={(e) => setEditedGrade(e.target.value)}
                                                     onClick={() => setEditPos(index)}
                                                     onBlur={() => {
-                                                        setEditPos(-1)
-                                                        setEditedGrade(data)
+                                                        setEditPos(-1);
+                                                        setEditedGrade(data);
                                                     }}
-                                                    className="text-center py-2 border-b-2 border-purple-500 bg-none "
+                                                    className="text-center py-2 bg-none"
                                                 />
-                                                : data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
+                                            ) : data ? (
+                                                data === true ? (
+                                                    'True'
+                                                ) : data === false ? (
+                                                    'False'
+                                                ) : (
+                                                    data
+                                                )
+                                            ) : (
+                                                'None'
+                                            )}
                                         </td>
-                                    )}
-                                    <td className="px-6 py-4 text-center">
+                                    ))}
+                                    <td className="px-6 py-4 text-center border">
                                         <button
                                             className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => alert("abc")}
+                                            onClick={() => alert('abc')}
                                         >
                                             Edit Grade
                                         </button>
                                     </td>
                                 </tr>
-                            )}
+                            ))}
                         </tbody>
                     </table>
                     <div className="mt-10 flex flex-row">

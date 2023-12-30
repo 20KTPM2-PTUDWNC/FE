@@ -10,15 +10,12 @@ import {
     verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import Logo from "../../assets/logo.png";
-import { useDrag, useDrop } from 'react-dnd';
+
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleMinus } from "react-icons/ci";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import Options from "../../components/app/Options.jsx";
 
 import { formatDate, formatDateLeft } from "../../utils/formatDate.js";
@@ -36,6 +33,7 @@ import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
 import { SortableItem } from "../../components/public/SortableList";
+import StudentGradeForm from "../../components/app/StudentGradeForm";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -74,28 +72,8 @@ const Assignment = ({ assignment, isDragging, grade }) => {
     );
 };
 
-const SortableAssignment = ({ assignment, index, moveAssignment, grade }) => {
-    const [{ isDragging }, drag] = useDrag({
-        type: 'assignment',
-        item: { index },
-    });
 
-    const [, drop] = useDrop({
-        accept: 'assignment',
-        hover: (item, monitor) => {
-            if (item.index !== index) {
-                moveAssignment(item.index, index);
-                item.index = index;
-            }
-        },
-    });
 
-    return (
-        <div ref={(node) => drag(drop(node))}>
-            <Assignment assignment={assignment} isDragging={isDragging} grade={grade} />
-        </div>
-    );
-};
 
 function ClassDetails() {
     const user = getUser()
@@ -202,9 +180,7 @@ function ClassDetails() {
         },
         assignmentTab: {
             close: function () {
-
                 setShowAddAssigment(false)
-
             }
         },
         ivitationEmail: {
@@ -228,6 +204,11 @@ function ClassDetails() {
             close: function () {
                 setShowEditGradeComposition(false)
                 setShowTopicOption(true)
+            }
+        },
+        studentGrade: {
+            close: function () {
+                setShowStudentGrade(false)
             }
         }
     }
@@ -441,14 +422,26 @@ function ClassDetails() {
                                         >
                                             <p>Member List</p>
                                         </button>
-                                        <div className="ml-5 mt-2">
-                                            <button
-                                                className="font-bold hover:opacity-90 rounded duration-200"
-                                                onClick={() => setShowStudentGrade(true)}
-                                            >
-                                                <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
-                                            </button>
-                                        </div>
+                                        {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) &&
+                                            <div className="ml-5 mt-2">
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowStudentGrade(true)}
+                                                >
+                                                    <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                            </div>
+                                        }
+                                        {user && memberList && memberList.students && memberList.students.some(teacher => teacher._id === user._id) &&
+                                            <div className="ml-5 mt-2">
+                                                <button
+                                                    className="font-bold hover:opacity-90 rounded duration-200"
+                                                    onClick={() => setShowStudentGrade(true)}
+                                                >
+                                                    <GrScorecard className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                </button>
+                                            </div>
+                                        }
                                     </>
                                     )}
                                     {tab === 2 && (<>
@@ -474,12 +467,12 @@ function ClassDetails() {
                                         <div className="ml-5 mt-2">
                                             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
                                                 <>
-                                                <button
-                                                    className="font-bold hover:opacity-90 rounded duration-200"
-                                                    onClick={() => setShowAssignmentOption(true)}
-                                                >
-                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                                </button>
+                                                    <button
+                                                        className="font-bold hover:opacity-90 rounded duration-200"
+                                                        onClick={() => setShowAssignmentOption(true)}
+                                                    >
+                                                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                    </button>
                                                 </>
                                             )}
                                         </div>
@@ -507,14 +500,14 @@ function ClassDetails() {
                                         </button>
                                         <div className="ml-5 mt-2">
                                             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && (
-                                            <>
-                                                <button
-                                                    className="font-bold hover:opacity-90 rounded duration-200"
-                                                    onClick={() => setShowMemberListToption(true)}
-                                                >
-                                                    <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                                                </button>
-                                            </>
+                                                <>
+                                                    <button
+                                                        className="font-bold hover:opacity-90 rounded duration-200"
+                                                        onClick={() => setShowMemberListToption(true)}
+                                                    >
+                                                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                                                    </button>
+                                                </>
                                             )}
                                         </div>
                                     </>
@@ -779,6 +772,12 @@ function ClassDetails() {
                         onClose={closeTab.exportStudentList.close}
                         classId={classId}
                     />}
+                {showStudentGrade &&
+                    <StudentGradeForm
+                        onClose={closeTab.studentGrade.close}
+                        classId={classId}
+                    />
+                }
 
             </div>
         );

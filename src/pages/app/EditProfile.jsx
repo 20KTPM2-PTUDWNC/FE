@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
-import { getProfile, updateProfile, updateAvatar } from "../../api/user/user.api";
+import { getProfile, updateProfile, updateAvatar, updateId } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
 
 
@@ -32,7 +32,7 @@ function EditProfile() {
     }, [])
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
 
-
+    const [studentId, setStudentId] = useState('')
     const [avatar, setAvatar] = useState(null);
     const [name, setName] = useState("");
     const [experience, setExperience] = useState([]);
@@ -89,7 +89,10 @@ function EditProfile() {
             address,
             phone,
         };
-
+        const studentIdMapping = {
+            studentId,
+            userId: user._id
+        }
         const Avatar = new FormData();
         if (avatar) {
             Avatar.append("user-avatar", avatar)
@@ -119,8 +122,9 @@ function EditProfile() {
 
         try {
             await updateProfile(user?._id, data);
-            if (avatar)
-                await updateAvatar(user?._id, Avatar)
+            await updateId(studentIdMapping)
+            // if (avatar)
+            //     await updateAvatar(user?._id, Avatar)
             alert("Update profile successfully!");
             skill_list = []
             navigate(`/user/${user?._id}`);
@@ -185,17 +189,16 @@ function EditProfile() {
                                     />
                                 </div>
 
-                                {/* <div className="w-6/12">
-                                    <p className="font-semibold mb-1">Avatar</p>
+                                <div className="w-6/12">
+                                    <p className="text-[#5f27cd] font-semibold mb-1">StudentId</p>
                                     <input
-                                        type="file"
-                                        name="avatar"
-                                        id="avatar"
-                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
+                                        type="text"
 
-                                        onChange={handleAvatar}
+                                        className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
+                                        value={studentId}
+                                        onChange={(e) => setStudentId(e.target.value)}
                                     />
-                                </div> */}
+                                </div>
                             </div>
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+
 import { Link, useNavigate, useParams, use } from "react-router-dom";
 import { activateAcc } from "../../api/auth/auth.api";
 import { getProfile } from "../../api/user/user.api";

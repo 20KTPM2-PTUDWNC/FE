@@ -36,6 +36,7 @@ import MemberClassAdminPage from "../pages/admin/MemberOfClass";
 
 import AccountsManage from "../pages/admin/AccountsManage";
 import MapStudentID from "../pages/admin/MapStudentID";
+import CSKH from "../pages/admin/CSKH";
 
 
 
@@ -72,8 +73,8 @@ const privateRoutes = [
 
     { path: "/admin/account/banAccount", component: AccountsManage },
     { path: "/admin/account/mapStudentID", component: MapStudentID },
-    { path: "/admin/class", component: AdminPage }
-
+    { path: "/admin/class", component: AdminPage },
+    { path: "/admin/CSKH", component: CSKH }
 
     // { path: "/home", component: Home },
     // { path: "/history", component: History },

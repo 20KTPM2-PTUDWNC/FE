@@ -20,7 +20,7 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const cookie = new Cookies();
     const params = useParams();
     const gradeStructureId = _gradeStructureId;
-
+    const [content, setContent] = useState('')
     console.log(gradeStructureId)
 
     useEffect(() => {
@@ -30,7 +30,7 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
         else {
             cookie.set('token', getCookies(), { path: `/v1/assignment/addAssignment/${gradeStructureId}` });
         }
-    }, [_gradeStructureId ]);
+    }, [_gradeStructureId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,7 +56,7 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
             setError(error.response.data.message);
             alert(error.response.data.message)
             console.log(error);
-            
+
         }
     };
 

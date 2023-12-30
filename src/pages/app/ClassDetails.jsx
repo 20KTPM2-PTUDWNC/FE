@@ -35,6 +35,7 @@ import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
 import { SortableItem } from "../../components/public/SortableList";
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
+import InvitationTeacherByEmailForm from "../../components/app/InvitationTeacherByEmailForm";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -112,6 +113,7 @@ function ClassDetails() {
     const [showExportStudentListForm, setShowExportStudentListForm] = useState(false)
     const [showEditGradeComposition, setShowEditGradeComposition] = useState(false)
     const [_showGradeBoard, setShowGradeBoard] = useState(false);
+    const [showInvitationTeacherByEmailForm, setShowInvitationTeacherByEmailForm] = useState(false)
 
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
@@ -232,6 +234,12 @@ function ClassDetails() {
             close: function () {
                 setShowGradeBoard(false)
             }
+        },
+        ivitationTeacherEmail: {
+            close: function () {
+                setShowInvitationTeacherByEmailForm(false)
+
+            }
         }
     }
     // useEffect(() => {
@@ -260,7 +268,8 @@ function ClassDetails() {
             || showAddTopic
             || showExportStudentListForm
             || showInvitationByEmailForm
-            || _showGradeBoard) {
+            || _showGradeBoard
+            || showInvitationTeacherByEmailForm) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
@@ -273,7 +282,8 @@ function ClassDetails() {
         showTopicOption,
         showExportStudentListForm,
         showInvitationByEmailForm,
-        _showGradeBoard
+        _showGradeBoard,
+        showInvitationTeacherByEmailForm
     ]);
 
     useEffect(() => {
@@ -548,25 +558,36 @@ function ClassDetails() {
                                     </p>
                                 </Link>
                             </div>
-                            <div className="flex justify-center mt-4 p-2 border-2 border-[#5f27cd] rounded-lg">
+                            <div className="flex justify-center mt-4 p-1 border-2 border-[#5f27cd] rounded-lg">
 
                                 <p className="text-center text-2xl text-[#5f27cd]">
                                     {splitTextWithLineBreaks(`Class ID\n ${classDetail.code}`)}
                                 </p>
 
                             </div>
-                            <div className="flex justify-center mt-4 p-2" draggable>
+                            <div className="flex justify-center mt-4 p-1" draggable>
 
                                 <InvitationLinkButton></InvitationLinkButton>
 
                             </div>
-                            <div className="flex justify-center mt-2 p-2" draggable>
-                                <button
-                                    className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                    onClick={() => setShowInvitationByEmailForm(true)}>
-                                    Invitation by email
-                                </button>
+                            <div className="grid grid-cols-2 grid-flow-row gap-10 text-center">
+                                <div className="flex justify-center mt-2 p-1" draggable>
+                                    <button
+                                        className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                        onClick={() => setShowInvitationByEmailForm(true)}>
+                                        Invitation student by email
+                                    </button>
+                                </div>
+
+                                <div className="flex justify-center mt-2 p-1" draggable>
+                                    <button
+                                        className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                        onClick={() => setShowInvitationTeacherByEmailForm(true)}>
+                                        Invitation teacher by email
+                                    </button>
+                                </div>
                             </div>
+                            
                         </div>
                         <div>
                             <div className="text-base mt-10">
@@ -714,6 +735,7 @@ function ClassDetails() {
                     </div>
                 </div>
                 {showInvitationByEmailForm && <InvitationByEmailForm onClose={closeTab.ivitationEmail.close} />}
+                {showInvitationTeacherByEmailForm && <InvitationTeacherByEmailForm onClose={closeTab.ivitationTeacherEmail.close} />}
                 {showAssignmentOption &&
                     <Options
                         data={assignmentOption}

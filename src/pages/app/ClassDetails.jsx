@@ -15,7 +15,6 @@ import Logo from "../../assets/logo.png";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleMinus } from "react-icons/ci";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
 import Options from "../../components/app/Options.jsx";
 
 import { formatDate, formatDateLeft } from "../../utils/formatDate.js";
@@ -33,7 +32,11 @@ import ExportStudentListForm from "../../components/app/ExportStudentListForm";
 import EditGradeCompForm from "../../components/app/EditGradeCompForm";
 import { GrScorecard } from "react-icons/gr";
 import { SortableItem } from "../../components/public/SortableList";
+
 import StudentGradeForm from "../../components/app/StudentGradeForm";
+
+import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
+
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -90,6 +93,7 @@ function ClassDetails() {
     const [showInvitationByEmailForm, setShowInvitationByEmailForm] = useState(false)
     const [showExportStudentListForm, setShowExportStudentListForm] = useState(false)
     const [showEditGradeComposition, setShowEditGradeComposition] = useState(false)
+    const [_showGradeBoard, setShowGradeBoard] = useState(false);
 
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
@@ -123,9 +127,11 @@ function ClassDetails() {
         setShowEditGradeComposition(true)
         setShowTopicOption(false)
     }
-    // const addGradeStructure = () => {
-    //     alert("add grade structure");
-    // }
+    const showGradeBoard = () => {
+        alert("show grade board");
+        setShowAssignmentOption(false);
+        setShowGradeBoard(true)
+    }
     const assignmentOption = [
         {
             name: "Add Topic",
@@ -135,10 +141,10 @@ function ClassDetails() {
             name: "Add Assignment",
             todo: addAssignment
         },
-        // {
-        //     name: "Add Topic",
-        //     todo: addGradeStructure
-        // }
+        {
+            name: "Show grade board",
+            todo: showGradeBoard
+        }
     ]
     const memberListOption = [
         {
@@ -155,10 +161,6 @@ function ClassDetails() {
             name: "Edit Grade Composition",
             todo: editGradeComposition
         }
-        // {
-        //     name: "Add Topic",
-        //     todo: addGradeStructure
-        // }
     ]
     const closeTab = {
         asssignmentOptions: {
@@ -206,9 +208,15 @@ function ClassDetails() {
                 setShowTopicOption(true)
             }
         },
+
         studentGrade: {
             close: function () {
                 setShowStudentGrade(false)
+            }
+        },
+        gradeBoardTab: {
+            close: function () {
+                setShowGradeBoard(false)
             }
         }
     }
@@ -237,7 +245,8 @@ function ClassDetails() {
             || showAddAssigment
             || showAddTopic
             || showExportStudentListForm
-            || showInvitationByEmailForm) {
+            || showInvitationByEmailForm
+            || _showGradeBoard) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
@@ -249,7 +258,8 @@ function ClassDetails() {
         showAddTopic,
         showTopicOption,
         showExportStudentListForm,
-        showInvitationByEmailForm
+        showInvitationByEmailForm,
+        _showGradeBoard
     ]);
 
     useEffect(() => {
@@ -772,12 +782,20 @@ function ClassDetails() {
                         onClose={closeTab.exportStudentList.close}
                         classId={classId}
                     />}
+
                 {showStudentGrade &&
                     <StudentGradeForm
                         onClose={closeTab.studentGrade.close}
                         classId={classId}
                     />
                 }
+
+                {_showGradeBoard &&
+                    <ShowGradeBoard
+                        onClose={closeTab.gradeBoardTab.close}
+                        onClick={() => setAction(1 - action)}
+                        classId={classId}
+                    />}
 
             </div>
         );

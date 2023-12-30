@@ -11,7 +11,7 @@ import Cookies from "universal-cookie";
 function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
-    const [file, setFile] = useState(null);
+    const [content, setContent] = useState("");
     const [error, setError] = useState("");
     const [images, setImages] = useState([]);
 
@@ -35,14 +35,14 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name || !_scale) {
+        if (!name || !_scale || !content) {
             return setError("Please fill all field!");
         }
 
         let scale = Number(_scale);
 
         let newAssignment = {
-            name, scale
+            name, scale, content
         };
 
         try {
@@ -79,7 +79,7 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
 
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
-            <div className="w-[1000px] h-[600px] bg-white rounded-lg p-8 max-w-[1100px]">
+            <div className="w-[600px] h-[450px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
                         <span className="text-2xl text-[#5f27cd]  font-bold">Options</span>
@@ -120,24 +120,16 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
                                 onChange={(e) => setScale(e.target.value)}
                             />
                         </div>
-                        <div className="mt-10 mb-5">
-                            {/* Attached File */}
-                            <div className="flex justify-between p-5 items-center rounded-lg border-2 border-[#5f27cd]">
-                                <button className="font-bold text-[#5f27cd] py-2 px-5 rounded-lg border-2 border-[#5f27cd]">{file ? handleTitle(file.name, 40) : "No file"}</button>
-                                <label
-                                    htmlFor="file"
-                                    className="bg-[#5f27cd] text-white px-4 py-2 rounded cursor-pointer"
-                                >
-                                    Choose File
-                                </label>
-                                <input
-                                    type="file"
-                                    name="file"
-                                    id="file"
-                                    className="hidden"
-                                    onChange={(e) => setFile(e.target.files[0])}
-                                />
-                            </div>
+                        <div className="mt-5">
+                            <p className="text-[#5f27cd] font-semibold mb-1">Content</p>
+                            <input
+                                type="text"
+                                name="content"
+                                id="content"
+                                className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                            />
                         </div>
                         <button
                             className=" mt-5 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"

@@ -77,6 +77,7 @@ function EditProfile() {
     // };
     const handleAvatar = async (e) => {
         e.preventDefault();
+
         const file = e.target.files[0]
         // file.previewURl = URL.createObjectURL(file)
         setAvatar(file)
@@ -95,32 +96,32 @@ function EditProfile() {
         }
         if (studentId === 0 || studentId.trim() === "0")
             return setError("StudentId is not accepted");
-            // const Avatar = new FormData();
-            // if (avatar) {
-            //     Avatar.append("user-avatar", avatar)
-            // }
-            // console.log(avatar)
-            // if (typeof experience === "string") {
-            //     data.experience = experience.split("\n");
-            // }
+        // const Avatar = new FormData();
+        // if (avatar) {
+        //     Avatar.append("user-avatar", avatar)
+        // }
+        // console.log(avatar)
+        // if (typeof experience === "string") {
+        //     data.experience = experience.split("\n");
+        // }
 
-            // if (typeof academicLevel === "string") {
-            //     data.academicLevel = academicLevel.split("\n");
-            // }
+        // if (typeof academicLevel === "string") {
+        //     data.academicLevel = academicLevel.split("\n");
+        // }
 
-            // if (
-            //     !data.avatar ||
-            //     !data.name ||
-            //     !data.address ||
-            //     !data.phone ||
-            //     !data.description ||
-            //     data.skills.length === 0 ||
-            //     data.experience.length === 0
-            // ) {
-            //     return setError("Please fill all fields!");
-            // }
+        // if (
+        //     !data.avatar ||
+        //     !data.name ||
+        //     !data.address ||
+        //     !data.phone ||
+        //     !data.description ||
+        //     data.skills.length === 0 ||
+        //     data.experience.length === 0
+        // ) {
+        //     return setError("Please fill all fields!");
+        // }
 
-            setError("");
+        setError("");
 
         try {
             await updateProfile(user?._id, data);

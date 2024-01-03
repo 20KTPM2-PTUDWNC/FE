@@ -55,21 +55,21 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
     }, []);
     const getStudentList = async () => {
         try {
-            // const res = await showAssignmentGrade(assignmentId);
-            const data = [
-                {
-                    "studentId": "12345",
-                    "grade": 10
-                },
-                {
-                    "studentId": "12345",
-                    "grade": 10
-                }, {
-                    "studentId": "12345",
-                    "grade": 9
-                },
-            ]
-            //const data = res.data
+            const res = await showAssignmentGrade(assignmentId);
+            // const data = [
+            //     {
+            //         "studentId": "12345",
+            //         "grade": 10
+            //     },
+            //     {
+            //         "studentId": "12345",
+            //         "grade": 10
+            //     }, {
+            //         "studentId": "12345",
+            //         "grade": 9
+            //     },
+            // ]
+            const data = res.data
             const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
             setHeader(Array.from(headerSet))
             setBody(data.map(obj => Object.values(obj)))
@@ -116,9 +116,10 @@ function ShowGrade({ onClose, onClick, assignmentId }) {
         const studentData = {
             "assignmentId": assignmentId,
             "mark": "0",
-            "userId": studentEx._id,
+            "userId": "6564bba8eeb5819d77c4d119",
             "grade": "9"
         }
+        console.log(studentData)
         await giveStudentGrade(studentData);
     }
     // async function loadImg() {

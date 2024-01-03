@@ -30,7 +30,7 @@ export const showAssignmentList = async (id) => {
 export const showAssignmentGrade = async (id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/grade/assignmentGrade/${id}`, {
+        return await axiosPrivate.get(`/v1/grade/exportGradeList/${id}`, {
             headers: {
                 "Authorization": getCookies()
             }

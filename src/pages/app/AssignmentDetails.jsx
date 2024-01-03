@@ -13,6 +13,7 @@ import ShowGrade from "../../components/app/AssignmentGradeForm";
 import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
 import { showMemberList } from "../../api/class/class.api";
+import { getAssigmentGrade, getClassGrade } from "../../api/grade/grade.api";
 
 function splitStr(a) {
     let re = "";
@@ -345,8 +346,21 @@ function AssignmentDetails() {
 
         }
     }
+    async function getReview() {
+        try {
+            const response = await getAssigmentGrade(assignmentId)
+            if (response.status === 200) {
+                console.log("review: ",response.data)
+                setMemberList(response.data)
+            }
+        } catch (error) {
+            console.log("ErrorReview: ", error);
+
+        }
+    }
     useEffect(() => {
         getMemberList(classId)
+        getReview()
     }, [])
     const [studentIdComment, setStudentIdComment] = useState(studentReviews[0].studentId)
     useEffect(() => {

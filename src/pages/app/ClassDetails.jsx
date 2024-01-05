@@ -19,7 +19,7 @@ import Options from "../../components/app/Options.jsx";
 
 import { formatDate, formatDateLeft } from "../../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks.js";
-import { showClassDetail, showMemberList } from "../../api/class/class.api.js";
+import { showClassDetail, showMemberList, showStudentList } from "../../api/class/class.api.js";
 import { addGradeComposition, deleteGradeComposition, showGradeStructure } from "../../api/grade/grade.api.js";
 import { addAssignment, showAssignmentList } from "../../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
@@ -110,6 +110,7 @@ function ClassDetails() {
     const [showStudentGrade, setShowStudentGrade] = useState(false);
     const [showUserGrade, setShowUserGrade] = useState(false)
     const cookie = new Cookies()
+    const [studentList, setStudentList] = useState([]);
 
     const addTopic = () => {
         alert("add topic");
@@ -293,6 +294,7 @@ function ClassDetails() {
                     getAssignmentList(grade._id);
                 });
             }
+            getStudentList(classId);
         }
 
     }, [action]);
@@ -394,6 +396,21 @@ function ClassDetails() {
             return newAssignments;
         });
     };
+
+    async function getStudentList(classId) {
+        try {
+            const response = await showStudentList(classId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setStudentList(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    };
+
     function handleDragEnd(e) {
         console.log(e);
         const { active, over } = e;
@@ -726,11 +743,11 @@ function ClassDetails() {
                                             </div>
                                         )}
 
-                                        {memberList && memberList.students && memberList.students.map((student) =>
+                                        {studentList && studentList.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{student.name} - Student</p>
+                                                        <p className="text-lg font-bold">{student.studentId} - {student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>

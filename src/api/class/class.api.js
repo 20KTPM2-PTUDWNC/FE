@@ -146,3 +146,16 @@ export const activeClass = async (id, data) => {
         throw err;
     }
 };
+
+export const showStudentList = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/class/showStudentList/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};

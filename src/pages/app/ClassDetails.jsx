@@ -19,7 +19,7 @@ import Options from "../../components/app/Options.jsx";
 
 import { formatDate, formatDateLeft } from "../../utils/formatDate.js";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks.js";
-import { showClassDetail, showMemberList } from "../../api/class/class.api.js";
+import { showClassDetail, showMemberList, showStudentList } from "../../api/class/class.api.js";
 import { addGradeComposition, deleteGradeComposition, showGradeStructure } from "../../api/grade/grade.api.js";
 import { addAssignment, showAssignmentList } from "../../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
@@ -38,6 +38,7 @@ import StudentGradeForm from "../../components/app/StudentGradeForm";
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
 import UserGradeFrom from "../../components/app/UserGradeFrom";
 
+import InvitationTeacherByEmailForm from "../../components/app/InvitationTeacherByEmailForm";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -95,6 +96,7 @@ function ClassDetails() {
     const [showExportStudentListForm, setShowExportStudentListForm] = useState(false)
     const [showEditGradeComposition, setShowEditGradeComposition] = useState(false)
     const [_showGradeBoard, setShowGradeBoard] = useState(false);
+    const [showInvitationTeacherByEmailForm, setShowInvitationTeacherByEmailForm] = useState(false)
 
     const [tab, setTab] = useState(1);
     const navigate = useNavigate();
@@ -108,6 +110,7 @@ function ClassDetails() {
     const [showStudentGrade, setShowStudentGrade] = useState(false);
     const [showUserGrade, setShowUserGrade] = useState(false)
     const cookie = new Cookies()
+    const [studentList, setStudentList] = useState([]);
 
     const addTopic = () => {
         alert("add topic");
@@ -221,6 +224,12 @@ function ClassDetails() {
                 setShowGradeBoard(false)
             }
         },
+        ivitationTeacherEmail: {
+            close: function () {
+                setShowInvitationTeacherByEmailForm(false)
+
+            }
+        },
         userGrade: {
             close: function () {
                 setShowUserGrade(false)
@@ -253,7 +262,8 @@ function ClassDetails() {
             || showAddTopic
             || showExportStudentListForm
             || showInvitationByEmailForm
-            || _showGradeBoard) {
+            || _showGradeBoard
+            || showInvitationTeacherByEmailForm) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
@@ -266,7 +276,8 @@ function ClassDetails() {
         showTopicOption,
         showExportStudentListForm,
         showInvitationByEmailForm,
-        _showGradeBoard
+        _showGradeBoard,
+        showInvitationTeacherByEmailForm
     ]);
 
     useEffect(() => {
@@ -283,6 +294,7 @@ function ClassDetails() {
                     getAssignmentList(grade._id);
                 });
             }
+            getStudentList(classId);
         }
 
     }, [action]);
@@ -384,6 +396,21 @@ function ClassDetails() {
             return newAssignments;
         });
     };
+
+    async function getStudentList(classId) {
+        try {
+            const response = await showStudentList(classId);
+
+            if (response.status === 200) {
+                console.log(response.data)
+                setStudentList(response.data)
+            }
+        } catch (error) {
+            console.log("Error123: ", error);
+
+        }
+    };
+
     function handleDragEnd(e) {
         console.log(e);
         const { active, over } = e;
@@ -553,25 +580,36 @@ function ClassDetails() {
                                 </p>
 
                             </div>
-                            <div className="flex justify-center mt-4 p-2 border-2 border-[#5f27cd] rounded-lg">
+                            <div className="flex justify-center mt-4 p-1 border-2 border-[#5f27cd] rounded-lg">
 
                                 <p className="text-center text-2xl text-[#5f27cd]">
                                     {splitTextWithLineBreaks(`Class ID\n ${classDetail.code}`)}
                                 </p>
 
                             </div>
-                            <div className="flex justify-center mt-4 p-2" draggable>
+                            <div className="flex justify-center mt-4 p-1" draggable>
 
                                 <InvitationLinkButton></InvitationLinkButton>
 
                             </div>
-                            <div className="flex justify-center mt-2 p-2" draggable>
-                                <button
-                                    className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                    onClick={() => setShowInvitationByEmailForm(true)}>
-                                    Invitation by email
-                                </button>
+                            <div className="grid grid-cols-2 grid-flow-row gap-10 text-center">
+                                <div className="flex justify-center mt-2 p-1" draggable>
+                                    <button
+                                        className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                        onClick={() => setShowInvitationByEmailForm(true)}>
+                                        Invitation student by email
+                                    </button>
+                                </div>
+
+                                <div className="flex justify-center mt-2 p-1" draggable>
+                                    <button
+                                        className=" mt-2 w-full bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                        onClick={() => setShowInvitationTeacherByEmailForm(true)}>
+                                        Invitation teacher by email
+                                    </button>
+                                </div>
                             </div>
+                            
                         </div>
                         <div>
                             <div className="text-base mt-10">
@@ -705,11 +743,11 @@ function ClassDetails() {
                                             </div>
                                         )}
 
-                                        {memberList && memberList.students && memberList.students.map((student) =>
+                                        {studentList && studentList.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{student.name} - Student</p>
+                                                        <p className="text-lg font-bold">{student.studentId} - {student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>
@@ -721,6 +759,7 @@ function ClassDetails() {
                     </div>
                 </div>
                 {showInvitationByEmailForm && <InvitationByEmailForm onClose={closeTab.ivitationEmail.close} />}
+                {showInvitationTeacherByEmailForm && <InvitationTeacherByEmailForm onClose={closeTab.ivitationTeacherEmail.close} />}
                 {showAssignmentOption &&
                     <Options
                         data={assignmentOption}

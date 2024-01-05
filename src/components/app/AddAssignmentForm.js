@@ -121,7 +121,7 @@ function AddAssignmentForm({ onClose, topic, onClick, _gradeStructureId }) {
                         </div>
                         <div className="mt-5">
                             <p className="text-[#5f27cd] font-semibold mb-1">Content</p>
-                            <input
+                            <textarea
                                 type="text"
                                 name="content"
                                 id="content"

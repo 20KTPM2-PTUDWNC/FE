@@ -13,7 +13,9 @@ import ShowGrade from "../../components/app/AssignmentGradeForm";
 import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
 import { showMemberList } from "../../api/class/class.api";
-import { getAssigmentGrade, getClassGrade } from "../../api/grade/grade.api";
+import { getAssigmentGrade, getClassGrade, showGradeStructure } from "../../api/grade/grade.api";
+import { showAssignmentList } from "../../api/assignment/assignment.api";
+import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks";
 
 function splitStr(a) {
     let re = "";
@@ -22,14 +24,6 @@ function splitStr(a) {
     }
     return re;
 }
-const Content = ({ content }) => {
-    return (
-        <div className="content-text mb-8 ">
-            <h2 className="text-2xl font-bold mb-4 ">Assignment Name</h2>
-            <p className="text-[#6F1E51]">{content}</p>
-        </div>
-    );
-};
 
 const TextInput = ({ onInputChange, value }) => {
     return (
@@ -153,10 +147,17 @@ function AssignmentDetails() {
     const assignmentId = params.assignmentId
     const classId = params.classId
     const [openReview, setOpenReview] = useState(false)
+    const [assigmentDetails, setAssigmentDetails] = useState(null)
+
     useEffect(() => {
         if (!user)
             navigate("/signin")
+        else {
+            console.log(sessionStorage.getItem("assignment"))
+            setAssigmentDetails(JSON.parse(sessionStorage.getItem("assignment")))
+        }
     }, [])
+
 
     // const [avatar, setAvatar] = useState(null);
     // const [name, setName] = useState("");
@@ -348,14 +349,13 @@ function AssignmentDetails() {
     }
     async function getReview() {
         try {
-            const response = await getAssigmentGrade(assignmentId)
+            const response = await getAssigmentGrade(assignmentId, id)
             if (response.status === 200) {
-                console.log("review: ",response.data)
+                console.log("review: ", response.data)
                 setMemberList(response.data)
             }
         } catch (error) {
             console.log("ErrorReview: ", error);
-
         }
     }
     useEffect(() => {
@@ -436,7 +436,10 @@ function AssignmentDetails() {
 
                 <div className="flex p-8 ">
                     <div className="flex-1 pr-8">
-                        <Content content="Assignment Content" />
+                        <div className="content-text mb-8 ">
+                            <h2 className="text-2xl font-bold mb-4 ">{assigmentDetails?.name}</h2>
+                            <p className="text-[#6F1E51]">{splitTextWithLineBreaks(assigmentDetails?.content)}</p>
+                        </div>
                         <div className="relative rounded-lg border-2 border-[#5f27cd] p-5 -ml-10">
                             <CommentSection
                                 comments={comments}

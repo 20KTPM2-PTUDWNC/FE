@@ -116,10 +116,10 @@ export const giveStudentGrade = async (data) => {
         throw err;
     }
 };
-export const getAssigmentGrade = async (id) => {
+export const getAssigmentGrade = async (assignmentId, id) => {
 
     try {
-        return await axiosPrivate.get(`/v1/grade/studentGrade/${id}`, {
+        return await axiosPrivate.get(`/v1/grade/${assignmentId}/studentGrade/${id}`, {
             headers: {
                 "Authorization": getCookies()
             }

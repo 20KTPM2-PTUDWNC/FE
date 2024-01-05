@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-
-import { getCookies, getUser } from "../../features/user";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { createClass } from "../../api/class/class.api.js";
-import Cookies from "universal-cookie";
+import Papa from 'papaparse'; // Import papaparse for CSV parsing
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage, faFile, faFileAlt } from '@fortawesome/free-regular-svg-icons';
-function UploadFileForm({ onClose, onClick }) {
-    const [fileInfo, setFileInfo] = useState(null);
+import { uploadStudentList } from "../../api/class/class.api";
 
+function UploadFileForm({ onClose, uploadType, classId }) {
+    const [fileInfo, setFileInfo] = useState(null);
+    const [file, setFile] = useState(null)
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
-        console.log("handelFileChange ",selectedFile)
+        setFile(selectedFile)
         displayFileInfo(selectedFile);
     };
 
@@ -22,7 +20,7 @@ function UploadFileForm({ onClose, onClick }) {
     const handleDrop = (e) => {
         e.preventDefault();
         const droppedFile = e.dataTransfer.files[0];
-        console.log("handleDrop ",droppedFile)
+        setFile(droppedFile)
         displayFileInfo(droppedFile);
     };
 
@@ -33,7 +31,116 @@ function UploadFileForm({ onClose, onClick }) {
                 size: file.size,
                 type: file.type,
             });
+
+            // Parse the CSV file to check column names and validate data
+            if (file.type === 'text/csv') {
+                parseCSVFile(file);
+            }
+            else {
+                setFile(null)
+                alert("File must be CSV")
+            }
         }
+    };
+
+    const parseCSVFile = (file) => {
+        Papa.parse(file, {
+            header: true,
+            dynamicTyping: true,
+            complete: (result) => {
+                // Check if the required column names exist
+                let requiredColumnNames = [];
+                if (uploadType === "grade list") {
+                    requiredColumnNames = ['studentId', 'email', 'grade']
+                }
+                else if (uploadType === "mapping studentId") {
+                    requiredColumnNames = ['studentId', 'name', 'email']
+                }
+                else if (uploadType === "student list") {
+                    requiredColumnNames = ['studentId', 'name']
+                }
+                else {
+                    alert("Invalid upload type");
+                    return;
+                }
+                function areArraysEqual(arrayA, arrayB) {
+                    // Check if the length is the same
+                    if (arrayA.length !== arrayB.length) {
+                        return false;
+                    }
+
+                    // Check each element in the arrays
+                    for (let i = 0; i < arrayA.length; i++) {
+                        if (arrayA[i] !== arrayB[i]) {
+                            return false;
+                        }
+                    }
+
+                    // If all elements are the same, the arrays are equal
+                    return true;
+                }
+                const hasRequiredColumns = areArraysEqual(requiredColumnNames, result.meta.fields)
+
+
+
+                if (hasRequiredColumns) {
+
+                    // Validate column data
+                    const isValidData = result.data.every(row => {
+                        if (uploadType === "grade list") {
+                            // Check if the email column contains valid email addresses
+                            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
+                            // ^: Asserts the start of the string.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
+                            // @: Matches the "@" symbol.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
+                            // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
+                            // $: Asserts the end of the string.
+
+                            // Check if the grade column contains numbers between 0 and 10
+                            const isValidGrade = typeof row.grade === 'number' && row.grade >= 0 && row.grade <= 10;
+
+                            return isValidEmail && isValidGrade;
+                        }
+                        if (uploadType === "mapping studentId") {
+                            // Check if the email column contains valid email addresses
+                            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
+                            // ^: Asserts the start of the string.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
+                            // @: Matches the "@" symbol.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
+                            // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
+                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
+                            // $: Asserts the end of the string.  
+
+                            return isValidEmail
+                        }
+                        return true
+                    });
+
+                    if (isValidData) {
+                        console.log('CSV file has valid data.');
+                        // Call your API function here with result.data
+                    } else {
+                        setFile(null)
+                        alert('CSV file contains invalid data.');
+                        console.log('CSV file contains invalid data.');
+                        // Handle the case where data is not valid
+                    }
+                } else {
+                    setFile(null)
+                    alert('CSV file error .');
+                    console.log('CSV file is missing some required columns.');
+                    // Handle the case where required columns are missing
+                }
+            },
+            error: (error) => {
+                alert('Error parsing CSV file:', error.message)
+                console.error('Error parsing CSV file:', error.message);
+                // Handle the CSV parsing error
+            },
+        });
     };
 
     const getFileIcon = () => {
@@ -48,10 +155,36 @@ function UploadFileForm({ onClose, onClick }) {
         }
         return null;
     };
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onClose();
-    }
+
+        if (file && fileInfo && fileInfo.type === 'text/csv') {
+            const formData = new FormData();
+            formData.append('file', file);
+            console.log(formData)
+            console.log(file)
+            try {
+                // Assuming you have an API function called uploadCSVFile
+                // Replace 'yourApiFunction' with the actual API function
+                const response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+
+                // Handle the API response as needed
+                console.log('API response:', response);
+
+                // Close the modal or perform any other actions
+                onClose();
+            } catch (error) {
+                // Handle API error
+                console.error('API error:', error);
+            }
+        } else {
+            // Handle the case where the file type is not CSV
+            console.log('Invalid file type. Only CSV files are allowed.');
+            // You can show an error message or take appropriate actions
+        }
+    };
+
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
             <div className="w-[1000px] h-[450px] bg-white rounded-lg p-8 max-w-[1100px]">
@@ -123,7 +256,6 @@ function UploadFileForm({ onClose, onClick }) {
                 </div>
             </div>
         </div>
-
     );
 }
 

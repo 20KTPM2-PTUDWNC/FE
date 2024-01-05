@@ -140,7 +140,7 @@ function AccountsManage() {
                                                         : 'odd:bg-white odd:dark:bg-gray-900'
                                                         } border-b dark:border-gray-700`}
                                                 >
-                                                    <td className="px-6 py-3 text-center border">{item.deleteAt ?
+                                                    <td className="px-6 py-3 text-center border">{!item.deleteAt ?
                                                         <button
                                                             className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
                                                             onClick={() => alert("Ban/Unban Account")}

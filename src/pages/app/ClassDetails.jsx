@@ -37,6 +37,7 @@ import StudentGradeForm from "../../components/app/StudentGradeForm";
 
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
 import UserGradeFrom from "../../components/app/UserGradeFrom";
+import UploadFileForm from "../../components/public/UploadFileForm";
 
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
@@ -107,6 +108,7 @@ function ClassDetails() {
     const [selectedGrade, setSelectedGrade] = useState(null);
     const [showStudentGrade, setShowStudentGrade] = useState(false);
     const [showUserGrade, setShowUserGrade] = useState(false)
+    const [showUploadStudentList, setShowUploadStudentList] = useState(false)
     const cookie = new Cookies()
 
     const addTopic = () => {
@@ -124,6 +126,10 @@ function ClassDetails() {
     const exportStudentList = () => {
         setShowMemberListToption(false)
         setShowExportStudentListForm(true)
+    }
+    const uploadStudentList = () => {
+        setShowUploadStudentList(true)
+        setShowAssignmentOption(false)
     }
     const editGradeComposition = () => {
         setShowEditGradeComposition(true)
@@ -144,7 +150,7 @@ function ClassDetails() {
             todo: addAssignment
         },
         {
-            name: "Show grade board",
+            name: "Show Grade Board",
             todo: showGradeBoard
         }
     ]
@@ -152,6 +158,10 @@ function ClassDetails() {
         {
             name: "Export Student List",
             todo: exportStudentList
+        },
+        {
+            name: "Upload Student List",
+            todo: uploadStudentList
         }
     ]
     const topicOption = [
@@ -224,6 +234,11 @@ function ClassDetails() {
         userGrade: {
             close: function () {
                 setShowUserGrade(false)
+            }
+        },
+        uploadStudentList: {
+            close: function () {
+                setShowUploadStudentList(false)
             }
         }
     }
@@ -389,7 +404,8 @@ function ClassDetails() {
         const { active, over } = e;
         console.log("ACTIVE: " + active.id);
         console.log("OVER :" + over.id);
-
+        const foundObject = over.data.current.sortable.items.find(obj => obj._id === over.id);
+        sessionStorage.setItem("assignment", JSON.stringify(foundObject))
         if (active.id !== over.id) {
             setAssignmentList((items) => {
                 const oldIndex = items.findIndex((i) => i._id === active.id);
@@ -407,7 +423,7 @@ function ClassDetails() {
         // items.splice(e.destination.index, 0, reorderedItem);
 
         // setAssignmentList(items);
-        console.log(e);
+
     }
 
     if (classDetail && memberList && gradeList && assignmentList) {
@@ -680,7 +696,13 @@ function ClassDetails() {
                                                     >
 
                                                         {assignmentList.map((assignment) =>
-                                                            <div className="transition-all transition-300">
+                                                            <div className="transition-all transition-300"
+                                                                onClick={
+                                                                    () => {
+                                                                        sessionStorage.setItem("assignment", assignment)
+                                                                        alert("Click")
+                                                                    }}
+                                                            >
                                                                 <SortableItem key={assignment._id} assignment={assignment} grade={grade} classId={classId} />
                                                             </div>
                                                         )}
@@ -809,6 +831,13 @@ function ClassDetails() {
                         onClose={closeTab.userGrade.close}
                         onClick={() => setAction(1 - action)}
                         userId={user._id}
+                    />}
+                {showUploadStudentList &&
+                    <UploadFileForm
+                        onClose={closeTab.uploadStudentList.close}
+                        uploadType={"student list"}
+                        classId={classId}
+
                     />}
 
             </div>

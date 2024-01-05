@@ -625,7 +625,7 @@ function ClassDetails() {
                                     </button>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div>
                             <div className="text-base mt-10">
@@ -755,6 +755,7 @@ function ClassDetails() {
                                 )}
                                 {tab === 3 && (
                                     <div>
+                                        Teacher:
                                         {memberList && memberList.teachers && memberList.teachers.map((teacher) =>
                                             <div key={teacher._id}>
                                                 <Link to={`/class/${classId}`}>
@@ -764,7 +765,17 @@ function ClassDetails() {
                                                 </Link>
                                             </div>
                                         )}
-
+                                        Student:
+                                        {memberList && memberList.students && memberList.students.map((student) =>
+                                            <div key={student._id}>
+                                                <Link to={`/class/${classId}`}>
+                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
+                                                        <p className="text-lg font-bold">{student.name} - Teacher</p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        )}
+                                        Student (doesn't have account)
                                         {studentList && studentList.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>

@@ -9,7 +9,7 @@ import { FaEye, FaCheck, FaBan } from "react-icons/fa";
 import axios from "axios";
 import DataTable from "react-data-table-component"
 import { getProfile } from "../../api/user/user.api";
-import { showMemberList, activeClass } from "../../api/class/class.api.js";
+import { showMemberList, activeClass, showStudentList } from "../../api/class/class.api.js";
 
 function ClassAdminPage() {
     const navigate = useNavigate();
@@ -18,8 +18,10 @@ function ClassAdminPage() {
     const [showAddNewClass, setShowAddNewClass] = useState(false);
     const [showJoinClass, setShowJoinClass] = useState(false);
     const [listClass, setListClass] = useState([]);
-    const [images, setImages] = useState([])
+    const [originalListClass, setOriginalListClass] = useState([]); // Thêm biến lưu giữ danh sách dữ liệu ban đầu
+    const [images, setImages] = useState([]);
     const [memberCounts, setMemberCounts] = useState({});
+    const [searchKeyword, setSearchKeyword] = useState(""); // Thêm state để lưu trữ từ khóa tìm kiếm
 
     useEffect(() => {
         if (!user) {
@@ -107,22 +109,19 @@ function ClassAdminPage() {
         },
     };
 
-
     useEffect(() => {
 
         loadImg();
-
 
         return () => {
             console.log("useEffect done");
         }
     }, [])
-    async function loadImg() {
 
+    async function loadImg() {
         const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
         const imgJson = await res.json()
         setImages(imgJson.results)
-
     }
 
     useEffect(() => {
@@ -131,7 +130,7 @@ function ClassAdminPage() {
                 const response = await getAllClass();
                 if (response.status === 200) {
                     setListClass(response.data);
-                    console.log(response.data);
+                    setOriginalListClass(response.data); // Lưu giữ danh sách dữ liệu ban đầu
                     listClass.forEach((_class) => {
                         authorInfor(_class.authorId);
                         getMemberList(_class._id);
@@ -142,7 +141,6 @@ function ClassAdminPage() {
             }
         }
         fetchClasses();
-        
     }, []);
 
     async function authorInfor(authorId) {
@@ -165,14 +163,16 @@ function ClassAdminPage() {
 
     async function getMemberList(classId) {
         try {
-            const response = await showMemberList(classId);
+            const responseTeacher = await showMemberList(classId);
+            const responseStudent = await showStudentList(classId);
     
-            if (response.status === 200) {
-                const listMember = response.data;
-                const studentsLength = listMember.students.length;
-                const teachersLength = listMember.teachers.length;
+            if (responseTeacher.status === 200 && responseStudent.status === 200) {
+                const listTeacher = responseTeacher.data;
+                const listStudent = responseStudent.data;
+                const studentsLength = listStudent.length;
+                const teachersLength = listTeacher.teachers.length;
     
-                console.log("Students length:", studentsLength);
+                console.log("Students length :", studentsLength);
                 console.log("Teachers length:", teachersLength);
     
                 setMemberCounts((prevCounts) => ({
@@ -184,12 +184,23 @@ function ClassAdminPage() {
             console.log("Error123: ", error);
         }
     }
-    
 
     const handleFilter = (e) => {
-        const newData = listClass.filter(row => row.name.toLowerCase().includes(e.target.value.toLowerCase()));
-        setListClass(newData);
-    }
+        setSearchKeyword(e.target.value);
+    };
+
+    useEffect(() => {
+        if (searchKeyword === "") {
+            setListClass([...originalListClass]); // Hiển thị lại bảng ban đầu khi xóa keyword
+        } else {
+            const newData = originalListClass.filter(
+                (row) =>
+                    row.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+                    row.subject.toLowerCase().includes(searchKeyword.toLowerCase())
+            );
+            setListClass(newData);
+        }
+    }, [searchKeyword, originalListClass]);
 
     const handleEyeClick = (rowId) => {
         console.log("Eye clicked for row:", rowId);
@@ -225,7 +236,6 @@ function ClassAdminPage() {
             console.error("Error updating status:", error);
         }
     };
-    
 
     return (
         <>

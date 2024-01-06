@@ -1,14 +1,10 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { showClassDetail } from "../../api/class/class.api.js";
+import { showClassDetail, showMemberList, showStudentList } from "../../api/class/class.api.js";
 import { getCookies, getUser } from "../../features/user";
-import Logo from "../../assets/cover.jpg";
 import Cookies from "universal-cookie";
-import { FaEye } from "react-icons/fa";
-import axios from "axios";
-import DataTable from "react-data-table-component"
-import { showMemberList } from "../../api/class/class.api.js";
+import DataTable from "react-data-table-component";
+import { getProfile } from "../../api/user/user.api.js";
 
 function MemberOfClass() {
     const navigate = useNavigate();
@@ -20,113 +16,58 @@ function MemberOfClass() {
     const [showAddNewClass, setShowAddNewClass] = useState(false);
     const [showJoinClass, setShowJoinClass] = useState(false);
     const [listClass, setListClass] = useState([]);
-    const [images, setImages] = useState([])
-    const [isAddClass, setIsAddClass] = useState(0)
-    const [records, setRecords] = useState([])
+    const [images, setImages] = useState([]);
+    const [isAddClass, setIsAddClass] = useState(0);
+    const [records, setRecords] = useState([]);
     const [classDetail, setClassDetail] = useState({});
-    const [teacherList, setTeacherList] = useState([]);
-    const [studentList, setStudentList] = useState([]);
 
     useEffect(() => {
         if (!user) {
-            navigate("/signin")
-        }
-        else {
+            navigate("/signin");
+        } else {
             cookie.set('token', getCookies(), { path: `/v1/className/showClassDetail/${classId}` });
         }
-    }, [])
+    }, []);
 
-    const columnTeacher = [
-        {
-            name: "No.",
-            cell: (row, index) => <span>{index + 1}</span>,
-        },
-        {
-            name: "Name",
-            selector: row => row.name,
-            sortable: true
-        },
-        {
-            name: "Email",
-            selector: row => row.email,
-            sortable: true
-        },
-        {
-            name: "Role",
-            selector: row => "Teacher",
-            sortable: true
+    const getStudentEmail = async (userId) => {
+        try {
+            const user = await getProfile(userId);
+            return user.data.email;
+        } catch (error) {
+            console.error("Error fetching student email: ", error);
+            return "";
         }
-    ]
-
-    const columnStudent = [
-        {
-            name: "No.",
-            cell: (row, index) => <span>{index + 1}</span>,
-        },
-        {
-            name: "Name",
-            selector: row => row.name,
-            sortable: true
-        },
-        {
-            name: "Email",
-            selector: row => row.email,
-            sortable: true
-        },
-        {
-            name: "Role",
-            selector: row => "Student",
-        }
-    ]
-    useEffect(() => {
-        if (showAddNewClass || showJoinClass) {
-            document.body.classList.add("overflow-hidden");
-        } else {
-            document.body.classList.remove("overflow-hidden");
-        }
-    }, [showAddNewClass, showJoinClass]);
+    };
 
     useEffect(() => {
+        async function getMemberList(classId) {
+            try {
+                const responseTeacher = await showMemberList(classId);
+                const responseStudent = await showStudentList(classId);
 
-        loadImg();
-
-
-        return () => {
-            console.log("useEffect done");
+                if (responseTeacher.status === 200 && responseStudent.status === 200) {
+                    const teachersWithRole = responseTeacher.data.teachers.map(teacher => ({ ...teacher, role: "teacher" }));
+                    const studentsWithRole = await Promise.all(responseStudent.data.map(async student => {
+                        const email = student.userId ? await getStudentEmail(student.userId) : "";
+                        return { ...student, role: "student", email };
+                    }));
+                    const combinedList = [...teachersWithRole, ...studentsWithRole];
+                    setRecords(combinedList);
+                }
+            } catch (error) {
+                console.log("Error123: ", error);
+            }
         }
-    }, [])
-    async function loadImg() {
 
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-        const imgJson = await res.json()
-        setImages(imgJson.results)
-
-    }
-
-    useEffect(() => {
         async function fetchClasses() {
             try {
                 const response = await showClassDetail(classId);
                 if (response.status === 200) {
                     setClassDetail(response.data);
-                    console.log(response.data)
+                    console.log(response.data);
                 }
             } catch (error) {
                 console.log("Error: ", error);
-            }
-        }
-        
-        async function getMemberList(classId) {
-            try {
-                const response = await showMemberList(classId);
-        
-                if (response.status === 200) {
-                    setTeacherList(response.data.teachers);
-                    setStudentList(response.data.students);
-                    console.log(response.data)
-                }
-            } catch (error) {
-                console.log("Error123: ", error);
             }
         }
 
@@ -140,6 +81,33 @@ function MemberOfClass() {
         return formattedDate;
     };
 
+    const columnCombined = [
+        {
+            name: "No.",
+            cell: (row, index) => <span>{index + 1}</span>,
+            width: "60px"
+        },
+        {
+            name: "Name",
+            selector: row => row.name,
+            sortable: true
+        },
+        {
+            name: "Email",
+            selector: row => row.email,
+            sortable: true
+        },
+        {
+            name: "Student ID",
+            selector: row => row.studentId, 
+        },
+        {
+            name: "Role",
+            selector: row => (row.role === "teacher" ? "Teacher" : "Student"),
+            sortable: true
+        }
+    ];
+
     return (
         <>
             <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
@@ -151,20 +119,14 @@ function MemberOfClass() {
                             <h3 className="text-2xl font-bolds mb-10">Description: {classDetail.subject}</h3>
                             <h3 className="text-xl mb-10">Creation date: {formatDate(classDetail.createdAt)}</h3>
                         </div>
-                        
-                        <h5 className="text-xl font-bold mb-10">List of teachers</h5>
+
+                        <h5 className="text-xl font-bold mb-10">List of members</h5>
                         <DataTable
-                            columns = {columnTeacher}
-                            data = {teacherList}
-                            pagination>
-                        </DataTable>
-                        <h5 className="text-xl font-bold mb-10">List of students</h5>
-                        <DataTable
-                            columns = {columnStudent}
-                            data = {studentList}
-                            pagination>
-                        </DataTable>
-                        </div>
+                            columns={columnCombined}
+                            data={records}
+                            pagination
+                        />
+                    </div>
                 </div>
             </main>
         </>

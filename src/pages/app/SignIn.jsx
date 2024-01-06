@@ -55,10 +55,12 @@ function SignIn() {
             if (response.status === 200) {
                 console.log(response.data.token);
                 const user = signin(response.data.token);
-                if (user.userFlag == 1){
+                if (user.userFlag == 1) {
+                    sessionStorage.setItem("password", password)
                     navigate("/home");
+                    
                 }
-                else{
+                else {
                     navigate("/admin");
                 }
             }
@@ -160,7 +162,7 @@ function SignIn() {
                                         <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
                                     <a href="http://localhost:8080/v1/auth/google">
-                                        <FaGoogle className="text-white hover:text-[#00ADB5]"  size={24} />
+                                        <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
                                 </div>
                             </div>

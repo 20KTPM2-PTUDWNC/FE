@@ -37,6 +37,7 @@ import StudentGradeForm from "../../components/app/StudentGradeForm";
 
 import ShowGradeBoard from "../../components/app/ShowGradeBoard.jsx";
 import UserGradeFrom from "../../components/app/UserGradeFrom";
+import UploadFileForm from "../../components/public/UploadFileForm";
 
 import InvitationTeacherByEmailForm from "../../components/app/InvitationTeacherByEmailForm";
 // const Assignment = ({ assignment, isDragging, grade }) => {
@@ -109,6 +110,7 @@ function ClassDetails() {
     const [selectedGrade, setSelectedGrade] = useState(null);
     const [showStudentGrade, setShowStudentGrade] = useState(false);
     const [showUserGrade, setShowUserGrade] = useState(false)
+    const [showUploadStudentList, setShowUploadStudentList] = useState(false)
     const cookie = new Cookies()
     const [studentList, setStudentList] = useState([]);
 
@@ -127,6 +129,10 @@ function ClassDetails() {
     const exportStudentList = () => {
         setShowMemberListToption(false)
         setShowExportStudentListForm(true)
+    }
+    const uploadStudentList = () => {
+        setShowUploadStudentList(true)
+        setShowAssignmentOption(false)
     }
     const editGradeComposition = () => {
         setShowEditGradeComposition(true)
@@ -147,7 +153,7 @@ function ClassDetails() {
             todo: addAssignment
         },
         {
-            name: "Show grade board",
+            name: "Show Grade Board",
             todo: showGradeBoard
         }
     ]
@@ -155,6 +161,10 @@ function ClassDetails() {
         {
             name: "Export Student List",
             todo: exportStudentList
+        },
+        {
+            name: "Upload Student List",
+            todo: uploadStudentList
         }
     ]
     const topicOption = [
@@ -233,6 +243,11 @@ function ClassDetails() {
         userGrade: {
             close: function () {
                 setShowUserGrade(false)
+            }
+        },
+        uploadStudentList: {
+            close: function () {
+                setShowUploadStudentList(false)
             }
         }
     }
@@ -416,7 +431,8 @@ function ClassDetails() {
         const { active, over } = e;
         console.log("ACTIVE: " + active.id);
         console.log("OVER :" + over.id);
-
+        const foundObject = over.data.current.sortable.items.find(obj => obj._id === over.id);
+        sessionStorage.setItem("assignment", JSON.stringify(foundObject))
         if (active.id !== over.id) {
             setAssignmentList((items) => {
                 const oldIndex = items.findIndex((i) => i._id === active.id);
@@ -434,7 +450,7 @@ function ClassDetails() {
         // items.splice(e.destination.index, 0, reorderedItem);
 
         // setAssignmentList(items);
-        console.log(e);
+
     }
 
     if (classDetail && memberList && gradeList && assignmentList) {
@@ -609,7 +625,7 @@ function ClassDetails() {
                                     </button>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div>
                             <div className="text-base mt-10">
@@ -718,7 +734,13 @@ function ClassDetails() {
                                                     >
 
                                                         {assignmentList.map((assignment) =>
-                                                            <div className="transition-all transition-300">
+                                                            <div className="transition-all transition-300"
+                                                                onClick={
+                                                                    () => {
+                                                                        sessionStorage.setItem("assignment", assignment)
+                                                                        alert("Click")
+                                                                    }}
+                                                            >
                                                                 <SortableItem key={assignment._id} assignment={assignment} grade={grade} classId={classId} />
                                                             </div>
                                                         )}
@@ -733,6 +755,7 @@ function ClassDetails() {
                                 )}
                                 {tab === 3 && (
                                     <div>
+                                        Teacher:
                                         {memberList && memberList.teachers && memberList.teachers.map((teacher) =>
                                             <div key={teacher._id}>
                                                 <Link to={`/class/${classId}`}>
@@ -742,7 +765,17 @@ function ClassDetails() {
                                                 </Link>
                                             </div>
                                         )}
-
+                                        Student:
+                                        {memberList && memberList.students && memberList.students.map((student) =>
+                                            <div key={student._id}>
+                                                <Link to={`/class/${classId}`}>
+                                                    <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
+                                                        <p className="text-lg font-bold">{student.name} - Student</p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        )}
+                                        Student (doesn't have account)
                                         {studentList && studentList.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
@@ -848,6 +881,13 @@ function ClassDetails() {
                         onClose={closeTab.userGrade.close}
                         onClick={() => setAction(1 - action)}
                         userId={user._id}
+                    />}
+                {showUploadStudentList &&
+                    <UploadFileForm
+                        onClose={closeTab.uploadStudentList.close}
+                        uploadType={"student list"}
+                        classId={classId}
+
                     />}
 
             </div>

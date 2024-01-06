@@ -75,7 +75,7 @@ function JoinClass({ onClose }) {
             <div className="relative w-[600px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
-                        <span className="text-2xl text-[#5f27cd] font-bold">Add New Class</span>
+                        <span className="text-2xl text-[#5f27cd] font-bold">Join Class</span>
 
                     </div>
 
@@ -108,7 +108,7 @@ function JoinClass({ onClose }) {
                             type="submit"
                             onClick={handleSubmit}
                         >
-                            Add
+                            Join
                         </button>
                     </div>
                 </div>

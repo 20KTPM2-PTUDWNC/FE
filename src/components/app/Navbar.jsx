@@ -63,7 +63,7 @@ function Navbar() {
     ]
     const fetchData = async () => {
         const res = await getNoti(user?._id)
-        setNoti(data)
+        setNoti(res.data)
         console.log(res.data)
     }
     useEffect(() => {

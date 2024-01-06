@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUser } from '../../features/user';
 
 const CSKH = () => {
     const [messages, setMessages] = useState([
         { user: 'User1', text: 'Hello there!' },
         { user: 'User2', text: 'Hi! How are you?' },
     ]);
-
+    const navigate = useNavigate();
+    const user = getUser();
     const [newMessage, setNewMessage] = useState('');
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin")
+        }
 
+    }, [])
     const handleInputChange = (event) => {
         setNewMessage(event.target.value);
     };
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin")
+        }
 
+    }, [])
     const handleSendMessage = () => {
         if (newMessage.trim() === '') return;
 

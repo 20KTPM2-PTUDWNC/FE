@@ -12,6 +12,12 @@ function MapStudentID() {
     const navigate = useNavigate();
     const user = getUser();
     const cookie = new Cookies();
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin")
+        }
+
+    }, [])
     const [editedStudentId, setEditedStudentId] = useState('');
     const list = [
         {

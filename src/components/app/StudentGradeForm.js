@@ -70,33 +70,7 @@ function StudentGradeForm({ onClose, onClick, classId }) {
         }
     }
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
 
-    //     if (!name || !_scale) {
-    //         return setError("Please fill all field!");
-    //     }
-
-    //     let scale = Number(_scale);
-
-    //     let newAssignment = {
-    //         name, scale
-    //     };
-
-    //     try {
-    //         const response = await addAssignment(gradeStructureId, newAssignment);
-    //         if (response.status === 200) {
-    //             alert("Add new assignment successfully!");
-    //             onClose();
-    //             onClick()
-    //         }
-    //     } catch (error) {
-    //         setError(error.response.data.message);
-    //         alert(error.response.data.message)
-    //         console.log(error);
-
-    //     }
-    // };
 
     useEffect(() => {
 
@@ -107,13 +81,6 @@ function StudentGradeForm({ onClose, onClick, classId }) {
             console.log("useEffect done");
         }
     }, [])
-    // async function loadImg() {
-
-    //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-    //     const imgJson = await res.json()
-    //     setImages(imgJson.results)
-
-    // }
 
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">

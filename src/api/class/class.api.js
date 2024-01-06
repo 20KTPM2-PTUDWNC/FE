@@ -147,11 +147,26 @@ export const activeClass = async (id, data) => {
     }
 };
 
+export const uploadStudentList = async (id, data) => {
+
+    try {
+        console.log(id)
+        return await axiosPrivate.post(`/v1/class/uploadStudentList/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                "Authorization": getCookies()
+            }
+        })
+    } catch (err) {
+        throw err;
+    }
+};
 export const showStudentList = async (id) => {
 
     try {
         return await axiosPrivate.get(`/v1/class/showStudentList/${id}`, {
             headers: {
+
                 "Authorization": getCookies()
             }
         });

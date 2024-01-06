@@ -94,7 +94,7 @@ function EditProfile() {
             studentId,
             userId: user._id
         }
-        if (studentId === 0 || studentId.trim() === "0")
+        if (studentId && (studentId === 0 || studentId.trim() === "0"))
             return setError("StudentId is not accepted");
         // const Avatar = new FormData();
         // if (avatar) {
@@ -129,7 +129,7 @@ function EditProfile() {
             // if (avatar)
             //     await updateAvatar(user?._id, Avatar)
             alert("Update profile successfully!");
-            skill_list = []
+
             navigate(`/user/${user?._id}`);
         } catch (error) {
             console.log(error);

@@ -123,18 +123,21 @@ const CommentSection = ({ comments, data, setStudentId }) => {
         </div>
     );
 };
-const StudentGrade = ({ onClick }) => {
+const StudentGrade = ({ onClick, reviews }) => {
     return (
         <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
 
             <p className="font-bold mb-2">Your Grade:</p>
-            <p className="font-bold mb-2 text-center text-2xl">10</p>
-            <button
-                className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
-                onClick={onClick}
-            >
-                Review
-            </button>
+            <p className="font-bold mb-2 text-center text-2xl">{!reviews ? 'No grade' : '10'}</p>
+            {reviews &&
+                <button
+                    className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                    onClick={onClick}
+                >
+                    Review
+                </button>
+            }
+
         </div>
     );
 }
@@ -302,20 +305,20 @@ function AssignmentDetails() {
     ]
     const handleInputChange = (inputText) => {
         setText(inputText);
-        setReview({
-            "deleteAt": null,
-            "_id": "6575ea710c7934d00351afda",
-            "assignmentReviewId": "6575ea360c7934d00351afd9",
-            "userId": {
-                "_id": user._id,
-                "name": user.name,
-                "studentId": null
-            },
-            "text": inputText,
-            "sort": "1",
-            "createdAt": "2023-12-16T14:44:26.682Z",
-            "updatedAt": "2023-12-16T14:44:26.682Z"
-        })
+        // setReview({
+        //     "deleteAt": null,
+        //     "_id": "6575ea710c7934d00351afda",
+        //     "assignmentReviewId": "6575ea360c7934d00351afd9",
+        //     "userId": {
+        //         "_id": user._id,
+        //         "name": user.name,
+        //         "studentId": null
+        //     },
+        //     "text": inputText,
+        //     "sort": "1",
+        //     "createdAt": "2023-12-16T14:44:26.682Z",
+        //     "updatedAt": "2023-12-16T14:44:26.682Z"
+        // })
     };
     const closeTab = {
         asssignmentOptions: {
@@ -340,7 +343,7 @@ function AssignmentDetails() {
 
             if (response.status === 200) {
                 console.log(response.data)
-                setMemberList(response.data)
+                setReview(response.data)
             }
         } catch (error) {
             console.log("Error123: ", error);
@@ -483,10 +486,11 @@ function AssignmentDetails() {
                     setStudentId={setStudentIdComment}
                 />
             }
-            {showGrade &&
+            {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && showGrade &&
                 <ShowGrade
                     onClose={closeTab.showGrade.close}
                     assignmentId={assignmentId}
+                    studentList={memberList.students}
                 />
             }
             {openReview &&

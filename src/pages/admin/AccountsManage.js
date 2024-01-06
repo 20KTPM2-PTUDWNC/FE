@@ -30,6 +30,12 @@ function AccountsManage() {
         const listData = [header, ...body]
     }
     useEffect(() => {
+        if (!user) {
+            navigate("/signin")
+        }
+       
+    }, [])
+    useEffect(() => {
         getAllUsers()
     }, [])
     // const list = [

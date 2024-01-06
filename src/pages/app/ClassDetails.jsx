@@ -770,7 +770,7 @@ function ClassDetails() {
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{student.name} - Teacher</p>
+                                                        <p className="text-lg font-bold">{student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>

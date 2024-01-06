@@ -80,3 +80,42 @@ export const getAllUser = async () => {
         throw error;
     }
 };
+
+export const lockAccount = async (userId) => {
+
+    try {
+        return await axiosPrivate.put(`/v1/user/lockAccount/${userId}`, {}, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const unmapStudentId = async (userId) => {
+
+    try {
+        return await axiosPrivate.patch(`/v1/user/unmappingStudentId/${userId}`, {}, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateIdByFile = async (data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/user/mappingStudentIdByCsv`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

@@ -11,9 +11,6 @@ import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
 import { FaBan, FaCheck } from "react-icons/fa";
 
-import { banAcc, getAllUser } from "../../api/user/user.api";
-
-
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 

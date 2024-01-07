@@ -215,7 +215,7 @@ function MapStudentID() {
                 {showMappingCSV &&
                     <UploadFileForm
                         onClose={() => setShowMappingCSV(!showMappingCSV)}
-
+                        uploadType={"mapping studentId"}
                     />}
             </main>
 

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage, faFile, faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { uploadStudentList } from "../../api/class/class.api";
 import { uploadGrade } from "../../api/grade/grade.api";
+import { updateIdByFile } from "../../api/user/user.api";
 
 function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
     const [fileInfo, setFileInfo] = useState(null);
@@ -107,6 +108,7 @@ function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
                         if (uploadType === "mapping studentId") {
                             // Check if the email column contains valid email addresses
                             const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
+                            console.log(row.email)
                             // ^: Asserts the start of the string.
                             // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
                             // @: Matches the "@" symbol.
@@ -168,23 +170,32 @@ function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
             try {
                 // Assuming you have an API function called uploadCSVFile
                 // Replace 'yourApiFunction' with the actual API function
+                let requiredColumnNames = [];
                 if (uploadType === "grade list") {
+                    requiredColumnNames = ['studentId', 'email', 'grade']
                     const response = await uploadGrade(classId, formData);
+                    if (response.status === 200){
+                        alert("Upload grade list successfullly");
+                    }
                 }
                 else if (uploadType === "mapping studentId") {
-                    requiredColumnNames = ['studentId', 'name', 'email']
+                    requiredColumnNames = ['studentId', 'name', 'email'];
+                    const response = await updateIdByFile(formData);
+                    if (response.status === 200){
+                        alert("Mapping student ID by file successfullly");
+                    }
                 }
                 else if (uploadType === "student list") {
-                    const response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+                    requiredColumnNames = ['studentId', 'name']
+                    const response = await uploadStudentList(classId, formData);
+                    if (response.status === 200){
+                        alert("Upload student list successfullly");
+                    }
                 }
                 else {
                     alert("Invalid upload type");
                     return;
                 }
-
-
-                // Handle the API response as needed
-                console.log('API response:', response);
 
                 // Close the modal or perform any other actions
                 onClose();

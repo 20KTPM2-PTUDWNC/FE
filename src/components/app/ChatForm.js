@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Draggable from 'react-draggable';
 import { FaRegCircleQuestion } from "react-icons/fa6";
+import { userReview, userReviewList } from '../../api/user/user.api';
 import { getUser } from '../../features/user';
 const ChatComponent = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -23,28 +24,54 @@ const ChatComponent = () => {
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() !== '') {
-      const userMessage = { text: message, sender: 'user' };
-      const responseMessage = { text: 'Hello! How can I help you?', sender: 'other' };
+      // const userMessage = { text: message, sender: 'user' };
+      // const responseMessage = { text: 'Hello! How can I help you?', sender: 'other' };
 
-      setMessages([...messages, userMessage, responseMessage]);
-      setMessage('');
+      // setMessages([...messages, userMessage, responseMessage]);
+      const dataMessage = {
+        "studentId": user?._id,
+        "text": message,
+        "sort": "3"
+      }
+      const res = await userReview(dataMessage)
+      if (res.status === 200) {
+        setMessage('');
+        getUserReviews()
+      }
     }
   };
+  const getUserReviews = async () => {
+    if (!user)
+      return
+    const response = await userReviewList(user._id)
+    if (response.status === 200) {
+      setMessages(response.data)
+    }
+  }
+  useEffect(() => {
+   
+    const intervalId = setInterval(() => {
+      getUserReviews();
+      console.log('Code executed every 2000 milliseconds');
+    }, 2000);
 
+    // Clean up the interval to avoid memory leaks
+    return () => clearInterval(intervalId);
+  }, [isChatOpen])
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [message]);
   if (user)
     return (
       <div
 
       >
         <div
-          className={`absolute right-0 bottom-0 m-4 ${chatTextColor} p-2 font-sans z-0`}
+          className={`fixed right-0 bottom-0 m-4 ${chatTextColor} p-2 font-sans z-0`}
 
 
         >
@@ -60,7 +87,7 @@ const ChatComponent = () => {
                 {messages.map((msg, index) => (
                   <div
                     key={index}
-                    className={`mb-2 ${chatInsideColor} ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}
+                    className={`mb-2 ${chatInsideColor} ${msg.userId._id === user._id ? 'text-right' : 'text-left'}`}
                   >
                     {msg.text}
                   </div>

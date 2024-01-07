@@ -5,7 +5,7 @@ import { faFileImage, faFile, faFileAlt } from '@fortawesome/free-regular-svg-ic
 import { uploadStudentList } from "../../api/class/class.api";
 import { uploadGrade } from "../../api/grade/grade.api";
 
-function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
+function UploadFileForm({ onClose, uploadType, classId }) {
     const [fileInfo, setFileInfo] = useState(null);
     const [file, setFile] = useState(null)
     const handleFileChange = (e) => {
@@ -168,14 +168,15 @@ function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
             try {
                 // Assuming you have an API function called uploadCSVFile
                 // Replace 'yourApiFunction' with the actual API function
+                let response = null
                 if (uploadType === "grade list") {
-                    const response = await uploadGrade(classId, formData);
+                    response = await uploadGrade(classId, formData);
                 }
                 else if (uploadType === "mapping studentId") {
-                    requiredColumnNames = ['studentId', 'name', 'email']
+                    // requiredColumnNames = ['studentId', 'name', 'email']
                 }
                 else if (uploadType === "student list") {
-                    const response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+                    response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
                 }
                 else {
                     alert("Invalid upload type");

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUser } from '../../features/user';
+import { userReview, userReviewList } from '../../api/user/user.api';
+import { getCookies, getUser } from '../../features/user';
 
 const CSKH = () => {
-    const [messages, setMessages] = useState([
-        { user: 'User1', text: 'Hello there!' },
-        { user: 'User2', text: 'Hi! How are you?' },
-    ]);
+    const [messages, setMessages] = useState([]);
     const navigate = useNavigate();
     const user = getUser();
     const [newMessage, setNewMessage] = useState('');
@@ -25,13 +23,46 @@ const CSKH = () => {
         }
 
     }, [])
-    const handleSendMessage = () => {
-        if (newMessage.trim() === '') return;
+    const handleSendMessage = async () => {
+        if (newMessage.trim() !== '') {
+            // const userMessage = { text: message, sender: 'user' };
+            // const responseMessage = { text: 'Hello! How can I help you?', sender: 'other' };
 
-        const updatedMessages = [...messages, { user: 'User1', text: newMessage }];
-        setMessages(updatedMessages);
-        setNewMessage('');
+            // setMessages([...messages, userMessage, responseMessage]);
+            const dataMessage = {
+                "studentId": sessionStorage.getItem("customerSelected"),
+                "text": newMessage,
+                "sort": "4"
+            }
+            console.log("data", dataMessage)
+            console.log(getCookies())
+            const res = await userReview(dataMessage)
+            if (res.status === 200) {
+                setNewMessage('');
+                getUserReviews()
+                alert("oke")
+                console.log(res.data)
+            }
+        }
     };
+    const getUserReviews = async () => {
+        if (!user)
+            return
+        const response = await userReviewList(sessionStorage.getItem("customerSelected"))
+        if (response.status === 200) {
+            setMessages(response.data)
+        }
+    }
+    useEffect(() => {
+
+        const intervalId = setInterval(() => {
+            getUserReviews();
+            console.log('Code executed every 2000 milliseconds');
+        }, 2000);
+
+        // Clean up the interval to avoid memory leaks
+        return () => clearInterval(intervalId);
+    }, [])
 
     return (
         <>
@@ -50,8 +81,8 @@ const CSKH = () => {
                                 <div className="flex-1">
                                     <div className="border border-gray-300 rounded-lg p-4 h-80 overflow-y-scroll mb-4">
                                         {messages.map((message, index) => (
-                                            <div key={index} className={`mb-2 ${message.user === 'User1' ? 'text-right' : 'text-left'}`}>
-                                                <strong>{message.user}:</strong> {message.text}
+                                            <div key={index} className={`mb-2 text-left `}>
+                                                <strong>{message.userId.name}:</strong> {message.text}
                                             </div>
                                         ))}
                                     </div>

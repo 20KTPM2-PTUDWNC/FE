@@ -126,3 +126,31 @@ export const updateIdByFile = async (data) => {
         throw error;
     }
 };
+
+
+export const userReview = async (data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/user/reviewStudentId`, data, {
+
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+export const userReviewList = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/user/studentIdReviewDetail/${id}`, {
+
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

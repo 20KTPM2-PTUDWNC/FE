@@ -54,3 +54,16 @@ export const studentReview = async (id, data) => {
         throw err;
     }
 };
+export const assignmentReview = async (id) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/assignment/assignmentReviews/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+
+        });
+    } catch (err) {
+        throw err;
+    }
+};

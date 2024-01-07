@@ -197,7 +197,7 @@ function NavbarAdmin() {
                                     </svg>
                                 </div>
                                 <div
-                                    className={`content transition-all duration-500 ${contentVisible2 ? 'max-h-96 overflow-hidden' : 'max-h-0 overflow-hidden'}`}
+                                    className={`content transition-all duration-500 ${contentVisible2 ? 'max-h-96 overflow-hidden overflow-y-auto' : 'max-h-0 overflow-hidden'}`}
                                 >
                                     <ul
 
@@ -205,7 +205,10 @@ function NavbarAdmin() {
                                     >
 
                                         {customer.map((c, index) =>
-                                            <li key={index} onClick={() => setCustomerSelected(c._id)}>
+                                            <li key={index} onClick={() => {
+                                                sessionStorage.setItem("customerSelected", c._id)
+                                                setCustomerSelected(c._id)
+                                            }}>
                                                 <Link to={`/admin/CSKH/${c._id}`}
                                                     className={`flex items-center ${customerSelected === c._id ? 'bg-yellow-200' : 'bg-white hover:bg-yellow-50'} rounded-xl font-bold text-sm text-gray-900 py-3 px-4`}
                                                 >

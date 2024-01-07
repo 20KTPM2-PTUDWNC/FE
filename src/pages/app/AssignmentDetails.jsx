@@ -14,8 +14,9 @@ import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
 import { showMemberList } from "../../api/class/class.api";
 import { getAssigmentGrade, getClassGrade, showGradeStructure } from "../../api/grade/grade.api";
-import { showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
+import { assignmentReview, showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks";
+import StudentReviewList from "../../components/app/StudentReviewList";
 
 function splitStr(a) {
     let re = "";
@@ -114,12 +115,12 @@ const CommentSection = ({ data, getReview, memberList, userId, setUserIdOfStuden
         <div className="comment-section mb-8">
             <div className="flex flex-row mb-3">
                 <h2 className="text-2xl font-bold mb-4">Comment</h2>
-                {!check &&
+                {!check && data && data.userReview.length > 0 &&
                     <button
                         className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ml-5"
                         onClick={setShowReview}
                     >
-                        Update Grade
+                        Review Details
                     </button>
                 }
             </div>
@@ -197,6 +198,7 @@ function AssignmentDetails() {
     const [showAssignmentOption, setShowAssignmentOption] = useState(false);
     const [showGrade, setShowGrade] = useState(false)
     const [showReviews, setShowReviews] = useState(false)
+    const [reviewList, setReviewList] = useState([])
     const [review, setReview] = useState(null)
     const [memberList, setMemberList] = useState([])
     const [action, setAction] = useState(false)
@@ -204,11 +206,23 @@ function AssignmentDetails() {
     const [userIdOfStudent, setUserIdOfStudent] = useState('')
     const [firstStudentId, setFirstStudentId] = useState('')
     const [showUploadGrade, setShowUploadGrade] = useState(false)
+    const [showReviewList, setShowReviewList] = useState(false)
     const handleInputChange = (inputText) => {
         setText(inputText);
     };
+    async function getStudentReviewList() {
+        const res = await assignmentReview(assignmentId)
+        if (res.status === 200) {
+            setReviewList(res.data)
+            alert("getReviewList")
+            setShowReviewList(true)
+        }
+        else {
+            alert("fail")
+        }
+    }
     const reviewFromStudent = () => {
-        setShowReviews(true);
+        getStudentReviewList()
     }
     const showUpload = () => {
         setShowUploadGrade(true)
@@ -243,6 +257,11 @@ function AssignmentDetails() {
                 setShowReviews(false)
             }
         },
+        showReviewList: {
+            close: function () {
+                setShowReviewList(false)
+            }
+        }
     }
     async function getMemberList(classId) {
         try {
@@ -355,7 +374,7 @@ function AssignmentDetails() {
     }, [showAssignmentOption]);
 
     return (
-        <div className="w-full h-full relative" >
+        <div className={`w-full ${review ? 'h-full' : 'h-screen'} relative`} >
             <div className="h-full pt-[120px] pb-[50px] max-w-[900px] text-[#5f27cd] mx-auto p-4  justify-center w-full h-full">
                 <div className="pb-4 mb-5 relative">
                     <p className="text-4xl font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">
@@ -450,6 +469,14 @@ function AssignmentDetails() {
                     selectedReview={review}
                     onClose={closeTab.showReviews.close}
 
+                />
+            }
+            {showReviewList &&
+                <StudentReviewList
+                    data={reviewList}
+                    setStudentId={setUserIdOfStudent}
+                    onClose={closeTab.showReviewList.close}
+                    getReview={getReview}
                 />
             }
             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && showGrade &&

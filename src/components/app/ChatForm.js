@@ -40,13 +40,11 @@ const ChatComponent = () => {
   }, [messages]);
   if (user)
     return (
-      <Draggable
-        onStart={() => setIsDragging(true)}
-        onStop={() => setIsDragging(false)}
+      <div
 
       >
         <div
-          className={`fixed right-0 bottom-0 m-4 ${chatTextColor} p-2 font-sans`}
+          className={`absolute right-0 bottom-0 m-4 ${chatTextColor} p-2 font-sans z-0`}
 
 
         >
@@ -83,7 +81,7 @@ const ChatComponent = () => {
                   Send
                 </button>
               </div>
-              <div className={`${chatHeaderColor} text-center rounded-full p-2 font-semibold`}
+              <div className={`${chatHeaderColor} text-center  p-2 font-semibold`}
                 onClick={handleChatClick}
               >
                 Close
@@ -97,7 +95,7 @@ const ChatComponent = () => {
             </div>
           )}
         </div>
-      </Draggable>
+      </div>
     );
 };
 

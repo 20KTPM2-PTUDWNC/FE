@@ -11,26 +11,10 @@ import { addAssignment, showAssignmentGrade } from "../../api/assignment/assignm
 import Cookies from "universal-cookie";
 import { exportStudentList } from "../../api/class/class.api";
 import { CSVLink } from "react-csv";
-import { giveStudentGrade } from "../../api/grade/grade.api";
+import { getAssigmentNoGrade, giveStudentGrade } from "../../api/grade/grade.api";
 import { updateId } from "../../api/user/user.api";
-const studentEx = [
-    {
-        "studentId": null,
-        "_id": "6564bba8eeb5819d77c4d119",
-        "userFlag": 1,
-        "email": "tintombolon@gmail.com",
-        "password": null,
-        "phone": "123",
-        "address": "123",
-        "name": "A",
-        "deleteAt": null,
-        "verified": true,
-        "createdAt": "2023-11-27T15:54:16.110Z",
-        "updatedAt": "2023-12-07T02:02:24.445Z",
-        "__v": 0
-    }
-]
-function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
+
+function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -43,13 +27,19 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
     const params = useParams();
     const [header, setHeader] = useState([]);
     const [body, setBody] = useState([])
-    const [editedGrade, setEditedGrade] = useState({ userId: '', grade: 0 });
-    const [editPos, setEditPos] = useState(-1)
+    const [editedGrade, setEditedGrade] = useState(-1);
+    const [editPos_graded, setEditPos_graded] = useState(-1)
+    const [editPos_studentID, setEditPos_studentID] = useState(-1)
+    const [editPosGraded_studentID, setEditPosGraded_studentID] = useState(-1)
+    const [editPosGraded_graded, setEditPosGraded_graded] = useState(-1)
     const [list, setList] = useState([])
     const [students, setStudents] = useState([])
     const [action, setAction] = useState(false)
-    const [selectedObj, setSelectedObj] = useState(null)
-    const [selectedStudentId, setSelectedStudentId] = useState({ userId: '', studentId: '' })
+    const [selectedObjGrade, setSelectedObjGrade] = useState(null)
+    const [selectedObjStudentID, setSelectedObjStudentID] = useState(null)
+    const [selectedStudentId, setSelectedStudentId] = useState('')
+    const [editStudentID, setEditStudentID] = useState(-1)
+    const [editStudentIDGraded, setEditStudentIDGraded] = useState(-1)
     useEffect(() => {
         if (!user) {
             navigate("/signin");
@@ -83,25 +73,26 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
             setList(listData)
             // const [status, setStatus] = useState(false)
             console.log("grade: ", data)
-            const filteredArray = studentList.filter(objA => !data.some(objB => objA.studentId === objB.studentId));
-            setStudents(filteredArray)
-
+            const res1 = await getAssigmentNoGrade(classId, assignmentId)
+            console.log("No grade ", res1.data)
+            setStudents(res1.data.studentsWithoutGrade)
         }
         catch (err) {
             console.log(err)
         }
     }
-    const handleStudentGrade = async (grade) => {
+    const handleStudentGrade = async (id, grade, mark) => {
         const studentData = {
             "assignmentId": assignmentId,
-            "mark": "0",
-            "userId": grade.userId,
-            "grade": grade.grade
+            "mark": mark,
+            "userId": id,
+            "grade": grade
         }
         console.log(studentData)
         try {
             const res = await giveStudentGrade(studentData);
             setAction(!action)
+            onClick()
         } catch (err) {
             alert("Error: ", err)
         }
@@ -116,10 +107,12 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
         if (studentId && (studentId === 0 || studentId.trim() === "0"))
             return alert("StudentId is not accepted");
         try {
-
+            console.log(studentIdMapping)
             await updateId(studentIdMapping)
             // if (avatar)
             //     await updateAvatar(user?._id, Avatar)
+            setAction(!action)
+            onClick()
             alert("Update studentID successfully!");
 
 
@@ -131,7 +124,9 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
         alert("StudentId available ", userId, studentId);
     }
     return (
-        <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
+        <div
+            onClick={() => setAction(!action)}
+            className="absolute overflow-y-auto overflow-x-auto top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
             <div className="w-[1000px] h-[500px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
@@ -148,8 +143,8 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
 
 
 
-                <div className="relative overflow-y-auto overflow-x-auto w-full h-full font-sans">
-                    <table className="overflow-y-auto overflow-x-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
+                <div className=" overflow-y-auto overflow-x-auto w-full max-h-[400px]  font-sans">
+                    <table className="overflow-y-auto overflow-x-auto max-h-[400px] w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-center border">
@@ -162,7 +157,7 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                                     Edit Grade
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center border">
-                                    Graded
+                                    Is Graded
                                 </th>
 
                             </tr>
@@ -170,24 +165,38 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                         <tbody>
                             {students.map((row, index) => (
                                 <tr
-                                    key={row._id ? row._id : index}
+                                    key={index}
                                     className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}
                                 >
                                     <td
                                         className={`px-6 py-4 text-center border border-r-2`}
                                     >
-                                        <input
+                                        {/* <input
                                             type="text"
                                             value={selectedStudentId.userId !== row._id ? row.studentId : selectedStudentId.studentId}
-                                            onChange={(e) => setSelectedStudentId({ userId: row._id, studentId: e.target.value })}
+                                            onChange={(e) => setSelectedStudentId(e.target.value)}
                                             className="text-center py-2 bg-none border"
 
+                                        /> */}
+                                        <input
+                                            type="text"
+                                            value={editPos_studentID === index ? selectedStudentId : row.studentId}
+                                            onChange={(e) => {
+                                                setSelectedStudentId(e.target.value)
+                                            }}
+                                            onClick={() => setEditPos_studentID(index)}
+                                            onBlur={() => setEditPos_studentID(-1)}
+                                            className="text-center py-2 bg-none border"
                                         />
-
                                         <button
                                             className="ml-2 bg-green-500 font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => handleUpdateStudentId(row._id, selectedStudentId.studentId)}
-                                        >
+                                            onClick={() => {
+                                                const prevPos = editPos_studentID;
+                                                setEditPos_studentID(index)
+                                                if (prevPos === index)
+                                                    handleUpdateStudentId(row.userId, selectedStudentId)
+                                            }
+                                            }>
                                             Map
                                         </button>
                                     </td>
@@ -196,8 +205,14 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                                     >
                                         <input
                                             type="number"
-                                            value={editedGrade.userId !== row._id ? 0 : editedGrade.grade < 0 ? 0 : editedGrade.grade > 10 ? 10 : editedGrade.grade}
-                                            onChange={(e) => setEditedGrade({ userId: row._id, grade: e.target.value })}
+                                            value={editPos_graded === index ? editedGrade === -1 ? 0 : editedGrade : row.grade}
+                                            onChange={(e) => {
+
+                                                setEditedGrade(e.target.value < 0 ? 0 : e.target.value > 10 ? 10 : e.target.value)
+
+                                            }}
+                                            onClick={() => setEditPos_graded(index)}
+
 
                                             className="text-center py-2 bg-none border"
                                         />
@@ -205,7 +220,13 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                                     <td className="px-6 py-4 text-center border">
                                         <button
                                             className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => handleStudentGrade(editedGrade)}
+                                            onClick={() => {
+                                                const prevPos = editPos_graded;
+                                                setEditPos_graded(index)
+                                                if (prevPos === index)
+                                                    if (editedGrade !== -1)
+                                                        handleStudentGrade(row.userId, editedGrade, row.mark)
+                                            }}
                                         >
                                             Edit Grade
                                         </button>
@@ -228,21 +249,42 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                                     <td
                                         className={`px-6 py-4 text-center border border-r-2`}
                                     >
-
                                         <input
-                                            type="number"
-                                            value={selectedStudentId.userId !== selectedObj?._id ? row.studentId : selectedStudentId.studentId}
+                                            type="text"
+                                            value={editPosGraded_studentID === index ? selectedStudentId : row.studentId}
                                             onChange={(e) => {
                                                 const foundObject = studentList.find(obj => obj.studentId === row.studentId);
-                                                setSelectedObj(foundObject)
+                                                console.log(foundObject)
+                                                setSelectedObjStudentID(foundObject)
+
+                                                setSelectedStudentId(e.target.value)
+
+                                            }}
+                                            onClick={() => setEditPosGraded_studentID(index)}
+                                            onBlur={() => setEditPosGraded_studentID(-1)}
+                                            className="text-center py-2 bg-none border"
+                                        />
+                                        {/* <input
+                                            type="text"
+                                            value={selectedStudentId.userId !== selectedObjStudentID?._id ? row.studentId : selectedStudentId.studentId}
+                                            onChange={(e) => {
+                                                const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                setSelectedObjGrade(foundObject)
                                                 setSelectedStudentId({ userId: foundObject._id, studentId: e.target.value })
                                             }}
 
                                             className="text-center py-2 bg-none border"
-                                        />
+                                        /> */}
                                         <button
                                             className="ml-2 bg-green-500 font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => handleUpdateStudentId(selectedObj?._id, selectedStudentId.studentId)}
+                                            onClick={() => {
+                                                const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                setSelectedObjGrade(foundObject)
+                                                const prevPos = editPosGraded_studentID;
+                                                setEditPosGraded_studentID(index)
+                                                if (prevPos === index)
+                                                    handleUpdateStudentId(foundObject?._id, selectedStudentId)
+                                            }}
                                         >
                                             Map
                                         </button>
@@ -252,20 +294,45 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                                     >
                                         <input
                                             type="number"
-                                            value={editedGrade.userId !== selectedObj?._id ? 0 : editedGrade.grade < 0 ? 0 : editedGrade.grade > 10 ? 10 : editedGrade.grade}
+                                            value={editPosGraded_graded === index ? editedGrade === -1 ? row.grade : editedGrade : row.grade}
                                             onChange={(e) => {
+                                                setEditedGrade(row.grade)
                                                 const foundObject = studentList.find(obj => obj.studentId === row.studentId);
-                                                setSelectedObj(foundObject)
-                                                setEditedGrade({ userId: foundObject._id, grade: e.target.value < 0 ? 0 : e.target.value > 10 ? 10 : e.target.value })
-                                            }}
+                                                setSelectedObjGrade(foundObject)
 
+                                                setEditedGrade(e.target.value < 0 ? 0 : e.target.value > 10 ? 10 : e.target.value)
+
+                                            }}
+                                            onClick={() => setEditPosGraded_graded(index)}
+                                            onBlur={() => setEditPosGraded_graded(-1)}
                                             className="text-center py-2 bg-none border"
                                         />
+                                        <button
+                                            className={`ml-2 ${row.mark === 0 ? 'bg-green-500' : 'bg-red-400'} font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90`}
+                                            onClick={() => {
+                                                const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                setSelectedObjGrade(foundObject)
+                                                const prevPos = editPosGraded_graded;
+                                                setEditPosGraded_graded(index)
+                                                if (prevPos === index)
+                                                    handleStudentGrade(foundObject._id, row.grade, row.mark === 0 ? 1 : 0)
+                                            }}
+                                        >
+                                            {row.mark === 0 ? 'Mark' : 'Un Mark'}
+                                        </button>
                                     </td>
                                     <td className="px-6 py-4 text-center border">
                                         <button
                                             className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                                            onClick={() => handleStudentGrade(editedGrade)}
+                                            onClick={() => {
+                                                const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                setSelectedObjGrade(foundObject)
+                                                const prevPos = editPosGraded_graded;
+                                                setEditPosGraded_graded(index)
+                                                if (prevPos === index)
+                                                    if (editedGrade !== -1)
+                                                        handleStudentGrade(foundObject._id, editedGrade, row.mark)
+                                            }}
                                         >
                                             Edit Grade
                                         </button>
@@ -282,24 +349,25 @@ function ShowGrade({ onClose, onClick, assignmentId, studentList }) {
                             ))}
                         </tbody>
                     </table>
-                    <div className="mt-10 flex flex-row">
 
-                        <CSVLink
-                            data={list}
-                            filename={"studentGrade"}
-                            target="_blank"
-                            className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                        >
-                            Download
-                        </CSVLink>
+                </div>
+                <div className="mt-10 flex flex-row">
 
-                        <button
-                            className="ml-10 bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
-                            onClick={() => alert("abc")}
-                        >
-                            Mark Grade
-                        </button>
-                    </div>
+                    <CSVLink
+                        data={list}
+                        filename={"studentGrade"}
+                        target="_blank"
+                        className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+                    >
+                        Download
+                    </CSVLink>
+
+                    <button
+                        className="ml-10 bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+                        onClick={() => alert("abc")}
+                    >
+                        Mark Grade
+                    </button>
                 </div>
             </div>
         </div>

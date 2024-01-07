@@ -3,26 +3,22 @@ import { AiOutlineDownload } from "react-icons/ai";
 
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link } from "react-router-dom";
+import { markFinal } from "../../api/grade/grade.api.js";
 
-function ShowReviews({ onClose, data, setStudentId }) {
-    const [selectedReview, setSelectedReview] = useState(null)
+function ShowReviews({ onClose, selectedReview, setStudentId }) {
+
     const [images, setImages] = useState([])
     const [finalGrade, setFinalGrade] = useState(-1)
-    useEffect(() => {
 
-        loadImg();
-
-
-        return () => {
-            console.log("useEffect done");
+    const handleMarkFinal = async () => {
+        const data = {
+            "expectedGrade": finalGrade
         }
-    }, [])
-    async function loadImg() {
-
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-        const imgJson = await res.json()
-        setImages(imgJson.results)
-
+        const res = await markFinal(selectedReview.assignmentReview._id, data)
+        if (res.status === 200) {
+            onClose()
+            alert("Mark successfully")
+        }
     }
 
     return (
@@ -50,103 +46,79 @@ function ShowReviews({ onClose, data, setStudentId }) {
                     <button
                         className="absolute top-[-16px] right-[-16px] bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
                         onClick={() => {
-                            if (selectedReview)
-                                setSelectedReview(false)
-                            else
-                                onClose()
+
+
+                            onClose()
                         }}
                     >
-                        {selectedReview ? "Back" : "X"}
+                        X
                     </button>
                 </div>
 
 
-                {!selectedReview &&
-                    <div className="overflow-y-auto w-full font-sans">
-                        <div className="flex flex-col">
-                            {data.map((item, index) =>
-                                <button
-                                    key={index}
-                                    className="flex justify-between hover:bg-[#48dbfb] px-2 py-4 rounded-sm"
-                                    onClick={() => {
-                                        setSelectedReview(item);
-                                        alert("Selected Reviews")
+
+
+                <div className="overflow-y-auto w-full font-sans">
+                    <div className="flex flex-col">
+                        <ul>
+                            <li className="py-2">
+                                <p className="font-semibold">StudentID: <span className="font-light">{selectedReview.studentId}</span> </p>
+                            </li>
+                            <li className="py-2">
+                                <p className="font-semibold">Grade: <span className="font-light text-green-500">{selectedReview.grade}</span> </p>
+                            </li>
+                            <li className="py-2">
+                                <p className="font-semibold">Expected Grade From Student: <span className="font-light text-red-500">{selectedReview.assignmentReview.expectedGrade}</span> </p>
+                            </li>
+                            <li className="py-2">
+                                <p className="font-semibold">Explanation:{" "}
+                                    <span className="font-light">
+                                        {selectedReview.userReview[0].text}
+                                    </span>
+                                </p>
+                            </li>
+                            <hr className="my-5" />
+                            <li className="py-2 flex flex-row items-center">
+                                <p className="font-semibold">Final Grade: {" "}</p>
+                                <input
+                                    type="number"
+                                    className="ml-2 pl-2 py-1 border-b-2 border-black"
+                                    value={finalGrade === -1 ? '' : finalGrade > 10 ? 10 : finalGrade < 0 ? 0 : finalGrade}
+                                    onChange={(e) => {
+                                        const grade = e.target.value
+                                        if (grade.length !== 0)
+                                            setFinalGrade(e.target.value)
+                                        else
+                                            setFinalGrade(-1)
                                     }}
-                                >
-                                    <p
-                                        className="font-bold hover:text-[#00ADB5]"
-                                    >
-                                        {item.studentId} - {item.assignmentReview.expectedGrade}
-                                    </p>
-                                </button>
-                            )}
+                                />
+                            </li>
+                        </ul>
 
 
-                        </div>
                     </div>
-                }
-                {selectedReview &&
-                    <div className="overflow-y-auto w-full font-sans">
-                        <div className="flex flex-col">
-                            <ul>
-                                <li className="py-2">
-                                    <p className="font-semibold">StudentID: <span className="font-light">{selectedReview.studentId}</span> </p>
-                                </li>
-                                <li className="py-2">
-                                    <p className="font-semibold">Grade: <span className="font-light text-green-500">{selectedReview.grade}</span> </p>
-                                </li>
-                                <li className="py-2">
-                                    <p className="font-semibold">Expected Grade From Student: <span className="font-light text-red-500">{selectedReview.assignmentReview.expectedGrade}</span> </p>
-                                </li>
-                                <li className="py-2">
-                                    <p className="font-semibold">Explanation:{" "}
-                                        <span className="font-light">
-                                            Thay cham diem thap qua
-                                        </span>
-                                    </p>
-                                </li>
-                                <hr className="my-5" />
-                                <li className="py-2 flex flex-row items-center">
-                                    <p className="font-semibold">Final Grade: {" "}</p>
-                                    <input
-                                        type="number"
-                                        className="ml-2 pl-2 py-1 border-b-2 border-black"
-                                        value={finalGrade === -1 ? '' : finalGrade > 10 ? 10 : finalGrade < 0 ? 0 : finalGrade}
-                                        onChange={(e) => {
-                                            const grade = e.target.value
-                                            if (grade.length !== 0)
-                                                setFinalGrade(e.target.value)
-                                            else
-                                                setFinalGrade(-1)
-                                        }}
-                                    />
-                                </li>
-                            </ul>
-
-
-                        </div>
-                        <div className="my-5 flex flex-row items-center justify-center">
+                    <div className="my-5 flex flex-row items-center justify-center">
+                        {/* <button
+                            className=" bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
+                            onClick={() => {
+                                setStudentId(selectedReview.studentId)
+                                onClose()
+                            }}
+                        >
+                            Go to comment
+                        </button> */}
+                        {finalGrade !== -1 &&
                             <button
-                                className=" bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
-                                onClick={() => {
-                                    setStudentId(selectedReview.studentId)
-                                    onClose()
-                                }}
+                                className="ml-5 bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
+                                onClick={handleMarkFinal}
                             >
-                                Go to comment
+                                Final Score
                             </button>
-                            {finalGrade !== -1 &&
-                                <button
-                                    className="ml-5 bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
+                        }
 
-                                >
-                                    Final Score
-                                </button>
-                            }
-
-                        </div>
                     </div>
-                }
+                </div>
+
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ import AddNewClass from "../../components/app/AddNewClassForm";
 import JoinClass from "../../components/app/JoinClassForm";
 import Cookies from "universal-cookie";
 import { FaBan, FaCheck } from "react-icons/fa";
-import { getAllUser } from "../../api/user/user.api";
+import { banAcc, getAllUser } from "../../api/user/user.api";
 function AccountsManage() {
 
     const navigate = useNavigate();
@@ -33,74 +33,20 @@ function AccountsManage() {
         if (!user) {
             navigate("/signin")
         }
-       
+
     }, [])
     useEffect(() => {
         getAllUsers()
     }, [])
-    // const list = [
-    //     {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": true
-    //     },
-    //     {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": true
-    //     },
-    //     {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": false
-    //     }, {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": true
-    //     },
-    //     {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": true
-    //     },
-    //     {
-    //         "studentId": "12345",
-    //         "name": "Nguyen Van A",
-    //         "deleteAt": false
-    //     },
-    // ]
+
 
     const [status, setStatus] = useState(false)
-    // useEffect(() => {
-    //     if (!user) {
-    //         navigate("/signin")
-    //     }
-    //     else {
-    //         cookie.set('token', getCookies(), { path: `/v1/className/getAllClassById` });
-    //     }
-    // }, [])
-    // useEffect(() => {
-    //     if (showAddNewClass || showJoinClass) {
-    //         document.body.classList.add("overflow-hidden");
-    //     } else {
-    //         document.body.classList.remove("overflow-hidden");
-    //     }
-    // }, [showAddNewClass, showJoinClass]);
-    // const [images, setImages] = useState([])
-
-    // useEffect(() => {
-    //     async function fetchClasses() {
-    //         try {
-    //             const response = await getAllClassById();
-    //             if (response.status === 200) {
-    //                 setListClass(response.data);
-    //             }
-    //         } catch (error) {
-    //             console.log("Error: ", error);
-    //         }
-    //     }
-    //     fetchClasses();
-    // }, [isAddClass]);
+    const handleBanAcc = async (id) => {
+        const res = await banAcc(id)
+        if (res.status !== 200) {
+            alert("Error when banning")
+        }
+    }
 
     return (
         <>
@@ -149,7 +95,7 @@ function AccountsManage() {
                                                     <td className="px-6 py-3 text-center border">{!item.deleteAt ?
                                                         <button
                                                             className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
-                                                            onClick={() => alert("Ban/Unban Account")}
+                                                            onClick={() => handleBanAcc(item._id)}
                                                         >
                                                             <p className="flex flex-row">
                                                                 <svg width="1em" height="1em" fill="currentColor" className="text-lg mr-4   ">

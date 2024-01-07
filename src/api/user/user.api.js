@@ -80,3 +80,16 @@ export const getAllUser = async () => {
         throw error;
     }
 };
+
+export const banAcc = async (id) => {
+
+    try {
+        return await axiosPrivate.patch(`/v1/user/lockAccount/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

@@ -3,8 +3,9 @@ import Papa from 'papaparse'; // Import papaparse for CSV parsing
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage, faFile, faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { uploadStudentList } from "../../api/class/class.api";
+import { uploadGrade } from "../../api/grade/grade.api";
 
-function UploadFileForm({ onClose, uploadType, classId }) {
+function UploadFileForm({ onClose, uploadType, classId, uploadFunc }) {
     const [fileInfo, setFileInfo] = useState(null);
     const [file, setFile] = useState(null)
     const handleFileChange = (e) => {
@@ -167,7 +168,20 @@ function UploadFileForm({ onClose, uploadType, classId }) {
             try {
                 // Assuming you have an API function called uploadCSVFile
                 // Replace 'yourApiFunction' with the actual API function
-                const response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+                if (uploadType === "grade list") {
+                    const response = await uploadGrade(classId, formData);
+                }
+                else if (uploadType === "mapping studentId") {
+                    requiredColumnNames = ['studentId', 'name', 'email']
+                }
+                else if (uploadType === "student list") {
+                    const response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+                }
+                else {
+                    alert("Invalid upload type");
+                    return;
+                }
+
 
                 // Handle the API response as needed
                 console.log('API response:', response);

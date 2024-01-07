@@ -4,9 +4,10 @@ import { getCookies, getUser } from "../../features/user";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { createClass } from "../../api/class/class.api.js";
 import Cookies from "universal-cookie";
+import { studentReview } from "../../api/assignment/assignment.api";
 
-function StudentReviewForm({ onClose, onClick }) {
-    const [name, setName] = useState("");
+function StudentReviewForm({ onClose, onClick, studentGradeId }) {
+    const [expectedGrade, setExpectedGrade] = useState("");
     const [des, setDes] = useState("");
     const [error, setError] = useState("");
 
@@ -21,34 +22,28 @@ function StudentReviewForm({ onClose, onClick }) {
         }
         else {
             cookie.set('token', getCookies(), { path: `/v1/class/createClass` });
+            console.log("studentGradeId ", studentGradeId ? studentGradeId : "")
         }
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // if (!name) {
-        //     return setError("Please fill name field!");
-        // }
-
-        // let newClass = {
-        //     name, subject
-        // };
-
-        // try {
-        //     const response = await createClass(newClass);
-        //     if (response.status === 200) {
-        //         alert("Create new class successfully!");
-        //         onClose()
-        //         onClick()
-        //         navigate('/home');
-        //     }
-        // } catch (error) {
-        //     setError(error.response.data.message);
-        //     alert(error.response.data.message)
-        //     console.log(error);
-
-        // }
+        if (!expectedGrade || !des) {
+            return alert("Please field all input")
+        }
+        console.log(user._id)
+        const data = {
+            "expectedGrade": expectedGrade,
+            "userReview": [
+                {
+                    "text": des,
+                    "sort": "4",
+                    "userId": user._id
+                }
+            ]
+        }
+        console.log(data)
+        await studentReview(studentGradeId, data)
         onClose()
     };
 
@@ -74,12 +69,11 @@ function StudentReviewForm({ onClose, onClick }) {
                         <div className="mt-5">
                             <p className="text-[#5f27cd] font-semibold mb-1">Your Expected Grade</p>
                             <input
-                                type="text"
-                                name="name"
-                                id="name"
+                                type="number"
+
                                 className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={expectedGrade}
+                                onChange={(e) => setExpectedGrade(e.target.value < 0 ? 0 : e.target.value > 10 ? 10 : e.target.value)}
                             />
                         </div>
                         <div className="mt-5">

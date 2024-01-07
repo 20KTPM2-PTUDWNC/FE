@@ -40,3 +40,17 @@ export const showAssignmentGrade = async (id) => {
         throw err;
     }
 };
+
+export const studentReview = async (id, data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/assignment/reviewAssignment/${id}`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+
+        });
+    } catch (err) {
+        throw err;
+    }
+};

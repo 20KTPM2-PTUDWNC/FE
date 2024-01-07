@@ -14,7 +14,7 @@ import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
 import { showMemberList } from "../../api/class/class.api";
 import { getAssigmentGrade, getClassGrade, showGradeStructure } from "../../api/grade/grade.api";
-import { showAssignmentList } from "../../api/assignment/assignment.api";
+import { showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks";
 
 function splitStr(a) {
@@ -36,8 +36,8 @@ const TextInput = ({ onInputChange, value }) => {
         </div>
     );
 };
-const StudentSearch = ({ data, setStudentId }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+const StudentSearch = ({ data, getReview, memberList, setUserIdOfStudent, firstStudentId }) => {
+    const [searchTerm, setSearchTerm] = useState(firstStudentId);
     const [showId, setShowId] = useState(false)
     const [filteredStudentIds, setFilteredStudentIds] = useState([]);
     const searchContainerRef = useRef(null);
@@ -48,7 +48,7 @@ const StudentSearch = ({ data, setStudentId }) => {
         if (inputValue.length !== 0)
             setShowId(true)
         // Filter student IDs based on the input value
-        const filteredIds = data
+        const filteredIds = memberList.students
             .filter((item) => item.studentId.toString().includes(inputValue))
             .map((item) => item.studentId);
 
@@ -58,10 +58,11 @@ const StudentSearch = ({ data, setStudentId }) => {
     const handleStudentClick = (studentId) => {
         // Set the selected student ID in the search bar
         setSearchTerm(studentId);
-        setStudentId(studentId.toString());
-        // Use the selected student ID to get the corresponding object
-        const selectedObject = data.find((item) => item.studentId === parseInt(studentId));
 
+        // Use the selected student ID to get the corresponding object
+        const selectedObject = memberList.students.find((item) => item.studentId === parseInt(studentId));
+        getReview(selectedObject._id)
+        setUserIdOfStudent(selectedObject._id)
         console.log("selected: ", selectedObject); // You can use the selectedObject as needed
     };
     const handleClickOutside = (e) => {
@@ -90,7 +91,6 @@ const StudentSearch = ({ data, setStudentId }) => {
                 placeholder="Search by Student ID"
                 value={searchTerm}
                 onChange={handleInputChange}
-
                 className="border-b-2 border-[#5f27cd] pl-2"
             />
             {searchTerm && showId &&
@@ -105,18 +105,41 @@ const StudentSearch = ({ data, setStudentId }) => {
         </div>
     );
 };
-const CommentSection = ({ comments, data, setStudentId }) => {
-
+const checkStudent = (memberList, id) => {
+    return memberList && memberList.students && memberList.students.some(student => student._id === id)
+}
+const CommentSection = ({ data, getReview, memberList, userId, setUserIdOfStudent, firstStudentId, setShowReview }) => {
+    const check = checkStudent(memberList, userId)
     return (
         <div className="comment-section mb-8">
-
-            <h2 className="text-2xl font-bold mb-4">Comment</h2>
-            <div className="absolute top-[15px] right-[20px]">
-                <StudentSearch data={data} setStudentId={setStudentId} />
+            <div className="flex flex-row mb-3">
+                <h2 className="text-2xl font-bold mb-4">Comment</h2>
+                {!check &&
+                    <button
+                        className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ml-5"
+                        onClick={setShowReview}
+                    >
+                        Update Grade
+                    </button>
+                }
             </div>
+            {!check && <>
+
+                <div className="absolute top-[15px] right-[20px] flex flex-row">
+
+                    <StudentSearch
+                        firstStudentId={firstStudentId}
+                        setUserIdOfStudent={setUserIdOfStudent}
+                        data={data}
+                        getReview={getReview}
+                        memberList={memberList} />
+                </div>
+            </>
+            }
+
 
             <ul>
-                {comments.map((comment, index) => (
+                {data && data.userReview.map((comment, index) => (
                     <li key={index} className="mb-2 text-[#6F1E51]"><span className="font-bold">{comment.userId.name}: </span>{comment.text}</li>
                 ))}
             </ul>
@@ -125,19 +148,20 @@ const CommentSection = ({ comments, data, setStudentId }) => {
 };
 const StudentGrade = ({ onClick, reviews }) => {
     return (
-        <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
+        <div className="absolute top-[110px] right-[20px] h-full">
+            <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
 
-            <p className="font-bold mb-2">Your Grade:</p>
-            <p className="font-bold mb-2 text-center text-2xl">{!reviews ? 'No grade' : '10'}</p>
-            {reviews &&
-                <button
-                    className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
-                    onClick={onClick}
-                >
-                    Review
-                </button>
-            }
-
+                <p className="font-bold mb-2">Your Grade:</p>
+                <p className="font-bold mb-2 text-center text-2xl">{!reviews ? 'No grade' : reviews.grade}</p>
+                {reviews && reviews.userReview.length === 0 &&
+                    <button
+                        className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg `}
+                        onClick={onClick}
+                    >
+                        Review
+                    </button>
+                }
+            </div>
         </div>
     );
 }
@@ -156,7 +180,7 @@ function AssignmentDetails() {
         if (!user)
             navigate("/signin")
         else {
-            console.log(sessionStorage.getItem("assignment"))
+            console.log(assignmentId)
             setAssigmentDetails(JSON.parse(sessionStorage.getItem("assignment")))
         }
     }, [])
@@ -175,151 +199,34 @@ function AssignmentDetails() {
     const [showReviews, setShowReviews] = useState(false)
     const [review, setReview] = useState(null)
     const [memberList, setMemberList] = useState([])
-    const studentReviews = [
-        {
-            "_id": "6575bad10d638bbf98c96b5c",
-            "assignmentId": "6565906131761443bcfcd788",
-            "studentId": 20127490,
-            "__v": 0,
-            "createdAt": "2023-12-10T13:19:08.158Z",
-            "deleteAt": null,
-            "mark": 0,
-            "updatedAt": "2023-12-10T15:07:43.153Z",
-            "grade": 8,
-            "assignmentReview": {
-                "deleteAt": null,
-                "_id": "6575ea360c7934d00351afd9",
-                "studentGradeId": "6575bad10d638bbf98c96b5c",
-                "expectedGrade": 9.5,
-                "updatedAt": "2023-12-16T14:39:24.753Z",
-                "createdAt": "2023-12-16T14:44:26.405Z"
-            },
-            "userReview": [
-                {
-                    "deleteAt": null,
-                    "_id": "6575ea710c7934d00351afda",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Tín",
-                        "studentId": 20127490
-                    },
-                    "text": "I want 10",
-                    "sort": "1",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                },
-                {
-                    "deleteAt": null,
-                    "_id": "6575eaf10c7934d00351afdc",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Tín",
-                        "studentId": 20127490
-                    },
-                    "text": "No, u cann't",
-                    "sort": "2",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                },
-                {
-                    "deleteAt": null,
-                    "_id": "6575eb0b0c7934d00351afdd",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Tín",
-                        "studentId": 20127490
-                    },
-                    "text": "why??",
-                    "sort": "3",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                }
-            ]
-        },
-        {
-            "_id": "6575bad10d638bbf98c96b5c",
-            "assignmentId": "6565906131761443bcfcd788",
-            "studentId": 20127491,
-            "__v": 0,
-            "createdAt": "2023-12-10T13:19:08.158Z",
-            "deleteAt": null,
-            "mark": 0,
-            "updatedAt": "2023-12-10T15:07:43.153Z",
-            "grade": 8,
-            "assignmentReview": {
-                "deleteAt": null,
-                "_id": "6575ea360c7934d00351afd9",
-                "studentGradeId": "6575bad10d638bbf98c96b5c",
-                "expectedGrade": 9.5,
-                "updatedAt": "2023-12-16T14:39:24.753Z",
-                "createdAt": "2023-12-16T14:44:26.405Z"
-            },
-            "userReview": [
-                {
-                    "deleteAt": null,
-                    "_id": "6575ea710c7934d00351afda",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Nguyễn Thị Ngọc Hải",
-                        "studentId": 20127490
-                    },
-                    "text": "I want 10",
-                    "sort": "1",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                },
-                {
-                    "deleteAt": null,
-                    "_id": "6575eaf10c7934d00351afdc",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Nguyễn Thị Ngọc Hải",
-                        "studentId": 20127490
-                    },
-                    "text": "No, u cann't",
-                    "sort": "2",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                },
-                {
-                    "deleteAt": null,
-                    "_id": "6575eb0b0c7934d00351afdd",
-                    "assignmentReviewId": "6575ea360c7934d00351afd9",
-                    "userId": {
-                        "_id": "6564c0a777616e8efdc4d551",
-                        "name": "Nguyễn Thị Ngọc Hải",
-                        "studentId": 20127490
-                    },
-                    "text": "why??",
-                    "sort": "3",
-                    "createdAt": "2023-12-16T14:44:26.682Z",
-                    "updatedAt": "2023-12-16T14:44:26.682Z"
-                }
-            ]
-        }
-    ]
+    const [action, setAction] = useState(false)
+    const [action1, setAction1] = useState(false)
+    const [userIdOfStudent, setUserIdOfStudent] = useState('')
+    const [firstStudentId, setFirstStudentId] = useState('')
+    const [showUploadGrade, setShowUploadGrade] = useState(false)
     const handleInputChange = (inputText) => {
         setText(inputText);
-        // setReview({
-        //     "deleteAt": null,
-        //     "_id": "6575ea710c7934d00351afda",
-        //     "assignmentReviewId": "6575ea360c7934d00351afd9",
-        //     "userId": {
-        //         "_id": user._id,
-        //         "name": user.name,
-        //         "studentId": null
-        //     },
-        //     "text": inputText,
-        //     "sort": "1",
-        //     "createdAt": "2023-12-16T14:44:26.682Z",
-        //     "updatedAt": "2023-12-16T14:44:26.682Z"
-        // })
     };
+    const reviewFromStudent = () => {
+        setShowReviews(true);
+    }
+    const showUpload = () => {
+        setShowUploadGrade(true)
+    }
+    const assignmentOption = [
+        {
+            name: "Reviews from students",
+            todo: reviewFromStudent
+        },
+        {
+            name: "Upload student grade",
+            todo: showUpload
+        },
+        // {
+        //     name: "Add Topic",
+        //     todo: addGradeStructure
+        // }
+    ]
     const closeTab = {
         asssignmentOptions: {
             close: function () {
@@ -343,59 +250,100 @@ function AssignmentDetails() {
 
             if (response.status === 200) {
                 console.log(response.data)
-                setReview(response.data)
+                setMemberList(response.data)
+
             }
         } catch (error) {
             console.log("Error123: ", error);
 
         }
     }
-    async function getReview() {
+    async function getMemberList1(classId) {
         try {
-            const response = await getAssigmentGrade(assignmentId, id)
+            const response = await showMemberList(classId);
+
             if (response.status === 200) {
-                console.log("review: ", response.data)
+                console.log(response.data)
                 setMemberList(response.data)
+                let memberList = response.data
+                if (!checkStudent(memberList, id)) {
+                    getReview(response.data.students[0]._id)
+                    setUserIdOfStudent(response.data.students[0]._id)
+                    setFirstStudentId(response.data.students[0].studentId)
+                }
+                else {
+                    getReview(id)
+                }
             }
         } catch (error) {
-            console.log("ErrorReview: ", error);
+            console.log("Error123: ", error);
+
         }
     }
+    async function getReview(idOfStudent) {
+        const check = checkStudent(memberList, id)
+        if (check) {
+            try {
+
+                const response = await getAssigmentGrade(assignmentId, id)
+                if (response.status === 200) {
+                    console.log("review: ", response.data)
+                    setReview(response.data)
+                    setAction(!action)
+                }
+            } catch (error) {
+                console.log("ErrorReview: ", error);
+            }
+        }
+        else {
+            try {
+                console.log("getReview: ", assignmentId, id)
+                const response = await getAssigmentGrade(assignmentId, idOfStudent)
+                if (response.status === 200) {
+                    console.log("review: ", response.data)
+                    setReview(response.data)
+                    setAction(!action)
+                }
+            } catch (error) {
+                console.log("ErrorReview: ", error);
+            }
+        }
+    }
+
     useEffect(() => {
         getMemberList(classId)
-        getReview()
-    }, [])
-    const [studentIdComment, setStudentIdComment] = useState(studentReviews[0].studentId)
+    }, [action])
     useEffect(() => {
-        const review = studentReviews.find((item) => item.studentId === parseInt(studentIdComment))
-        setComments(review.userReview)
-        // console.log(studentReviews[0].userReview)
-    }, [studentIdComment])
-    const handleAddComment = () => {
-        setComments([...comments, review]);
+        getMemberList1(classId)
+    }, [action1])
+
+    // useEffect(() => {
+    //     const review = studentReviews.find((item) => item.studentId === parseInt(studentIdComment))
+    //     setComments(review.userReview)
+    //     // console.log(studentReviews[0].userReview)
+    // }, [studentIdComment])
+    const handleAddComment = async () => {
         setText('');
-        setReview(null)
+        const data = {
+            "expectedGrade": review?.assignmentReview?.expectedGrade,
+            "userReview": [
+                {
+                    "text": text,
+                    "sort": "4",
+                    "userId": user._id
+                }
+            ]
+        }
+        console.log(data)
+        await studentReview(review?._id, data)
+        getReview(userIdOfStudent)
+        setText('');
     };
     const deleteAssignment = () => {
         alert("Delete this assignment")
     }
-    const reviewFromStudent = () => {
-        setShowReviews(true);
-    }
-    const assignmentOption = [
-        {
-            name: "Reviews from students",
-            todo: reviewFromStudent
-        },
-        {
-            name: "Delete Assignment",
-            todo: deleteAssignment
-        },
-        // {
-        //     name: "Add Topic",
-        //     todo: addGradeStructure
-        // }
-    ]
+
+
 
     useEffect(() => {
         if (showAssignmentOption
@@ -404,9 +352,7 @@ function AssignmentDetails() {
         } else {
             document.body.classList.remove("overflow-hidden");
         }
-    }, [showAssignmentOption,
-
-    ]);
+    }, [showAssignmentOption]);
 
     return (
         <div className="w-full h-full relative" >
@@ -415,14 +361,15 @@ function AssignmentDetails() {
                     <p className="text-4xl font-bold inline text-[#5f27cd] border-b-4 border-[#ff4757]">
                         Assignment Details
                     </p>
-
-                    <button
-                        className="ml-5 font-bold hover:opacity-90 rounded duration-200"
-                        onClick={() => setShowAssignmentOption(true)}
-                    >
-                        <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
-                    </button>
-                    {user && memberList && memberList.students && memberList.teachers.some(teacher => teacher._id === user._id) &&
+                    {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) &&
+                        <button
+                            className="ml-5 font-bold hover:opacity-90 rounded duration-200"
+                            onClick={() => setShowAssignmentOption(true)}
+                        >
+                            <IoSettingsOutline className="text-[#5f27cd] duration-200" size={"30px"} />
+                        </button>
+                    }
+                    {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === id) &&
                         <button
                             className="ml-5 font-bold hover:opacity-90 rounded duration-200"
                             onClick={() => setShowGrade(true)}
@@ -443,22 +390,39 @@ function AssignmentDetails() {
                             <h2 className="text-2xl font-bold mb-4 ">{assigmentDetails?.name}</h2>
                             <p className="text-[#6F1E51]">{splitTextWithLineBreaks(assigmentDetails?.content)}</p>
                         </div>
-                        <div className="relative rounded-lg border-2 border-[#5f27cd] p-5 -ml-10">
-                            <CommentSection
-                                comments={comments}
-                                data={studentReviews}
-                                setStudentId={setStudentIdComment}
-                            />
-                            <div className="my-10">
-                                <TextInput value={text} onInputChange={handleInputChange} />
+                        {review &&
+                            <div className="relative rounded-lg border-2 border-[#5f27cd] p-5 -ml-10">
+                                <CommentSection
+                                    memberList={memberList}
+                                    userId={id}
+                                    data={review}
+                                    getReview={getReview}
+                                    setUserIdOfStudent={setUserIdOfStudent}
+                                    firstStudentId={firstStudentId}
+                                    setShowReview={() => setShowReviews(true)}
+                                />
+                                <div className="my-10">
+                                    <TextInput value={text} onInputChange={handleInputChange} />
+                                </div>
+                                {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && review.userReview.length > 0 &&
+                                    <button
+                                        className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                                        onClick={handleAddComment}
+                                    >
+                                        Comment
+                                    </button>
+                                }
+                                {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
+                                    <button
+                                        className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                                        onClick={handleAddComment}
+                                    >
+                                        Comment
+                                    </button>
+                                }
                             </div>
-                            <button
-                                className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
-                                onClick={handleAddComment}
-                            >
-                                Comment
-                            </button>
-                        </div>
+                        }
+
 
                     </div>
 
@@ -468,9 +432,11 @@ function AssignmentDetails() {
 
             </div>
             {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
-                <div className="absolute top-[110px] right-[20px] h-full">
-                    <StudentGrade onClick={() => setOpenReview(!openReview)} />
-                </div>
+
+                <StudentGrade
+                    reviews={review}
+                    onClick={() => setOpenReview(!openReview)} />
+
             }
             {showAssignmentOption &&
                 <Options
@@ -481,21 +447,24 @@ function AssignmentDetails() {
             }
             {showReviews &&
                 <ShowReviews
-                    data={studentReviews}
+                    selectedReview={review}
                     onClose={closeTab.showReviews.close}
-                    setStudentId={setStudentIdComment}
+
                 />
             }
             {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && showGrade &&
                 <ShowGrade
                     onClose={closeTab.showGrade.close}
                     assignmentId={assignmentId}
+                    classId={classId}
                     studentList={memberList.students}
+                    onClick={() => setAction(!action)}
                 />
             }
             {openReview &&
                 <StudentReviewForm
                     onClose={() => setOpenReview(!openReview)}
+                    studentGradeId={review._id}
                 />
             }
         </div >

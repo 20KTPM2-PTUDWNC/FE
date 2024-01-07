@@ -128,3 +128,40 @@ export const getAssigmentGrade = async (assignmentId, id) => {
         throw err;
     }
 };
+export const getAssigmentNoGrade = async (classId, assignmentId) => {
+
+    try {
+        return await axiosPrivate.get(`/v1/class/${classId}/studentNoGrade/${assignmentId}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+export const markFinal = async (id, data) => {
+
+    try {
+        return await axiosPrivate.put(`/v1/assignment/markFinalDecision/${id}`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const uploadGrade = async (id, data) => {
+
+    try {
+        return await axiosPrivate.put(`/v1/assignment/uploadGradeList/${id}`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};

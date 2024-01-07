@@ -48,9 +48,9 @@ function App() {
                             if (route.path !== "/") return <Route key={index} path={route.path} element={
                                 <>
                                     <Navbar />
-                                    <ChatComponent />
+
                                     <Page />
-                                    
+                                    <ChatComponent />
                                     {/* <Footer /> */}
                                 </>} />
                             return <Route key={index} path={route.path} element={<Page />} />;

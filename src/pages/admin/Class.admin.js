@@ -132,7 +132,9 @@ function ClassAdminPage() {
                     setListClass(response.data);
                     setOriginalListClass(response.data); // Lưu giữ danh sách dữ liệu ban đầu
                     listClass.forEach((_class) => {
-                        authorInfor(_class.authorId);
+                        if (_class.authorId){
+                            authorInfor(_class.authorId);
+                        }
                         getMemberList(_class._id);
                     });
                 }

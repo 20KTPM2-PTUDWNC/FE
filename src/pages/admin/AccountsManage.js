@@ -12,10 +12,9 @@ import Cookies from "universal-cookie";
 import { FaBan, FaCheck } from "react-icons/fa";
 
 
-
-
 // import { confirmAlert } from 'react-confirm-alert';
 // import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 
 function AccountsManage() {

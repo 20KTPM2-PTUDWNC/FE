@@ -119,6 +119,7 @@ export const updateIdByFile = async (data) => {
         return await axiosPrivate.post(`/v1/user/mappingStudentIdByCsv`, data, {
 
             headers: {
+                'Content-Type': 'multipart/form-data',
                 "Authorization": getCookies()
             }
         });

@@ -33,8 +33,10 @@ const ChatComponent = () => {
       const dataMessage = {
         "studentId": user?._id,
         "text": message,
-        "sort": "3"
+        "sort": messages.length + 1,
+        "userId": user?._id,
       }
+      console.log(dataMessage)
       const res = await userReview(dataMessage)
       if (res.status === 200) {
         setMessage('');
@@ -51,7 +53,7 @@ const ChatComponent = () => {
     }
   }
   useEffect(() => {
-   
+
     const intervalId = setInterval(() => {
       getUserReviews();
       console.log('Code executed every 2000 milliseconds');

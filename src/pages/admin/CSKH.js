@@ -9,7 +9,7 @@ const CSKH = () => {
     const user = getUser();
     const [newMessage, setNewMessage] = useState('');
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag !== 0)) {
             navigate("/signin")
         }
 
@@ -23,7 +23,7 @@ const CSKH = () => {
         }
 
     }, [])
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (listReview) => {
         if (newMessage.trim() !== '') {
             // const userMessage = { text: message, sender: 'user' };
             // const responseMessage = { text: 'Hello! How can I help you?', sender: 'other' };
@@ -32,7 +32,8 @@ const CSKH = () => {
             const dataMessage = {
                 "studentId": sessionStorage.getItem("customerSelected"),
                 "text": newMessage,
-                "sort": "4"
+                "sort": listReview.length + 1,
+                "userId": user._id
             }
             console.log("data", dataMessage)
             console.log(getCookies())
@@ -50,6 +51,7 @@ const CSKH = () => {
             return
         const response = await userReviewList(sessionStorage.getItem("customerSelected"))
         if (response.status === 200) {
+            console.log(response.data)
             setMessages(response.data)
         }
     }
@@ -81,8 +83,11 @@ const CSKH = () => {
                                 <div className="flex-1">
                                     <div className="border border-gray-300 rounded-lg p-4 h-80 overflow-y-scroll mb-4">
                                         {messages.map((message, index) => (
-                                            <div key={index} className={`mb-2 text-left `}>
-                                                <strong>{message.userId.name}:</strong> {message.text}
+                                            <div key={index} className={`mb-2 ${message.userId._id === user._id ? 'text-right' : 'text-left'}`}>
+                                                {message.userId._id !== user._id && (
+                                                    <strong>{message.userId.name}: {" "}</strong>
+                                                )}
+                                                {message.text}
                                             </div>
                                         ))}
                                     </div>
@@ -93,7 +98,7 @@ const CSKH = () => {
                                             onChange={handleInputChange}
                                             className="flex-1 mr-2"
                                         />
-                                        <button onClick={handleSendMessage} className="bg-gray-900 text-white p-3 rounded-lg">
+                                        <button onClick={() => handleSendMessage(messages)} className="bg-gray-900 text-white p-3 rounded-lg">
                                             <p className="font-bold text-sm">Send</p>
                                         </button>
                                     </div>

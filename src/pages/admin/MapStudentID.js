@@ -46,7 +46,7 @@ function MapStudentID() {
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag !== 0)) {
             navigate("/signin")
         }
         else {

@@ -24,7 +24,7 @@ function ClassAdminPage() {
     const [searchKeyword, setSearchKeyword] = useState(""); // Thêm state để lưu trữ từ khóa tìm kiếm
 
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag !== 0)) {
             navigate("/signin")
         }
         else {

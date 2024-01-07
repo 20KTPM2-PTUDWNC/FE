@@ -61,8 +61,13 @@ function App() {
                                 <div className="bg-white w-full h-full text-black">
 
                                     <div className="relative overflow-hidden max-h-screen">
-                                        <NavbarAdmin />
-                                        <Page />
+                                        <div className="fixed z-20">
+                                            <NavbarAdmin />
+                                        </div>
+                                        <div className=" relative z-10">
+                                            <Page />
+                                        </div>
+
                                     </div>
                                 </div>
                             } />

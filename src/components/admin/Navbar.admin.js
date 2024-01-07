@@ -11,6 +11,8 @@ import { GoTriangleUp } from "react-icons/go";
 import { MdManageAccounts } from "react-icons/md";
 import { getAdapter } from "axios";
 import { getAllUser } from "../../api/user/user.api";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { getNoti } from "../../api/notification/noti.api";
 const chatData = [
     {
         "user": {
@@ -81,10 +83,22 @@ function NavbarAdmin() {
     const [contentVisible2, setContentVisible2] = useState(false);
     const [customer, setCustomer] = useState([])
     const [customerSelected, setCustomerSelected] = useState(0)
+    const [notiOpen, setNotiOpen] = useState(false)
+    const [noti, setNoti] = useState([])
     const getUserData = async () => {
         const res = await getAllUser()
         setCustomer(res.data)
     }
+    const fetchData = async () => {
+        const res = await getNoti(user?._id)
+        setNoti(res.data)
+        console.log(res.data)
+    }
+    useEffect(() => {
+        fetchData()
+
+
+    }, [notiOpen]); // Empty dependency array ensures the effect runs only once on mount
     useEffect(() => {
         getUserData()
     }, [])
@@ -112,13 +126,47 @@ function NavbarAdmin() {
         setContentVisible2(!contentVisible2);
     };
     return (
-        <aside className="fixed inset-y-0 left-0 top- bg-white shadow-md max-h-screen w-120 ">
+        <aside className="fixed inset-y-0 left-0 top- bg-white shadow-md max-h-screen w-120  ">
             <div className="flex flex-col items-center h-full">
-                <div className="flex-grow">
-                    <div className="px-4 py-6 text-center border-b">
+                <div className="flex-grow relative">
+                    <div className="px-4 py-6 text-center border-b flex flex-row ">
                         <h1 className="text-xl font-bold leading-none"><span className="text-yellow-700">Class Room</span> Management</h1>
+                        <div className="items-center">
+                            <button onClick={() => setNotiOpen(!notiOpen)}>
+                                <IoIosNotificationsOutline
+                                    size={"30px"}
+                                // style={{ cursor: "pointer" }}
+                                />
+                            </button>
+                        </div>
+                        {notiOpen &&
+                            <div className="z-20 absolute bg-white overflow-y-auto overflow-x-auto top-[60px] right-[-200px] w-[500px]  h-[300px] shadow-lg rounded-lg content-center items-center">
+                                {noti.length === 0 ?
+                                    <div id="toast-success" className="flex items-center w-full w-[500px] p-4 m-2 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" >
+                                        <h2 className="text-center">Nothing</h2>
+                                    </div>
+                                    :
+                                    noti.map((notification, index) =>
+                                        <div key={index} className="flex items-center justify-center w-11/12 p-4 m-5 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+                                            <div className="inline-flex items-center justify-center flex-shrink-0 ">
+                                                <p>{notification.title}</p>
+                                            </div>
+                                            <div className="ms-3 text-sm font-normal">{notification.description}</div>
+                                            <a href={`/#/${notification.url}`} className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+                                                <p>{">"}</p>
+                                            </a>
+                                        </div>
+                                    )
+
+                                }
+
+
+
+
+                            </div>
+                        }
                     </div>
-                    <div className="p-4 ">
+                    <div className="p-4 z-20">
                         <ul className="space-y-1 transition-all">
 
                             <li onClick={() => setTab(1)}>

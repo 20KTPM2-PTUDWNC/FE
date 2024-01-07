@@ -22,7 +22,7 @@ function MemberOfClass() {
     const [classDetail, setClassDetail] = useState({});
 
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag !== 0)) {
             navigate("/signin");
         } else {
             cookie.set('token', getCookies(), { path: `/v1/className/showClassDetail/${classId}` });
@@ -99,7 +99,7 @@ function MemberOfClass() {
         },
         {
             name: "Student ID",
-            selector: row => row.studentId, 
+            selector: row => row.studentId,
         },
         {
             name: "Role",
@@ -114,7 +114,7 @@ function MemberOfClass() {
                 <div className="px-6 py-8">
                     <div className="max-w-5xl mx-auto bg-white rounded-3xl p-8 mb-5">
                         <div className="grid grid-cols-2 gap-x-20">
-                            <h3 className="text-2xl font-bold mb-10">Class name: {classDetail.name}</h3> 
+                            <h3 className="text-2xl font-bold mb-10">Class name: {classDetail.name}</h3>
                             <h3 className="text-xl mb-10">Code: {classDetail.code}</h3>
                             <h3 className="text-2xl font-bolds mb-10">Description: {classDetail.subject}</h3>
                             <h3 className="text-xl mb-10">Creation date: {formatDate(classDetail.createdAt)}</h3>

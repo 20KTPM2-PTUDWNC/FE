@@ -17,7 +17,7 @@ import { api } from "../constants";
 //     return config;
 //   });
 export const axiosPrivate = axios.create({
-    baseURL: api.host,
+    baseURL: api.dev,
     headers: { "Content-Type": "application/json" },
     withCredentials: true
 });

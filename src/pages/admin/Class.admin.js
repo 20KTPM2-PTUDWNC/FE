@@ -55,11 +55,11 @@ function ClassAdminPage() {
             selector: row => row.code,
             width: "80px"
         },
-        {
-            name: "Author",
-            selector: row => row.author,
-            width: "150px"
-        },
+        // {
+        //     name: "Author",
+        //     selector: row => row.author,
+        //     width: "150px"
+        // },
         {
             name: "Status",
             cell: row => (
@@ -88,11 +88,11 @@ function ClassAdminPage() {
             ),
             width: "150px"
         },        
-        {
-            name: "Number of members",
-            cell: row => <span>{memberCounts[row._id] || 0}</span>,
-            width: "80px"
-        },
+        // {
+        //     name: "Number of members",
+        //     cell: row => <span>{memberCounts[row._id] || 0}</span>,
+        //     width: "80px"
+        // },
         {
             name: "List of members",
             cell: row => <FaEye onClick={() => handleEyeClick(row._id)} />,
@@ -132,9 +132,9 @@ function ClassAdminPage() {
                     setListClass(response.data);
                     setOriginalListClass(response.data); // Lưu giữ danh sách dữ liệu ban đầu
                     listClass.forEach((_class) => {
-                        if (_class.authorId){
-                            authorInfor(_class.authorId);
-                        }
+                        // if (_class.authorId){
+                        //     authorInfor(_class.authorId);
+                        // }
                         getMemberList(_class._id);
                     });
                 }
@@ -145,23 +145,23 @@ function ClassAdminPage() {
         fetchClasses();
     }, []);
 
-    async function authorInfor(authorId) {
-        try {
-            const response = await getProfile(authorId);
+    // async function authorInfor(authorId) {
+    //     try {
+    //         const response = await getProfile(authorId);
 
-            if (response.status === 200) {
-                const authorInfo = response.data;
-                setListClass(prevClasses => prevClasses.map(_class => {
-                    if (_class.authorId === authorId) {
-                        _class.author = authorInfo.name;
-                    }
-                    return _class;
-                }));
-            }
-        } catch (error) {
-            console.log("Error123: ", error);
-        }
-    }
+    //         if (response.status === 200) {
+    //             const authorInfo = response.data;
+    //             setListClass(prevClasses => prevClasses.map(_class => {
+    //                 if (_class.authorId === authorId) {
+    //                     _class.author = authorInfo.name;
+    //                 }
+    //                 return _class;
+    //             }));
+    //         }
+    //     } catch (error) {
+    //         console.log("Error123: ", error);
+    //     }
+    // }
 
     async function getMemberList(classId) {
         try {

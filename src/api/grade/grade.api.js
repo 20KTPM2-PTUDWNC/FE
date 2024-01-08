@@ -128,7 +128,7 @@ export const getAssigmentGrade = async (assignmentId, id) => {
         throw err;
     }
 };
-export const getAssigmentNoGrade = async (classId, assignmentId) => {
+export const getAssigmentGradeBoard = async (classId, assignmentId) => {
 
     try {
         return await axiosPrivate.get(`/v1/class/${classId}/studentNoGrade/${assignmentId}`, {
@@ -156,8 +156,9 @@ export const markFinal = async (id, data) => {
 export const uploadGrade = async (id, data) => {
 
     try {
-        return await axiosPrivate.put(`/v1/assignment/uploadGradeList/${id}`, data, {
+        return await axiosPrivate.post(`/v1/assignment/uploadGradeList/${id}`, data, {
             headers: {
+                'Content-Type': 'multipart/form-data',
                 "Authorization": getCookies()
             }
         });

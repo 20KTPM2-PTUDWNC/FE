@@ -6,6 +6,8 @@ import { getCookies, getUser } from "../../features/user";
 import { signIn } from "../../api/auth/auth.api";
 import { signin } from "../../features/user";
 import Cookies from "universal-cookie";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { api } from "../../constants.js";
 
 function AcceptInvitation() {
     const user = getUser();
@@ -62,16 +64,16 @@ function AcceptInvitation() {
     const cancel = async (e) => {
         navigate("/signin")
     };
-    
+
     return (
         <section className="bg-white text-white">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 w-full h-full ">
                 <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-white text-center">
-                        Do you agree to join the class?</h1>
+                            Do you agree to join the class?</h1>
                         <h4 className="text-xl font-bold leading-tight tracking-tight text-white md:text-l dark:text-white text-center">
-                        If you agree, enter your email and password to join the class
+                            If you agree, enter your email and password to join the class
                         </h4>
                         {error && (
                             <p className="bg-[#D14D72] text-sm text-white font-bold py-3 px-4 rounded">{error}</p>
@@ -93,7 +95,7 @@ function AcceptInvitation() {
                                     autoComplete="off"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                </div>
+                            </div>
                             <div>
                                 <label
                                     htmlFor="password"
@@ -127,6 +129,17 @@ function AcceptInvitation() {
                             >
                                 Cancel
                             </button>
+                            <div className="flex items-center">
+                                <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
+                                <div className="flex">
+                                    <a href={`${api.dev}/v1/auth/facebook`}>
+                                        <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
+                                    </a>
+                                    <a href={`${api.dev}/v1/auth/google`}>
+                                        <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
+                                    </a>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

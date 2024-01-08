@@ -9,12 +9,15 @@ import { addGradeComposition } from "../../api/grade/grade.api.js";
 import Cookies from "universal-cookie";
 
 function ExportCSVForm({ list, fileName, className }) {
-    const headerSet = new Set(list.flatMap(obj => Object.keys(obj)))
+
+    const reorderedList = list.map(({ studentId, name }) => ({ studentId, name}));
+    const headerSet = new Set(reorderedList.flatMap(obj => Object.keys(obj)))
     const header = Array.from(headerSet)
-    const body = list.map(obj => Object.values(obj))
+    const body = reorderedList.map(obj => Object.values(obj))
     const listData = [header, ...body]
     const [editedStudentId, setEditedStudentId] = useState('');
     const [editPos, setEditPos] = useState(-1)
+   
     useEffect(() => {
         console.log(editedStudentId)
     }, [editedStudentId])
@@ -44,7 +47,7 @@ function ExportCSVForm({ list, fileName, className }) {
                                     >
                                         {row.map((data, i) =>
                                             <td key={i} className="px-6 py-4 text-center">
-                                                { data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
+                                                {data ? (data === true ? "True" : data === false ? "False" : data) : "None"}
                                             </td>
                                         )}
                                         {/* <td className="px-6 py-4 text-center">

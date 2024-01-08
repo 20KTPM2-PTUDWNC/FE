@@ -7,11 +7,11 @@ import { FaBan, FaCheck } from "react-icons/fa";
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCookies, getUser } from "../../features/user";
-import { addAssignment, showAssignmentGrade } from "../../api/assignment/assignment.api.js";
+import { addAssignment, assignmentReview, showAssignmentGrade } from "../../api/assignment/assignment.api.js";
 import Cookies from "universal-cookie";
 import { exportStudentList } from "../../api/class/class.api";
 import { CSVLink } from "react-csv";
-import { getAssigmentNoGrade, giveStudentGrade } from "../../api/grade/grade.api";
+import { getAssigmentGrade, getAssigmentGradeBoard, giveStudentGrade } from "../../api/grade/grade.api";
 import { updateId } from "../../api/user/user.api";
 
 function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
@@ -40,32 +40,77 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
     const [selectedStudentId, setSelectedStudentId] = useState('')
     const [editStudentID, setEditStudentID] = useState(-1)
     const [editStudentIDGraded, setEditStudentIDGraded] = useState(-1)
+
     useEffect(() => {
         if (!user) {
             navigate("/signin");
         }
-        else {
-            getStudentList()
-        }
-    }, [action]);
+
+    }, []);
+    useEffect(() => {
+        getStudentList()
+    }, [action])
+    // async function getStudentReviewList() {
+    //     const res = await assignmentReview(assignmentId)
+    //     if (res.status === 200) {
+    //         setReviewList(res.data)
+    //         alert("getReviewList")
+    //         setShowReviewList(true)
+    //     }
+    //     else {
+    //         alert("fail")
+    //     }
+    // }
     const getStudentList = async () => {
         try {
-            const res = await showAssignmentGrade(assignmentId);
-            // const data = [
-            //     {
-            //         "studentId": "12345",
-            //         "grade": 10
-            //     },
-            //     {
-            //         "studentId": "12345",
-            //         "grade": 10
-            //     }, {
-            //         "studentId": "12345",
-            //         "grade": 9
-            //     },
-            // ]
-            const data = res.data
-            setGradedStudent(data)
+
+            const res1 = await getAssigmentGradeBoard(classId, assignmentId)
+            const res = await assignmentReview(assignmentId)
+            const reviews = res.data
+            console.log("review", reviews)
+            const raw_data = res1.data.gradedStudentIds
+            // const gradedStudentId = res1.data.gradedStudentIds
+            // const arrayObjects_gradedStudentId = gradedStudentId.map(_id => ({ _id }));
+            // const idToStudentIdMap = {};
+
+            // studentList.forEach(item => {
+            //     idToStudentIdMap[item._id] = item.studentId ? item.studentId : "";
+            // });
+            // console.log(idToStudentIdMap)
+            // console.log(gradedStudentId)
+            // // Update arrayA with the "studentId" property from arrayB
+            // arrayObjects_gradedStudentId.forEach(item => {
+            //     item.studentId = idToStudentIdMap[item._id];
+            // });
+
+            // const idToNameMap_Graded = {};
+            // studentList.forEach(item => {
+            //     idToNameMap_Graded[item._id] = item.name;
+            // });
+            // arrayObjects_gradedStudentId.forEach(item => {
+            //     item.name = idToNameMap_Graded[item._id];
+            // });
+
+            // const idToStudentIdMap_Graded = {};
+            // studentList.forEach(item => {
+            //     idToStudentIdMap_Graded[item._id] = item.name;
+            // });
+            // raw_data.forEach(item => {
+            //     item.name = idToNameMap_Graded[item._id];
+            // });
+            // // Update arrayB with the "name" property from arrayA
+            const data = raw_data
+            const gradedStudent = data.map((obj2) => {
+                const matchedObj1 = reviews.find((obj1) => obj1.studentGradeId.userId._id === obj2.userId);
+                if (matchedObj1) {
+                    obj2.finalDecision = matchedObj1.finalDecision;
+                } else {
+                    obj2.finalDecision = 0; // Set finalDecision to 0 if not found in reviews
+                }
+                return obj2;
+            });
+
+            setGradedStudent(gradedStudent)
             const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
             setHeader(Array.from(headerSet))
             setBody(data.map(obj => Object.values(obj)))
@@ -73,9 +118,20 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
             setList(listData)
             // const [status, setStatus] = useState(false)
             console.log("grade: ", data)
-            const res1 = await getAssigmentNoGrade(classId, assignmentId)
+
             console.log("No grade ", res1.data)
-            setStudents(res1.data.studentsWithoutGrade)
+            const studentNoGraded = res1.data.studentsWithoutGrade
+            // const idToNameMap = {};
+            // studentList.forEach(item => {
+            //     idToNameMap[item._id] = item.name;
+            // });
+
+            // // Update arrayB with the "name" property from arrayA
+            // const updatedStudentsNoGraded = studentNoGraded.map(item => ({
+            //     ...item,
+            //     name: idToNameMap[item._id],
+            // }));
+            setStudents(studentNoGraded)
         }
         catch (err) {
             console.log(err)
@@ -88,7 +144,7 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
             "userId": id,
             "grade": grade
         }
-        console.log(studentData)
+        console.log("studentData", studentData)
         try {
             const res = await giveStudentGrade(studentData);
             setAction(!action)
@@ -96,7 +152,7 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
         } catch (err) {
             alert("Error: ", err)
         }
-
+        setAction(!action)
     }
     const handleUpdateStudentId = async (userId, studentId) => {
         console.log("StudentId available ", userId, studentId);
@@ -112,6 +168,7 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
             // if (avatar)
             //     await updateAvatar(user?._id, Avatar)
             setAction(!action)
+
             onClick()
             alert("Update studentID successfully!");
 
@@ -143,13 +200,17 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
 
 
 
-                <div className=" overflow-y-auto overflow-x-auto w-full max-h-[400px]  font-sans">
-                    <table className="overflow-y-auto overflow-x-auto max-h-[400px] w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
+                <div className=" overflow-y-auto overflow-x-auto w-full max-h-[300px]  font-sans">
+                    <table className="overflow-y-auto overflow-x-auto max-h-[300px] w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-center border">
+                                    Name
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-center border">
                                     StudentId
                                 </th>
+
                                 <th scope="col" className="px-6 py-3 text-center border">
                                     Grade
                                 </th>
@@ -168,6 +229,14 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                                     key={index}
                                     className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}
                                 >
+                                    <td
+                                        className={`px-6 py-4 text-center border border-r-2`}
+                                    >
+                                        <p className="px-6 py-3 text-center">
+                                            {row.name}
+                                        </p>
+
+                                    </td>
                                     <td
                                         className={`px-6 py-4 text-center border border-r-2`}
                                     >
@@ -249,6 +318,14 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                                     <td
                                         className={`px-6 py-4 text-center border border-r-2`}
                                     >
+                                        <p className="px-6 py-3 text-center">
+                                            {row.name}
+                                        </p>
+
+                                    </td>
+                                    <td
+                                        className={`px-6 py-4 text-center border border-r-2`}
+                                    >
                                         <input
                                             type="text"
                                             value={editPosGraded_studentID === index ? selectedStudentId : row.studentId}
@@ -292,7 +369,41 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                                     <td
                                         className={`px-6 py-4 text-center border border-r-2`}
                                     >
-                                        <input
+                                        {row.finalDecision === 0 ? <>
+                                            <input
+                                                type="number"
+                                                value={editPosGraded_graded === index ? editedGrade === -1 ? row.grade : editedGrade : row.grade}
+                                                onChange={(e) => {
+                                                    setEditedGrade(row.grade)
+                                                    const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                    setSelectedObjGrade(foundObject)
+
+                                                    setEditedGrade(e.target.value < 0 ? 0 : e.target.value > 10 ? 10 : e.target.value)
+
+                                                }}
+                                                onClick={() => setEditPosGraded_graded(index)}
+                                                onBlur={() => setEditPosGraded_graded(-1)}
+                                                className="text-center py-2 bg-none border"
+                                            />
+                                            <button
+                                                className={`ml-2 ${row.mark === 0 ? 'bg-green-500' : 'bg-red-400'} font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90`}
+                                                onClick={() => {
+                                                    const foundObject = studentList.find(obj => obj.studentId === row.studentId);
+                                                    setSelectedObjGrade(foundObject)
+                                                    const prevPos = editPosGraded_graded;
+                                                    setEditPosGraded_graded(index)
+                                                    if (prevPos === index)
+                                                        handleStudentGrade(foundObject._id, row.grade, row.mark === 0 ? 1 : 0)
+                                                }}
+                                            >
+                                                {row.mark === 0 ? 'Mark' : 'Un Mark'}
+                                            </button> </>
+                                            :
+                                            <p className="px-6 py-3 text-center">
+                                                {row.grade}
+                                            </p>
+                                        }
+                                        {/* <input
                                             type="number"
                                             value={editPosGraded_graded === index ? editedGrade === -1 ? row.grade : editedGrade : row.grade}
                                             onChange={(e) => {
@@ -319,12 +430,14 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                                             }}
                                         >
                                             {row.mark === 0 ? 'Mark' : 'Un Mark'}
-                                        </button>
+                                        </button> */}
                                     </td>
                                     <td className="px-6 py-4 text-center border">
                                         <button
-                                            className="bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                            className={`bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90 ${row.finalDecision === 1 ? 'opacity-50 pointer-events-none' : ''}`}
                                             onClick={() => {
+                                                if (row.finalDecision === 1)
+                                                    return
                                                 const foundObject = studentList.find(obj => obj.studentId === row.studentId);
                                                 setSelectedObjGrade(foundObject)
                                                 const prevPos = editPosGraded_graded;

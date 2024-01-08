@@ -40,6 +40,7 @@ import UserGradeFrom from "../../components/app/UserGradeFrom";
 import UploadFileForm from "../../components/public/UploadFileForm";
 
 import InvitationTeacherByEmailForm from "../../components/app/InvitationTeacherByEmailForm";
+import { SortableGrade } from "../../components/public/SortableGrade";
 // const Assignment = ({ assignment, isDragging, grade }) => {
 
 //     const [{ opacity }, drag] = useDrag({
@@ -261,13 +262,13 @@ function ClassDetails() {
     //     }
     // }, [])
 
-    async function loadImg() {
+    // async function loadImg() {
 
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
-        const imgJson = await res.json()
-        setImages(imgJson.results)
+    //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
+    //     const imgJson = await res.json()
+    //     setImages(imgJson.results)
 
-    }
+    // }
 
     useEffect(() => {
         if (showAssignmentOption
@@ -296,7 +297,7 @@ function ClassDetails() {
     ]);
 
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag === 0)) {
             navigate("/signin");
         }
         else {
@@ -425,7 +426,25 @@ function ClassDetails() {
 
         }
     };
+    function handleDragEnd_Grade(e) {
+        console.log(e);
+        const { active, over } = e;
+        console.log("ACTIVE: " + active.id);
+        console.log("OVER :" + over.id);
+        // const foundObject = over.data.current.sortable.items.find(obj => obj._id === over.id);
+        // sessionStorage.setItem("assignment", JSON.stringify(foundObject))
+        if (active.id !== over.id) {
+            setGradeList((items) => {
+                const oldIndex = items.findIndex((i) => i._id === active.id);
+                const newIndex = items.findIndex((i) => i._id === over.id);
+                return arrayMove(items, oldIndex, newIndex);
+                // items: [2, 3, 1]   0  -> 2
+                // [1, 2, 3] oldIndex: 0 newIndex: 2  -> [2, 3, 1] 
+            });
 
+        }
+
+    }
     function handleDragEnd(e) {
         console.log(e);
         const { active, over } = e;
@@ -631,15 +650,40 @@ function ClassDetails() {
                             <div className="text-base mt-10">
                                 {tab === 1 && (
                                     <div>
-                                        {gradeList.map((grade) =>
-                                            <div key={grade._id}>
+                                        <DndContext
+                                            collisionDetection={closestCenter}
+                                            onDragEnd={handleDragEnd_Grade}
+                                        >
 
-                                                <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                    <p className="text-lg font-bold">{grade.name} - {grade.gradeScale}%</p>
-                                                </div>
 
-                                            </div>
-                                        )}
+                                            <SortableContext
+                                                items={gradeList}
+                                                strategy={verticalListSortingStrategy}
+                                            >
+                                                {gradeList.map((grade) =>
+                                                    <div key={grade._id}>
+                                                        <div className="transition-all transition-300"
+                                                        >
+                                                            <SortableGrade grade={grade} />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {/* {assignmentList.map((assignment) =>
+                                                    <div className="transition-all transition-300"
+                                                        onClick={
+                                                            () => {
+                                                                sessionStorage.setItem("assignment", assignment)
+                                                                alert("Click")
+                                                            }}
+                                                    >
+                                                        <SortableItem key={assignment._id} assignment={assignment} grade={grade} classId={classId} />
+                                                    </div>
+                                                )} */}
+
+                                            </SortableContext>
+
+                                        </DndContext>
+
                                     </div>
                                 )}
                                 {tab === 2 && (
@@ -671,57 +715,7 @@ function ClassDetails() {
                                                         )}
                                                     </div>
                                                 </div>
-                                                {/* <DragDropContext onDragEnd={handleDragEnd}>
-                                                    <Droppable droppableId="droppable-1">
-                                                        {(provided, _) => (
-                                                            <div
-                                                                ref={provided.innerRef}
-                                                                {...provided.droppableProps}
-                                                            >
-                                                                {assignmentList.map((assignment, i) =>
-                                                                    <Draggable
-                                                                        key={assignment._id}
-                                                                        draggableId={assignment._id}
-                                                                        index={i}
-                                                                        className="flex flex-row"
-                                                                    >
-                                                                        {(provided, _) => {
-                                                                            <div
-                                                                                ref={provided.innerRef}
-                                                                                {...provided.draggableProps}
-                                                                                {...provided.dragHandleProps}
-                                                                            >
 
-                                                                                {assignment.gradeId === grade._id && (
-                                                                                    <Link to={`/class/assingment/${assignment._id}`}>
-                                                                                        <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                                            <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
-                                                                                        </div>
-                                                                                    </Link>
-                                                                                )}
-                                                                            </div>
-                                                                        }}
-
-
-                                                                    </Draggable>
-                                                                )}
-                                                                {provided.placeholder}
-                                                            </div>
-
-                                                        )}
-                                                    </Droppable>
-                                                </DragDropContext> */}
-                                                {/* {assignmentList.map((assignment) =>
-                                                    <div key={assignment._id}>
-                                                        {assignment.gradeId === grade._id && (
-                                                            <Link to={`/class/assingment/${assignment._id}`}>
-                                                                <div className="relative flex align-center hover:bg-[#5f27cd] hover:text-white my-8 py-4 px-6 rounded-lg shadow">
-                                                                    <p className="text-lg font-bold">{assignment.name} - {assignment.scale}%</p>
-                                                                </div>
-                                                            </Link>
-                                                        )}
-                                                    </div>
-                                                )} */}
                                                 <DndContext
                                                     collisionDetection={closestCenter}
                                                     onDragEnd={handleDragEnd}
@@ -765,22 +759,22 @@ function ClassDetails() {
                                                 </Link>
                                             </div>
                                         )}
-                                        Student:
+                                        <p>Student (already have account):</p>
                                         {memberList && memberList.students && memberList.students.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{student.name} - Student</p>
+                                                        <p className="text-lg font-bold">{student.studentId ? student.studentId : 'No_StudentId'} - {student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>
                                         )}
-                                        Student (doesn't have account)
+                                        <p>All student:</p>
                                         {studentList && studentList.map((student) =>
                                             <div key={student._id}>
                                                 <Link to={`/class/${classId}`}>
                                                     <div class="relative flex align-center  hover:bg-[#5f27cd] hover:text-white my-8 py-3 px-6 rounded-lg shadow">
-                                                        <p className="text-lg font-bold">{student.studentId} - {student.name} - Student</p>
+                                                        <p className="text-lg font-bold">{student.studentId ? student.studentId : 'No_StudentId'} - {student.name} - Student</p>
                                                     </div>
                                                 </Link>
                                             </div>

@@ -13,6 +13,18 @@ export const updateProfile = async (id, data) => {
         throw err;
     }
 };
+export const updatePassword = async (id, data) => {
+
+    try {
+        return await axiosPrivate.post(`/v1/user/changePassword`, data, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
 export const updateAvatar = async (id, data) => {
 
     try {
@@ -90,7 +102,19 @@ export const getAllUser = async () => {
 export const lockAccount = async (userId) => {
 
     try {
-        return await axiosPrivate.put(`/v1/user/lockAccount/${userId}`, {}, {
+        return await axiosPrivate.patch(`/v1/user/lockAccount/${userId}`, {}, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+export const unLockAccount = async (userId) => {
+
+    try {
+        return await axiosPrivate.patch(`/v1/user/unLockAccount/${userId}`, {}, {
             headers: {
                 "Authorization": getCookies()
             }

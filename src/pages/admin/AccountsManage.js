@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllUser, lockAccount } from "../../api/user/user.api.js";
+import { getAllUser, lockAccount, unLockAccount } from "../../api/user/user.api.js";
 import Filter from "../../components/app/Filter";
 import Jobs from "../../components/app/Jobs";
 import { getCookies, getUser } from "../../features/user";
@@ -86,19 +86,19 @@ function AccountsManage() {
     }, [])
 
     useEffect(() => {
-// <<<<<<< HEAD
-//         getAllUsers()
-//     }, [])
+        // <<<<<<< HEAD
+        //         getAllUsers()
+        //     }, [])
 
 
-//     const [status, setStatus] = useState(false)
-//     const handleBanAcc = async (id) => {
-//         const res = await banAcc(id)
-//         if (res.status !== 200) {
-//             alert("Error when banning")
-//         }
-//     }
-// =======
+        //     const [status, setStatus] = useState(false)
+        //     const handleBanAcc = async (id) => {
+        //         const res = await banAcc(id)
+        //         if (res.status !== 200) {
+        //             alert("Error when banning")
+        //         }
+        //     }
+        // =======
         async function fetchData() {
             try {
                 const response = await getAllUser();
@@ -135,10 +135,31 @@ function AccountsManage() {
             console.log("Error: ", error);
         }
     };
-
+    const unlockAccountUser = async (userId) => {
+        try {
+            const confirmed = window.confirm(`Are you sure you want to unlock this account?`);
+            if (confirmed) {
+                try {
+                    const response = await unLockAccount(userId);
+                    if (response.status === 200) {
+                        setUserData((prevUserData) => {
+                            return prevUserData.map((user) =>
+                                user._id === userId ? { ...user, deleteAt: new Date() } : user
+                            );
+                        });
+                        alert("Lock account successfully!!");
+                    }
+                } catch (error) {
+                    console.log('Error: ', error);
+                }
+            }
+        } catch (error) {
+            console.log("Error: ", error);
+        }
+    };
 
     return (
-        <>           
+        <>
             <main className="ml-60 pt-16 h-screen bg-yellow-50 overflow-auto">
                 <div className="px-6 py-8">
                     <div className="max-w-4xl mx-auto">
@@ -179,41 +200,41 @@ function AccountsManage() {
                                                     <td className="px-6 py-4 text-center">
                                                         {user.deleteAt === null ? (
                                                             <button
-                                                            className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
+                                                                className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
 
-                                                            onClick={() => lockAccountUser(user._id)}
+                                                                onClick={() => lockAccountUser(user._id)}
 
-                                                        >
-                                                            <p className="flex flex-row">
-                                                                <svg
-                                                                    width="1em"
-                                                                    height="1em"
-                                                                    fill="currentColor"
-                                                                    className="text-lg mr-4"
-                                                                >
-                                                                    <FaCheck />
-                                                                </svg>{" "}
-                                                                Active
-                                                            </p>
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            className="rounded-lg px-7 py-2 bg-red-500 text-white dark:text-blue-500 hover:bg-red-600"
-                                                            onClick={() => alert("Ban/Unban Account")}
-                                                        >
-                                                            <p className="flex flex-row">
-                                                                <svg
-                                                                    width="1em"
-                                                                    height="1em"
-                                                                    fill="currentColor"
-                                                                    className="text-lg mr-4"
-                                                                >
-                                                                    <FaBan />
-                                                                </svg>{" "}
-                                                                Ban
-                                                            </p>
-                                                        </button>
-                                                    )}
+                                                            >
+                                                                <p className="flex flex-row">
+                                                                    <svg
+                                                                        width="1em"
+                                                                        height="1em"
+                                                                        fill="currentColor"
+                                                                        className="text-lg mr-4"
+                                                                    >
+                                                                        <FaCheck />
+                                                                    </svg>{" "}
+                                                                    Active
+                                                                </p>
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="rounded-lg px-7 py-2 bg-red-500 text-white dark:text-blue-500 hover:bg-red-600"
+                                                                onClick={() => unlockAccountUser(user._id)}
+                                                            >
+                                                                <p className="flex flex-row">
+                                                                    <svg
+                                                                        width="1em"
+                                                                        height="1em"
+                                                                        fill="currentColor"
+                                                                        className="text-lg mr-4"
+                                                                    >
+                                                                        <FaBan />
+                                                                    </svg>{" "}
+                                                                    Ban
+                                                                </p>
+                                                            </button>
+                                                        )}
                                                     </td>
 
                                                 </tr>

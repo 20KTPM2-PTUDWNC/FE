@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, updateAvatar, updateId } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
+import ChangePasswordForm from "../../components/app/ChangePasswordForm";
 
 
 let skill_list = [];
@@ -22,7 +23,7 @@ function EditProfile() {
     const navigate = useNavigate();
     const id = user._id
     useEffect(() => {
-        if (!user)
+        if (!user || (user && user.userFlag === 0))
             navigate("/signin")
         else {
             const cookie = new Cookies()
@@ -31,7 +32,7 @@ function EditProfile() {
 
     }, [])
     const skillList = ["C++", "C#", "Python", "Java", "JavaScript", "HTML", "CSS", "Ruby"];
-
+    const [email, setEmail] = useState('')
     const [studentId, setStudentId] = useState('')
     const [avatar, setAvatar] = useState(null);
     const [name, setName] = useState("");
@@ -42,7 +43,7 @@ function EditProfile() {
     const [phone, setPhone] = useState("");
     const [description, setDescription] = useState("");
     const [error, setError] = useState("");
-
+    const [showEditPassword, setShowEditPassword] = useState(false)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -52,7 +53,8 @@ function EditProfile() {
                 setName(response.data.name);
                 setAddress(response.data.address);
                 setPhone(response.data.phone);
-
+                setStudentId(response.data.studentId || "");
+                setEmail(response.data.email);
                 console.log(response.data);
             } catch (error) {
                 console.error(error);
@@ -217,8 +219,24 @@ function EditProfile() {
                             Update Profile
                         </button>
                     </div>
+                    <div className="mt-8">
+                        <button
+                            type="submit"
+                            className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
+                            onClick={() => setShowEditPassword(true)}
+                        >
+                            Update Password
+                        </button>
+                    </div>
                 </div>
+                {showEditPassword &&
+                    <ChangePasswordForm
+                        onClose={() => setShowEditPassword(false)}
+                        email={email}
+                    />
+                }
             </div>
+
         </div>
     );
 }

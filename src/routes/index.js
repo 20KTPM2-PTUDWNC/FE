@@ -47,6 +47,7 @@ const publicRoutes = [
     { path: "/home", component: Home },
     { path: "/signin", component: SignIn },
     { path: "/signup", component: SignUp },
+    { path: "/signup/:token", component: SignUp },
     { path: "/loginSuccess/:token", component: SignInSuccess },
     { path: "/forgetPassword", component: ForgetPassword },
     { path: "/resetPassword/:token", component: ResetPassword },

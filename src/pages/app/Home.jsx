@@ -40,7 +40,7 @@ function Home() {
     const [isAddClass, setIsAddClass] = useState(0)
 
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag === 0)) {
             navigate("/signin")
         }
         else {

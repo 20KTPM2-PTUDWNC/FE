@@ -6,7 +6,7 @@ import { uploadStudentList } from "../../api/class/class.api";
 import { uploadGrade } from "../../api/grade/grade.api";
 import { updateIdByFile } from "../../api/user/user.api";
 
-function UploadFileForm({ onClose, uploadType, classId }) {
+function UploadFileForm({ onClose, uploadType, classId, assignmentId }) {
     const [fileInfo, setFileInfo] = useState(null);
     const [file, setFile] = useState(null)
     const handleFileChange = (e) => {
@@ -91,33 +91,39 @@ function UploadFileForm({ onClose, uploadType, classId }) {
                     const isValidData = result.data.every(row => {
                         if (uploadType === "grade list") {
                             // Check if the email column contains valid email addresses
-                            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
-                            // ^: Asserts the start of the string.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
-                            // @: Matches the "@" symbol.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
-                            // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
-                            // $: Asserts the end of the string.
+                            if (row.studentId) {
+                                
+                                const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
+                                // ^: Asserts the start of the string.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
+                                // @: Matches the "@" symbol.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
+                                // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
+                                // $: Asserts the end of the string.
 
-                            // Check if the grade column contains numbers between 0 and 10
-                            const isValidGrade = typeof row.grade === 'number' && row.grade >= 0 && row.grade <= 10;
+                                // Check if the grade column contains numbers between 0 and 10
+                                const isValidGrade = typeof row.grade === 'number' && row.grade >= 0 && row.grade <= 10;
 
-                            return isValidEmail && isValidGrade;
+                                return isValidEmail && isValidGrade;
+                            }
                         }
                         if (uploadType === "mapping studentId") {
                             // Check if the email column contains valid email addresses
-                            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
-                            console.log(row.email)
-                            // ^: Asserts the start of the string.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
-                            // @: Matches the "@" symbol.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
-                            // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
-                            // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
-                            // $: Asserts the end of the string.  
+                            if (row.studentId) {
 
-                            return isValidEmail
+                                const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email);
+                                console.log(row.email)
+                                // ^: Asserts the start of the string.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character before the "@" symbol in the local part of the email address.
+                                // @: Matches the "@" symbol.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the "@" symbol in the domain part of the email address.
+                                // \.: Escapes the dot (.) character to match it literally. It ensures that there is a dot after the "@" symbol, separating the domain and top-level domain (TLD) parts of the email address.
+                                // [^\s@]+: Matches one or more characters that are not whitespace (\s) or the at symbol (@). This ensures that there is at least one character after the dot in the TLD part of the email address.
+                                // $: Asserts the end of the string.  
+
+                                return isValidEmail
+                            }
                         }
                         return true
                     });
@@ -170,36 +176,36 @@ function UploadFileForm({ onClose, uploadType, classId }) {
             try {
                 // Assuming you have an API function called uploadCSVFile
                 // Replace 'yourApiFunction' with the actual API function
-// <<<<<<< HEAD
-//                 let response = null
-//                 if (uploadType === "grade list") {
-//                     response = await uploadGrade(classId, formData);
-//                 }
-//                 else if (uploadType === "mapping studentId") {
-//                     // requiredColumnNames = ['studentId', 'name', 'email']
-//                 }
-//                 else if (uploadType === "student list") {
-//                     response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
-// =======
+                // <<<<<<< HEAD
+                //                 let response = null
+                //                 if (uploadType === "grade list") {
+                //                     response = await uploadGrade(classId, formData);
+                //                 }
+                //                 else if (uploadType === "mapping studentId") {
+                //                     // requiredColumnNames = ['studentId', 'name', 'email']
+                //                 }
+                //                 else if (uploadType === "student list") {
+                //                     response = await uploadStudentList(classId, formData); // Pass fileInfo or any other required parameters
+                // =======
                 let requiredColumnNames = [];
                 if (uploadType === "grade list") {
                     requiredColumnNames = ['studentId', 'email', 'grade']
-                    const response = await uploadGrade(classId, formData);
-                    if (response.status === 200){
+                    const response = await uploadGrade(assignmentId, formData);
+                    if (response.status === 200) {
                         alert("Upload grade list successfullly");
                     }
                 }
                 else if (uploadType === "mapping studentId") {
                     requiredColumnNames = ['studentId', 'name', 'email'];
                     const response = await updateIdByFile(formData);
-                    if (response.status === 200){
+                    if (response.status === 200) {
                         alert("Mapping student ID by file successfullly");
                     }
                 }
                 else if (uploadType === "student list") {
                     requiredColumnNames = ['studentId', 'name']
                     const response = await uploadStudentList(classId, formData);
-                    if (response.status === 200){
+                    if (response.status === 200) {
                         alert("Upload student list successfullly");
                     }
                 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { userReview, userReviewList } from '../../api/user/user.api';
 import { getCookies, getUser } from '../../features/user';
 
@@ -8,6 +8,7 @@ const CSKH = () => {
     const navigate = useNavigate();
     const user = getUser();
     const [newMessage, setNewMessage] = useState('');
+    const params = useParams()
     useEffect(() => {
         if (!user || (user && user.userFlag !== 0)) {
             navigate("/signin")
@@ -17,12 +18,7 @@ const CSKH = () => {
     const handleInputChange = (event) => {
         setNewMessage(event.target.value);
     };
-    useEffect(() => {
-        if (!user) {
-            navigate("/signin")
-        }
 
-    }, [])
     const handleSendMessage = async (listReview) => {
         if (newMessage.trim() !== '') {
             // const userMessage = { text: message, sender: 'user' };
@@ -49,6 +45,7 @@ const CSKH = () => {
     const getUserReviews = async () => {
         if (!user)
             return
+        console.log("cusId: ", sessionStorage.getItem("customerSelected"))
         const response = await userReviewList(sessionStorage.getItem("customerSelected"))
         if (response.status === 200) {
             console.log(response.data)

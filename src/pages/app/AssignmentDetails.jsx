@@ -17,6 +17,7 @@ import { getAssigmentGrade, getClassGrade, showGradeStructure } from "../../api/
 import { assignmentReview, showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks";
 import StudentReviewList from "../../components/app/StudentReviewList";
+import UploadFileForm from "../../components/public/UploadFileForm";
 
 function splitStr(a) {
     let re = "";
@@ -42,7 +43,9 @@ const StudentSearch = ({ data, getReview, memberList, setUserIdOfStudent, firstS
     const [showId, setShowId] = useState(false)
     const [filteredStudentIds, setFilteredStudentIds] = useState([]);
     const searchContainerRef = useRef(null);
-
+    useEffect(() => {
+        console.log(memberList)
+    }, [])
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
         setSearchTerm(inputValue);
@@ -50,7 +53,7 @@ const StudentSearch = ({ data, getReview, memberList, setUserIdOfStudent, firstS
             setShowId(true)
         // Filter student IDs based on the input value
         const filteredIds = memberList.students
-            .filter((item) => item.studentId.toString().includes(inputValue))
+            .filter((item) => item.studentId?.toString().includes(inputValue))
             .map((item) => item.studentId);
 
         setFilteredStudentIds(filteredIds);
@@ -95,7 +98,7 @@ const StudentSearch = ({ data, getReview, memberList, setUserIdOfStudent, firstS
                 className="border-b-2 border-[#5f27cd] pl-2"
             />
             {searchTerm && showId &&
-                <ul className="shadow-md ">
+                <ul className="shadow-md bg-white ">
                     {filteredStudentIds.map((studentId) => (
                         <li key={studentId} onClick={() => handleStudentClick(studentId)}>
                             {studentId}
@@ -124,7 +127,7 @@ const CommentSection = ({ data, getReview, memberList, userId, setUserIdOfStuden
                     </button>
                 }
             </div>
-            {!check && <>
+            {!check && data && <>
 
                 <div className="absolute top-[15px] right-[20px] flex flex-row">
 
@@ -153,7 +156,7 @@ const StudentGrade = ({ onClick, reviews }) => {
             <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
 
                 <p className="font-bold mb-2">Your Grade:</p>
-                <p className="font-bold mb-2 text-center text-2xl">{!reviews ? 'No grade' : reviews.grade}</p>
+                <p className="font-bold mb-2 text-center text-2xl">{reviews && ( reviews.mark === 0 ? '...' : reviews.grade)}</p>
                 {reviews && reviews.userReview.length === 0 &&
                     <button
                         className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg `}
@@ -178,7 +181,7 @@ function AssignmentDetails() {
     const [assigmentDetails, setAssigmentDetails] = useState(null)
 
     useEffect(() => {
-        if (!user)
+        if (!user || (user && user.userFlag === 0)) 
             navigate("/signin")
         else {
             console.log(assignmentId)
@@ -223,9 +226,11 @@ function AssignmentDetails() {
     }
     const reviewFromStudent = () => {
         getStudentReviewList()
+        setShowAssignmentOption(false)
     }
     const showUpload = () => {
         setShowUploadGrade(true)
+        setShowAssignmentOption(false)
     }
     const assignmentOption = [
         {
@@ -260,6 +265,11 @@ function AssignmentDetails() {
         showReviewList: {
             close: function () {
                 setShowReviewList(false)
+            }
+        },
+        showUpload: {
+            close: function () {
+                setShowUploadGrade(false)
             }
         }
     }
@@ -409,38 +419,38 @@ function AssignmentDetails() {
                             <h2 className="text-2xl font-bold mb-4 ">{assigmentDetails?.name}</h2>
                             <p className="text-[#6F1E51]">{splitTextWithLineBreaks(assigmentDetails?.content)}</p>
                         </div>
-                        {review &&
-                            <div className="relative rounded-lg border-2 border-[#5f27cd] p-5 -ml-10">
-                                <CommentSection
-                                    memberList={memberList}
-                                    userId={id}
-                                    data={review}
-                                    getReview={getReview}
-                                    setUserIdOfStudent={setUserIdOfStudent}
-                                    firstStudentId={firstStudentId}
-                                    setShowReview={() => setShowReviews(true)}
-                                />
-                                <div className="my-10">
-                                    <TextInput value={text} onInputChange={handleInputChange} />
-                                </div>
-                                {user && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && review.userReview.length > 0 &&
-                                    <button
-                                        className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
-                                        onClick={handleAddComment}
-                                    >
-                                        Comment
-                                    </button>
-                                }
-                                {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
-                                    <button
-                                        className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
-                                        onClick={handleAddComment}
-                                    >
-                                        Comment
-                                    </button>
-                                }
+
+                        <div className="relative rounded-lg border-2 border-[#5f27cd] p-5 -ml-10">
+                            <CommentSection
+                                memberList={memberList}
+                                userId={id}
+                                data={review}
+                                getReview={getReview}
+                                setUserIdOfStudent={setUserIdOfStudent}
+                                firstStudentId={firstStudentId}
+                                setShowReview={() => setShowReviews(true)}
+                            />
+                            <div className="my-10">
+                                <TextInput value={text} onInputChange={handleInputChange} />
                             </div>
-                        }
+                            {user && review && memberList && memberList.teachers && memberList.teachers.some(teacher => teacher._id === user._id) && review.userReview.length > 0 &&
+                                <button
+                                    className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg"
+                                    onClick={handleAddComment}
+                                >
+                                    Comment
+                                </button>
+                            }
+                            {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
+                                <button
+                                    className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ${review ? '' : 'opacity-50 pointer-events-none'}`}
+                                    onClick={handleAddComment}
+                                >
+                                    Comment
+                                </button>
+                            }
+                        </div>
+
 
 
                     </div>
@@ -468,7 +478,7 @@ function AssignmentDetails() {
                 <ShowReviews
                     selectedReview={review}
                     onClose={closeTab.showReviews.close}
-
+                    onClick={()=>setAction(!action)}
                 />
             }
             {showReviewList &&
@@ -492,6 +502,14 @@ function AssignmentDetails() {
                 <StudentReviewForm
                     onClose={() => setOpenReview(!openReview)}
                     studentGradeId={review._id}
+                />
+            }
+            {showUploadGrade &&
+                <UploadFileForm
+                    onClose={closeTab.showUpload.close}
+                    uploadType={"grade list"}
+                    classId={classId}
+                    assignmentId={assignmentId}
                 />
             }
         </div >

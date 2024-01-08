@@ -3,9 +3,9 @@ import { AiOutlineDownload } from "react-icons/ai";
 
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link } from "react-router-dom";
-import { markFinal } from "../../api/grade/grade.api.js";
+import { getAssigmentGrade, markFinal } from "../../api/grade/grade.api.js";
 
-function ShowReviews({ onClose, selectedReview, setStudentId }) {
+function ShowReviews({ onClose, selectedReview, setStudentId, onClick }) {
 
     const [images, setImages] = useState([])
     const [finalGrade, setFinalGrade] = useState(-1)
@@ -16,11 +16,15 @@ function ShowReviews({ onClose, selectedReview, setStudentId }) {
         }
         const res = await markFinal(selectedReview.assignmentReview._id, data)
         if (res.status === 200) {
+            onClick()
             onClose()
             alert("Mark successfully")
         }
     }
-
+    
+    useEffect(() => {
+        console.log(selectedReview)
+    }, [])
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-gray-900 text-black bg-opacity-75 flex justify-center items-center">
             <div className="w-[600px] h-[450px] bg-white rounded-lg p-8 max-w-[1100px]">
@@ -107,7 +111,7 @@ function ShowReviews({ onClose, selectedReview, setStudentId }) {
                         >
                             Go to comment
                         </button> */}
-                        {finalGrade !== -1 &&
+                        {finalGrade !== -1 && selectedReview.assignmentReview.finalDecision === 0 &&
                             <button
                                 className="ml-5 bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
                                 onClick={handleMarkFinal}

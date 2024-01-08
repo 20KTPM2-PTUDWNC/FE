@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
-import { signUp } from "../../api/auth/auth.api";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { signIn, signUp } from "../../api/auth/auth.api";
+import { acceptInvitation } from "../../api/class/class.api";
 
 function SignUp() {
     const [userType, setUserType] = useState(2);
@@ -16,8 +17,8 @@ function SignUp() {
     const [error, setError] = useState("");
     const [isSignUp, setIsSignUp] = useState(false);
     const navigate = useNavigate();
-
-
+    const params = useParams()
+    const token = params.token || null
     const handleSignUp = async (e) => {
         e.preventDefault();
 
@@ -66,6 +67,7 @@ function SignUp() {
             if (response.status === 200) {
                 alert("Sign up successfully!");
                 setIsSignUp(true);
+
             }
         } catch (error) {
             setError(error.response.data.message);
@@ -267,7 +269,7 @@ function SignUp() {
                     </div>
                 </section>
             )}
-            {isSignUp && (
+            {isSignUp && !token && (
                 <section className="dark:bg-gray-900">
                     <div className="text-gray-300 flex flex-col items-center justify-center px-6 mx-auto h-full py-10 mt-20">
                         <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:m-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -276,7 +278,29 @@ function SignUp() {
                                     Sign Up
                                 </h1>
                                 <p className="text-lg text-white dark:text-gray-400">
-                                    Sign up successfully. Please go to your email and verify your account.                                    
+                                    Sign up successfully. Please go to your email and verify your account.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+            {isSignUp && token && (
+                <section className="dark:bg-gray-900">
+                    <div className="text-gray-300 flex flex-col items-center justify-center px-6 mx-auto h-full py-10 mt-20">
+                        <div className="w-full bg-[#5f27cd] rounded-lg shadow dark:border md:m-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                <h1 className="text-xl text-white font-bold leading-tight tracking-tight md:text-2xl dark:text-white">
+                                    Sign Up
+                                </h1>
+                                <p className="text-lg text-white dark:text-gray-400">
+                                    Sign up successfully.  <strong>Please go to your email and verify your account.</strong>
+                                </p>
+                                <p className="text-lg text-white dark:text-gray-400">
+                                    <strong>Please go to your email and verify your account.</strong>
+                                </p>
+                                <p className="text-lg text-white dark:text-gray-400">
+                                    <strong> Then go to your email accept invitation click to your invitation link</strong>
                                 </p>
                             </div>
                         </div>

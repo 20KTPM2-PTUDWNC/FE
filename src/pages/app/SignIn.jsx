@@ -6,7 +6,7 @@ import { getProfile } from "../../api/user/user.api";
 import { signin } from "../../features/user";
 import Cookies from 'universal-cookie/es6';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-
+import { api } from '../../constants'
 function SignIn() {
     const cookies = new Cookies();
     const navigate = useNavigate();
@@ -56,9 +56,9 @@ function SignIn() {
                 console.log(response.data.token);
                 const user = signin(response.data.token);
                 if (user.userFlag == 1) {
-                    sessionStorage.setItem("password", password)
-                    navigate("/home");
                     
+                    navigate("/home");
+
                 }
                 else {
                     navigate("/admin");
@@ -158,10 +158,10 @@ function SignIn() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-                                    <a href="http://localhost:8080/v1/auth/facebook">
+                                    <a href={`${api.dev}/v1/auth/facebook`}>
                                         <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
-                                    <a href="http://localhost:8080/v1/auth/google">
+                                    <a href={`${api.dev}/v1/auth/google`}>
                                         <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
                                 </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import Logo from "../../assets/logo.png";
-import Logo from "../../assets/idol.jpg"
+import Logo from "../../assets/avt_img.png"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProfile } from "../../api/user/user.api";
 import { getCookies, getUser } from "../../features/user";
@@ -15,7 +15,7 @@ function Profile() {
     // const [a,setA] = useState("")
     const [profile, setProfile] = useState(null);
     useEffect(() => {
-        if (!user) {
+        if (!user || (user && user.userFlag === 0))  {
             navigate("/signin");
         }
         else {

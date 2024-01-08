@@ -12,6 +12,7 @@ export const signin = (token) => {
     console.log("userData: ", JSON.stringify(userData))
     sessionStorage.setItem("password", userData.password)
     console.log("cookie: ", token)
+
     sessionStorage.setItem("user", JSON.stringify(userData))
     sessionStorage.setItem("cookie", token);
     return userData;

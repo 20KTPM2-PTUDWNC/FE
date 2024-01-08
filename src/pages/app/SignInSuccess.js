@@ -23,8 +23,26 @@ function SignInSuccess() {
     const handelLoginSuccess = async () => {
         try {
             const response = await activateAcc(token);
+
             if (response.status === 200) {
                 signin(token);
+                const userId = signin(signInResponse.data.token)._id;
+                const checkJoinClass = sessionStorage.getItem("joinClass")
+                if (checkJoinClass) {
+
+                    const dataAccept = {
+                        token,
+                        userId,
+                    };
+
+
+                    const acceptResponse = await acceptInvitation(dataAccept);
+                    if (acceptResponse.status === 200) {
+                        alert("Join new class successfully!!");
+                        navigate("/home");
+                    }
+
+                }
                 cookies.set('token', token);
             }
         }

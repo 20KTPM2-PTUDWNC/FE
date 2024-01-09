@@ -147,7 +147,7 @@ function AccountsManage() {
                                 user._id === userId ? { ...user, deleteAt: new Date() } : user
                             );
                         });
-                        alert("Lock account successfully!!");
+                        alert("unlock account successfully!!");
                     }
                 } catch (error) {
                     console.log('Error: ', error);

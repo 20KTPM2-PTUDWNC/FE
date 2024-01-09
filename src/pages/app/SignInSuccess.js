@@ -6,6 +6,7 @@ import { getProfile } from "../../api/user/user.api";
 import { signin } from "../../features/user";
 import Cookies from 'universal-cookie/es6';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { acceptInvitation } from "../../api/class/class.api";
 
 function SignInSuccess() {
     const cookies = new Cookies();
@@ -26,23 +27,26 @@ function SignInSuccess() {
 
             if (response.status === 200) {
                 signin(token);
-                const userId = signin(signInResponse.data.token)._id;
+                const userId = signin(token)._id;
                 const checkJoinClass = sessionStorage.getItem("joinClass")
                 if (checkJoinClass) {
 
                     const dataAccept = {
-                        token,
+                        token: checkJoinClass,
                         userId,
                     };
-
+                    console.log(dataAccept)
 
                     const acceptResponse = await acceptInvitation(dataAccept);
                     if (acceptResponse.status === 200) {
                         alert("Join new class successfully!!");
+
                         navigate("/home");
+
                     }
 
                 }
+                sessionStorage.removeItem("joinClass")
                 cookies.set('token', token);
             }
         }

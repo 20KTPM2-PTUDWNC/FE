@@ -79,9 +79,9 @@ function Navbar() {
                 </Link>
             </div>
 
-            <div className="w-[700px] hidden md:block">
+            {/* <div className="w-[700px] hidden md:block">
                 <Search setKeyword={setKeyword} handleSearch={handleSearch} />
-            </div>
+            </div> */}
 
             {/* Menu */}
             <ul className="font-bold hidden md:flex items-center">

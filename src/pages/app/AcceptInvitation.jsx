@@ -132,16 +132,20 @@ function AcceptInvitation() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-                                    <button onClick={() => { sessionStorage.setItem("joinClass"), "true" }}>
-                                        <a href={`${api.dev}/v1/auth/facebook`}>
+
+                                    <a href={`${api.dev}/v1/auth/facebook`}>
+                                        <div onClick={() => { sessionStorage.setItem("joinClass", token) }}>
                                             <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
-                                        </a>
-                                    </button>
-                                    <button onClick={() => { sessionStorage.setItem("joinClass"), "true" }}>
-                                        <a href={`${api.dev}/v1/auth/google`}>
+                                        </div>
+                                    </a>
+
+
+                                    <a href={`${api.dev}/v1/auth/google`}>
+                                        <div onClick={() => { sessionStorage.setItem("joinClass", token) }}>
                                             <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
-                                        </a>
-                                    </button>
+                                        </div>
+                                    </a>
+
                                 </div>
                             </div>
                         </form>

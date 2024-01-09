@@ -4,10 +4,10 @@ import { getCookies, getUser } from "../../features/user";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { createClass } from "../../api/class/class.api.js";
 import Cookies from "universal-cookie";
-import { updatePassword } from "../../api/user/user.api";
+import { updatePassword, updateProfile } from "../../api/user/user.api";
 
 function ChangePasswordForm({ onClose, onClick, email, password }) {
-    const [oldPass, setOldPass] = useState("");
+
     const [newPass, setNewPass] = useState("");
     const [confirm, setConfirm] = useState("");
     const [subject, setSubject] = useState("");
@@ -30,31 +30,28 @@ function ChangePasswordForm({ onClose, onClick, email, password }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!oldPass && !newPass && !confirm) {
+        if (!newPass && !confirm) {
             return alert("Please fill name field!");
         }
 
         if (newPass !== confirm) {
             return alert("Password and Confirm Password don't match");
         }
-        const userAuth = {
-            token: getCookies(),
-            email,
-            oldPassword: oldPass,
-            newPassword: newPass
+        const data = {
+            _password: newPass
         };
-        console.log(userAuth)
         try {
-            const response = await updatePassword(userAuth);
-            if (response.status === 200) {
-                alert("Reset password successfully. Please login again!");
 
-                onClose()
-            }
+            await updateProfile(user?._id, data);
+
+            // if (avatar)
+            //     await updateAvatar(user?._id, Avatar)
+            alert("Update profile successfully!");
+
+            navigate(`/user/${user?._id}`);
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message)
-            setError(error.response.data.message);
+            setError(error.response?.data?.message || "Failed to update profile");
         }
     };
 
@@ -77,16 +74,7 @@ function ChangePasswordForm({ onClose, onClick, email, password }) {
 
                 <div className="overflow-y-auto w-full h-[400px] font-sans">
                     <div className="flex flex-col">
-                        <div className="mt-5">
-                            <p className="text-[#5f27cd] font-semibold mb-1">Old Password</p>
-                            <input
-                                type="password"
-
-                                className="text-black border-b-2 border-[#5f27cd] p-2 w-full"
-                                value={oldPass}
-                                onChange={(e) => setOldPass(e.target.value)}
-                            />
-                        </div>
+                        
                         <div className="mt-5">
                             <p className="text-[#5f27cd] font-semibold mb-1">New Password</p>
                             <input

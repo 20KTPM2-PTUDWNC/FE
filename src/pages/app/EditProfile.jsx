@@ -210,7 +210,7 @@ function EditProfile() {
                         </div>
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-8 flex flex-row">
                         <button
                             type="submit"
                             className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
@@ -218,16 +218,15 @@ function EditProfile() {
                         >
                             Update Profile
                         </button>
-                    </div>
-                    <div className="mt-8">
                         <button
                             type="submit"
-                            className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 md:mt-0"
+                            className="bg-[#ff4757] text-white font-bold py-2 px-4 rounded-md mt-4 ml-5 md:mt-0"
                             onClick={() => setShowEditPassword(true)}
                         >
                             Update Password
                         </button>
                     </div>
+
                 </div>
                 {showEditPassword &&
                     <ChangePasswordForm

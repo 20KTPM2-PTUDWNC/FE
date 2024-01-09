@@ -149,14 +149,15 @@ function ClassDetails() {
             name: "Add Topic",
             todo: addTopic
         },
-        {
-            name: "Add Assignment",
-            todo: addAssignment
-        },
+
         {
             name: "Show Grade Board",
             todo: showGradeBoard
-        }
+        },
+        // {
+        //     name: "Add Assignment",
+        //     todo: addAssignment
+        // },
     ]
     const memberListOption = [
         {

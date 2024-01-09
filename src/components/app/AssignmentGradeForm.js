@@ -475,12 +475,12 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                         Download
                     </CSVLink>
 
-                    <button
+                    {/* <button
                         className="ml-10 bg-[#ff4757] font-semibold text-white py-2 px-3 rounded-lg hover:opacity-90"
                         onClick={() => alert("abc")}
                     >
                         Mark Grade
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>

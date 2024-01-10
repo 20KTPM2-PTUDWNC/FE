@@ -37,6 +37,7 @@ import MemberClassAdminPage from "../pages/admin/MemberOfClass";
 import AccountsManage from "../pages/admin/AccountsManage";
 import MapStudentID from "../pages/admin/MapStudentID";
 import CSKH from "../pages/admin/CSKH";
+import NotFound from "../pages/NotFound";
 
 
 
@@ -60,7 +61,7 @@ const publicRoutes = [
     { path: "/class/:classId/:assignmentId", component: AssignmentDetails },
     { path: "/class/:classId/:assignmentId/:idStudent", component: AssignmentDetails },
     { path: "/verifyAccount/:token", component: SignInSuccess },
-
+    { path: "/notFound", component: NotFound },
     // { path: "/notification", component: Notification },
     // { path: "/notification/details", component: Notification_details },
     // { path: "/company_profile/:companyId", component: CompanyProfile },

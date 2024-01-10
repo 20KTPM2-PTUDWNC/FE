@@ -56,8 +56,8 @@ const ChatComponent = () => {
 
     const intervalId = setInterval(() => {
       getUserReviews();
-      console.log('Code executed every 2000 milliseconds');
-    }, 2000);
+      console.log('Code executed every 5000 milliseconds');
+    }, 5000);
 
     // Clean up the interval to avoid memory leaks
     return () => clearInterval(intervalId);

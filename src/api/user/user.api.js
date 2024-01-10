@@ -114,7 +114,7 @@ export const lockAccount = async (userId) => {
 export const unLockAccount = async (userId) => {
 
     try {
-        return await axiosPrivate.patch(`/v1/user/unLockAccount/${userId}`, {
+        return await axiosPrivate.patch(`/v1/user/unLockAccount/${userId}`, {}, {
             headers: {
                 "Authorization": getCookies()
             }

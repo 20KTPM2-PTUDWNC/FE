@@ -876,6 +876,7 @@ function ClassDetails() {
                         onClose={closeTab.userGrade.close}
                         onClick={() => setAction(1 - action)}
                         userId={user._id}
+                        className={classDetail.name}
                     />}
                 {showUploadStudentList &&
                     <UploadFileForm

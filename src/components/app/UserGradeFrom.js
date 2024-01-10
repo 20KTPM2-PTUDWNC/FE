@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { handleTitle } from "../../utils/handleTitle";
 import ExportCSVForm from "./ExportCSVForm";
-
+import { CSVLink, CSVDownload } from "react-csv";
 
 import { formatDateTime } from "../../utils/formatDate.js";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -28,7 +28,7 @@ const dataEx = [
         "grade": 8
     }
 ]
-function UserGradeFrom({ onClose, onClick, userId }) {
+function UserGradeFrom({ onClose, onClick, userId, className }) {
     const [name, setName] = useState("");
     const [_scale, setScale] = useState("");
     const [file, setFile] = useState(null);
@@ -44,19 +44,15 @@ function UserGradeFrom({ onClose, onClick, userId }) {
     const [editedGrade, setEditedGrade] = useState('');
     const [editPos, setEditPos] = useState(-1)
     const [data, setData] = useState([])
-    useEffect(() => {
-        if (!user) {
-            navigate("/signin");
-        }
-        else {
-            getStudentList()
-        }
-    }, []);
-    const getStudentList = async () => {
+    const getStudentGradeBoard = async () => {
+        console.log("grade student In")
         try {
             const res = await showGradeById(userId);
-            setData(res.data)
-            console.log(res.data)
+            const obj_data = res.data
+            obj_data.assignmentsInfo.push({ "Total Grade": obj_data.totalGrade })
+            console.log(obj_data)
+            setData(obj_data)
+            console.log("grade student", obj_data)
             // const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
             // setHeader(Array.from(headerSet))
             // setBody(data.map(obj => Object.values(obj)))
@@ -66,9 +62,18 @@ function UserGradeFrom({ onClose, onClick, userId }) {
             // setListStudent(data);
         }
         catch (err) {
-            console.log(err)
+            console.log("err student Grade", err)
         }
     }
+    useEffect(() => {
+        if (!user) {
+            navigate("/signin");
+        }
+        else {
+            getStudentGradeBoard()
+        }
+    }, []);
+
 
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
@@ -98,15 +103,15 @@ function UserGradeFrom({ onClose, onClick, userId }) {
     //     }
     // };
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // loadImg();
+    //     // loadImg();
 
 
-        return () => {
-            console.log("useEffect done");
-        }
-    }, [])
+    //     return () => {
+    //         console.log("useEffect done");
+    //     }
+    // }, [])
     // async function loadImg() {
 
     //     const res = await fetch(`https://api.unsplash.com/search/photos?query=""&client_id=V5Xdz9okJnQnuvIQFN0OjsUaeExGt67obOT3bmCIq0o`)
@@ -120,7 +125,7 @@ function UserGradeFrom({ onClose, onClick, userId }) {
             <div className="w-[1000px] h-[500px] bg-white rounded-lg p-8 max-w-[1100px]">
                 <div className="relative flex justify-between items-center">
                     <div className="flex justify-between items-center mb-4 w-full">
-                        <span className="text-2xl text-[#5f27cd]  font-bold">Options</span>
+                        <span className="text-2xl text-[#5f27cd]  font-bold">Grade Board</span>
                     </div>
 
                     <button
@@ -146,13 +151,15 @@ function UserGradeFrom({ onClose, onClick, userId }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((item, index) => (
-                                    <tr key={index}
-                                        className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}>
-                                        <td className="px-6 py-3 text-center border">{item.gradeCompositionName}</td>
-                                        <td className="px-6 py-3 text-center border">{item.assignmentName}</td>
-                                        <td className="px-6 py-3 text-center border">{item.grade}</td>
-                                        {/* <td className="px-6 py-3 text-center border">
+                                {data && data.assignmentsInfo &&
+                                    <>
+                                        {data.assignmentsInfo.map((item, index) => (
+                                            <tr key={index}
+                                                className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 ${index === body.length - 1 ? 'border-b-2' : ''}`}>
+                                                <td className="px-6 py-3 text-center border">{item.gradeCompositionName}</td>
+                                                <td className="px-6 py-3 text-center border">{item.assignmentName}</td>
+                                                <td className="px-6 py-3 text-center border">{item.grade}</td>
+                                                {/* <td className="px-6 py-3 text-center border">
                                             <ul className="list-disc list-inside">
                                                 {item.assignments.map((assignment, i) => (
                                                     <li key={i}>
@@ -162,19 +169,47 @@ function UserGradeFrom({ onClose, onClick, userId }) {
                                             </ul>
                                         </td>
                                         <td className="border p-2">{item.total}</td> */}
-                                    </tr>
-                                ))}
+                                            </tr>
+
+                                        )
+                                        )}
+                                        <tr
+                                            className={`odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-b-2`}>
+                                            <td className="px-6 py-3 text-center border"></td>
+                                            <td className="px-6 py-3 text-center border"></td>
+                                            <td className="px-6 py-3 text-center border"><span className="font-semibold">Total Grade: </span>{data.totalGrade}</td>
+                                            {/* <td className="px-6 py-3 text-center border">
+                                            <ul className="list-disc list-inside">
+                                                {item.assignments.map((assignment, i) => (
+                                                    <li key={i}>
+                                                        {assignment.name}: {assignment.grade} (Scale: {assignment.scale})
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </td>
+                                        <td className="border p-2">{item.total}</td> */}
+                                        </tr>
+                                    </>
+                                }
+                                {/* <tr>
+
+                                </tr> */}
                             </tbody>
                         </table>
-                        <div className="my-10">
+                        {data && data.assignmentsInfo &&
+                            <div className="my-10">
 
-                            <button
-                                className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
-                            // onClick={() => setEdit(true)}
-                            >
-                                Download
-                            </button>
-                        </div>
+                                <CSVLink
+                                    data={data.assignmentsInfo}
+                                    filename={"my grade board_ " + className}
+                                    className="bg-[#ff4757] text-white py-2 px-3 rounded-lg hover:opacity-90"
+                                // onClick={() => setEdit(true)}
+                                >
+                                    Download
+                                </CSVLink>
+                            </div>
+                        }
+
                     </div>
                 </div>
 

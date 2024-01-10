@@ -45,10 +45,9 @@ function App() {
                     <Routes>
                         {publicRoutes.map((route, index) => {
                             const Page = route.component;
-                            if (route.path !== "/") return <Route key={index} path={route.path} element={
+                            if (route.path !== "/" && route.path !== "/verifyAccount/:token" && route.path !== "/loginSuccess/:token") return <Route key={index} path={route.path} element={
                                 <>
                                     <Navbar />
-
                                     <Page />
                                     <ChatComponent />
                                     {/* <Footer /> */}

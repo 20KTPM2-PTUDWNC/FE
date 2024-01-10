@@ -13,7 +13,18 @@ export const addAssignment = async (id, data) => {
         throw err;
     }
 };
+export const getAssignmentDetail = async (id) => {
 
+    try {
+        return await axiosPrivate.get(`/v1/assignment/assignmentDetail/${id}`, {
+            headers: {
+                "Authorization": getCookies()
+            }
+        });
+    } catch (err) {
+        throw err;
+    }
+};
 export const showAssignmentList = async (id) => {
 
     try {

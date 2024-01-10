@@ -69,39 +69,14 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
             const reviews = res.data
             console.log("review", reviews)
             const raw_data = res1.data.gradedStudentIds
-            // const gradedStudentId = res1.data.gradedStudentIds
-            // const arrayObjects_gradedStudentId = gradedStudentId.map(_id => ({ _id }));
-            // const idToStudentIdMap = {};
 
-            // studentList.forEach(item => {
-            //     idToStudentIdMap[item._id] = item.studentId ? item.studentId : "";
-            // });
-            // console.log(idToStudentIdMap)
-            // console.log(gradedStudentId)
-            // // Update arrayA with the "studentId" property from arrayB
-            // arrayObjects_gradedStudentId.forEach(item => {
-            //     item.studentId = idToStudentIdMap[item._id];
-            // });
+            const res_data = await showAssignmentGrade(assignmentId)
+            const data_before = res_data.data
+            const data = data_before.map(({ studentId, name, userId, grade, mark }) => ({ studentId, name, userId, grade, mark }));
+            console.log("grade: ", data)
 
-            // const idToNameMap_Graded = {};
-            // studentList.forEach(item => {
-            //     idToNameMap_Graded[item._id] = item.name;
-            // });
-            // arrayObjects_gradedStudentId.forEach(item => {
-            //     item.name = idToNameMap_Graded[item._id];
-            // });
-
-            // const idToStudentIdMap_Graded = {};
-            // studentList.forEach(item => {
-            //     idToStudentIdMap_Graded[item._id] = item.name;
-            // });
-            // raw_data.forEach(item => {
-            //     item.name = idToNameMap_Graded[item._id];
-            // });
-            // // Update arrayB with the "name" property from arrayA
-            const data = raw_data
-            const gradedStudent = data.map((obj2) => {
-                const matchedObj1 = reviews.find((obj1) => obj1.studentGradeId.userId._id === obj2.userId);
+            const gradedStudentList = data.map((obj2) => {
+                const matchedObj1 = reviews.find((obj1) => obj1.studentGradeId.userId._id === obj2.userId._id);
                 if (matchedObj1) {
                     obj2.finalDecision = matchedObj1.finalDecision;
                 } else {
@@ -110,12 +85,16 @@ function ShowGrade({ onClose, onClick, assignmentId, classId, studentList }) {
                 return obj2;
             });
 
-            setGradedStudent(gradedStudent)
-            const headerSet = new Set(data.flatMap(obj => Object.keys(obj)))
-            setHeader(Array.from(headerSet))
-            setBody(data.map(obj => Object.values(obj)))
-            const listData = [header, ...body]
+
+            const headerSet = new Set(gradedStudentList.flatMap(obj => Object.keys(obj)))
+            const h = Array.from(headerSet)
+            setHeader(h)
+            console.log("Pass here")
+            const b = gradedStudentList.map(obj => Object.values(obj))
+            setBody(b)
+            const listData = [h, ...b]
             setList(listData)
+            setGradedStudent(gradedStudentList)
             // const [status, setStatus] = useState(false)
             console.log("grade: ", data)
 

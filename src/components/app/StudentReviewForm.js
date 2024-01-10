@@ -44,6 +44,7 @@ function StudentReviewForm({ onClose, onClick, studentGradeId }) {
         }
         console.log(data)
         await studentReview(studentGradeId, data)
+        onClick()
         onClose()
     };
 

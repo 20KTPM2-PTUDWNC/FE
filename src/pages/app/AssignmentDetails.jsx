@@ -14,7 +14,7 @@ import StudentReviewForm from "../../components/app/StudentReviewForm";
 import ShowReviews from "../../components/app/ShowReviews";
 import { showMemberList } from "../../api/class/class.api";
 import { getAssigmentGrade, getClassGrade, showGradeStructure } from "../../api/grade/grade.api";
-import { assignmentReview, showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
+import { assignmentReview, getAssignmentDetail, showAssignmentList, studentReview } from "../../api/assignment/assignment.api";
 import { splitTextWithLineBreaks } from "../../utils/splitTextWithLineBreaks";
 import StudentReviewList from "../../components/app/StudentReviewList";
 import UploadFileForm from "../../components/public/UploadFileForm";
@@ -118,7 +118,7 @@ const CommentSection = ({ data, getReview, memberList, userId, setUserIdOfStuden
         <div className="comment-section mb-8">
             <div className="flex flex-row mb-3">
                 <h2 className="text-2xl font-bold mb-4">Comment</h2>
-                {!check && data && data.userReview.length > 0 &&
+                {data && data.userReview.length > 0 &&
                     <button
                         className="bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ml-5"
                         onClick={setShowReview}
@@ -156,7 +156,7 @@ const StudentGrade = ({ onClick, reviews }) => {
             <div className="flex flex-col text-[#5f27cd] rounded-lg border-2 border-[#5f27cd] p-5">
 
                 <p className="font-bold mb-2">Your Grade:</p>
-                <p className="font-bold mb-2 text-center text-2xl">{reviews && ( reviews.mark === 0 ? '...' : reviews.grade)}</p>
+                <p className="font-bold mb-2 text-center text-2xl">{reviews && (reviews.mark === 0 ? '...' : reviews.grade)}</p>
                 {reviews && reviews.userReview.length === 0 &&
                     <button
                         className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg `}
@@ -177,19 +177,25 @@ function AssignmentDetails() {
     const params = useParams()
     const assignmentId = params.assignmentId
     const classId = params.classId
+    const idStudent = params.idStudent
     const [openReview, setOpenReview] = useState(false)
     const [assigmentDetails, setAssigmentDetails] = useState(null)
 
     useEffect(() => {
-        if (!user || (user && user.userFlag === 0)) 
+        if (!user || (user && user.userFlag === 0))
             navigate("/signin")
         else {
             console.log(assignmentId)
-            setAssigmentDetails(JSON.parse(sessionStorage.getItem("assignment")))
+            getAssignmentDetails()
         }
     }, [])
 
-
+    const getAssignmentDetails = async () => {
+        const res = await getAssignmentDetail(assignmentId);
+        if (res.status === 200) {
+            setAssigmentDetails(res.data)
+        }
+    }
     // const [avatar, setAvatar] = useState(null);
     // const [name, setName] = useState("");
 
@@ -298,7 +304,10 @@ function AssignmentDetails() {
                 if (!checkStudent(memberList, id)) {
                     getReview(response.data.students[0]._id)
                     setUserIdOfStudent(response.data.students[0]._id)
-                    setFirstStudentId(response.data.students[0].studentId)
+                    if (idStudent)
+                        setFirstStudentId(idStudent)
+                    else
+                        setFirstStudentId(response.data.students[0].studentId)
                 }
                 else {
                     getReview(id)
@@ -443,7 +452,7 @@ function AssignmentDetails() {
                             }
                             {user && memberList && memberList.students && memberList.students.some(student => student._id === user._id) &&
                                 <button
-                                    className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ${review ? '' : 'opacity-50 pointer-events-none'}`}
+                                    className={`bg-[#5f27cd] text-white font-bold px-4 py-2 rounded-lg ${review && review.userReview.length > 0 ? '' : 'opacity-50 pointer-events-none'}`}
                                     onClick={handleAddComment}
                                 >
                                     Comment
@@ -478,7 +487,8 @@ function AssignmentDetails() {
                 <ShowReviews
                     selectedReview={review}
                     onClose={closeTab.showReviews.close}
-                    onClick={()=>setAction(!action)}
+                    onClick={() => setAction(!action)}
+                    isStudent={checkStudent(memberList, user._id)}
                 />
             }
             {showReviewList &&
@@ -502,6 +512,7 @@ function AssignmentDetails() {
                 <StudentReviewForm
                     onClose={() => setOpenReview(!openReview)}
                     studentGradeId={review._id}
+                    onClick={()=>setAction(!action)}
                 />
             }
             {showUploadGrade &&

@@ -93,7 +93,7 @@ function MapStudentID() {
 
     const handleUnMapButtonClick = async (userId) => {
         try {
-            
+
             const response = await unmapStudentId(userId);
             if (response.status === 200) {
                 const updatedUserData = userData.map((user) =>
@@ -150,32 +150,32 @@ function MapStudentID() {
                                         <tbody>
                                             {userData.map((user) => (
                                                 <tr
-                                                key={user._id}
-                                                className={`${user._id % 2 === 0
+                                                    key={user._id}
+                                                    className={`${user._id % 2 === 0
                                                         ? 'even:bg-gray-50 even:dark:bg-gray-800'
                                                         : 'odd:bg-white odd:dark:bg-gray-900'
                                                         } border-b dark:border-gray-700`}
                                                 >
                                                     <td className="px-6 py-4 text-center">
-                                                                <input
-                                                                    type="text"
-                                                                    value={editPos === user._id ? editedStudentId : user.studentId}
-                                                                    onChange={(e) => {
-                                                                        if (!user.studentId) {
-                                                                            setEditedStudentId(e.target.value);
-                                                                        }
-                                                                    }}
-                                                                    onClick={() => setEditPos(user._id)}
-                                                                    onBlur={() => {
-                                                                        setEditPos(-1);
-                                                                    }}
-                                                                    readOnly={!!user.studentId}
-                                                                    className="text-center py-2 border-2 rounded-lg"
-                                                                />
+                                                        <input
+                                                            type="text"
+                                                            value={editPos === user._id ? editedStudentId : user.studentId}
+                                                            onChange={(e) => {
+                                                                if (!user.studentId) {
+                                                                    setEditedStudentId(e.target.value);
+                                                                }
+                                                            }}
+                                                            onClick={() => setEditPos(user._id)}
+                                                            onBlur={() => {
+                                                                setEditPos(-1);
+                                                            }}
+                                                            readOnly={!!user.studentId}
+                                                            className="text-center py-2 border-2 rounded-lg"
+                                                        />
                                                     </td>
                                                     <td className="px-6 py-4 text-center">{user.name}</td>
-                                                    <td className="px-6 py-4 text-center">{user.deleteAt === null ? 'Active' : 'Banned'}</td>
-                                                    
+                                                    <td className={`px-6 py-4 text-center font-semibold ${user.deletedAt === null ? 'text-green-500' : 'text-red-500'}`}>{user.deletedAt === null ? 'Active' : 'Banned'}</td>
+
                                                     <td className="px-6 py-4 text-center">
                                                         <button
                                                             className="rounded-lg px-7 py-2 bg-yellow-200 text-yellow-900 dark:text-blue-500 hover:bg-yellow-100"

@@ -40,13 +40,30 @@ function SignInSuccess() {
                     const acceptResponse = await acceptInvitation(dataAccept);
                     if (acceptResponse.status === 200) {
                         alert("Join new class successfully!!");
-
+                        sessionStorage.removeItem("joinClass")
                         navigate("/home");
 
                     }
 
                 }
-                sessionStorage.removeItem("joinClass")
+                const checkInviteByEmail = sessionStorage.getItem("inviteByEmailToken");
+                if (checkInviteByEmail) {
+                    const dataAccept = {
+                        token: checkInviteByEmail,
+                        userId,
+                    };
+                    console.log(dataAccept)
+
+                    const acceptResponse = await acceptInvitation(dataAccept);
+                    if (acceptResponse.status === 200) {
+                        alert("Join new class successfully!!");
+                        sessionStorage.removeItem("inviteByEmailToken")
+                        navigate("/home");
+
+                    }
+                }
+
+
                 cookies.set('token', token);
             }
         }

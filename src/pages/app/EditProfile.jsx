@@ -92,12 +92,7 @@ function EditProfile() {
             address,
             phone,
         };
-        const studentIdMapping = {
-            studentId,
-            userId: user._id
-        }
-        if (studentId && (studentId === 0 || studentId.trim() === "0"))
-            return setError("StudentId is not accepted");
+
         // const Avatar = new FormData();
         // if (avatar) {
         //     Avatar.append("user-avatar", avatar)
@@ -127,7 +122,20 @@ function EditProfile() {
 
         try {
             await updateProfile(user?._id, data);
-            await updateId(studentIdMapping)
+            if (!studentId || (studentId && (studentId === 0 || studentId.trim() === "0" || studentId.trim() === ""))) {
+                const confirmed = window.confirm(`Your studentId is not available, only update other information. Continue ?`);
+                if (!confirmed) {
+                    return
+                }
+            }
+            if (studentId && (studentId !== 0 || studentId.trim() !== "0" || studentId.trim() !== "")) {
+
+                const studentIdMapping = {
+                    studentId,
+                    userId: user._id
+                }
+                await updateId(studentIdMapping)
+            }
             // if (avatar)
             //     await updateAvatar(user?._id, Avatar)
             alert("Update profile successfully!");

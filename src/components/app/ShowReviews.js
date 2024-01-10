@@ -5,7 +5,7 @@ import { formatDateTime } from "../../utils/formatDate.js";
 import { Link } from "react-router-dom";
 import { getAssigmentGrade, markFinal } from "../../api/grade/grade.api.js";
 
-function ShowReviews({ onClose, selectedReview, setStudentId, onClick }) {
+function ShowReviews({ onClose, selectedReview, setStudentId, onClick, isStudent }) {
 
     const [images, setImages] = useState([])
     const [finalGrade, setFinalGrade] = useState(-1)
@@ -21,7 +21,7 @@ function ShowReviews({ onClose, selectedReview, setStudentId, onClick }) {
             alert("Mark successfully")
         }
     }
-    
+
     useEffect(() => {
         console.log(selectedReview)
     }, [])
@@ -81,22 +81,25 @@ function ShowReviews({ onClose, selectedReview, setStudentId, onClick }) {
                                     </span>
                                 </p>
                             </li>
-                            <hr className="my-5" />
-                            <li className="py-2 flex flex-row items-center">
-                                <p className="font-semibold">Final Grade: {" "}</p>
-                                <input
-                                    type="number"
-                                    className="ml-2 pl-2 py-1 border-b-2 border-black"
-                                    value={finalGrade === -1 ? '' : finalGrade > 10 ? 10 : finalGrade < 0 ? 0 : finalGrade}
-                                    onChange={(e) => {
-                                        const grade = e.target.value
-                                        if (grade.length !== 0)
-                                            setFinalGrade(e.target.value)
-                                        else
-                                            setFinalGrade(-1)
-                                    }}
-                                />
-                            </li>
+                            {!isStudent && <>
+                                <hr className="my-5" />
+                                <li className="py-2 flex flex-row items-center">
+                                    <p className="font-semibold">Final Grade: {" "}</p>
+                                    <input
+                                        type="number"
+                                        className="ml-2 pl-2 py-1 border-b-2 border-black"
+                                        value={finalGrade === -1 ? '' : finalGrade > 10 ? 10 : finalGrade < 0 ? 0 : finalGrade}
+                                        onChange={(e) => {
+                                            const grade = e.target.value
+                                            if (grade.length !== 0)
+                                                setFinalGrade(e.target.value)
+                                            else
+                                                setFinalGrade(-1)
+                                        }}
+                                    />
+                                </li>
+                            </>
+                            }
                         </ul>
 
 
@@ -111,7 +114,7 @@ function ShowReviews({ onClose, selectedReview, setStudentId, onClick }) {
                         >
                             Go to comment
                         </button> */}
-                        {finalGrade !== -1 && selectedReview.assignmentReview.finalDecision === 0 &&
+                        {!isStudent && finalGrade !== -1 && selectedReview.assignmentReview.finalDecision === 0 &&
                             <button
                                 className="ml-5 bg-[#ff4757] text-white px-3 py-1 font-bold rounded"
                                 onClick={handleMarkFinal}

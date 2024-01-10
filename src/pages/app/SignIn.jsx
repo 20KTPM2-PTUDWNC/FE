@@ -117,7 +117,7 @@ function SignIn() {
                                 />
                             </div>
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center">
+                                {/* <div className="flex items-center">
                                     <div className="h-5">
                                         <input
                                             id="remember"
@@ -127,7 +127,7 @@ function SignIn() {
                                         />
                                     </div>
                                     
-                                </div>
+                                </div> */}
                                 <Link
                                     to="/forgetPassword"
                                     className="text-sm font-medium text-white hover:underline dark:text-primary-500"
@@ -154,10 +154,10 @@ function SignIn() {
                             <div className="flex items-center">
                                 <p className="text-white text-2xl mr-5 font-bold">Sign in with:</p>
                                 <div className="flex">
-                                    <a href={`${api.dev}/v1/auth/facebook`}>
+                                    <a href={`${api.host}/v1/auth/facebook`}>
                                         <FaFacebook className="mr-3 text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
-                                    <a href={`${api.dev}/v1/auth/google`}>
+                                    <a href={`${api.host}/v1/auth/google`}>
                                         <FaGoogle className="text-white hover:text-[#00ADB5]" size={24} />
                                     </a>
                                 </div>

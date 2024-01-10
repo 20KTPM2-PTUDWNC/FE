@@ -140,6 +140,7 @@ function AccountsManage() {
             const confirmed = window.confirm(`Are you sure you want to unlock this account?`);
             if (confirmed) {
                 try {
+                    console.log("id: ", userId)
                     const response = await unLockAccount(userId);
                     if (response.status === 200) {
                         setUserData((prevUserData) => {
@@ -195,10 +196,11 @@ function AccountsManage() {
                                                         : 'odd:bg-white odd:dark:bg-gray-900'
                                                         } border-b dark:border-gray-700`}
                                                 >
+                                                    <td className="px-6 py-4 text-center">{user._id}</td>
                                                     <td className="px-6 py-4 text-center">{user.studentId}</td>
                                                     <td className="px-6 py-4 text-center">{user.name}</td>
                                                     <td className="px-6 py-4 text-center">
-                                                        {user.deleteAt === null ? (
+                                                        {user.deletedAt === null ? (
                                                             <button
                                                                 className="rounded-lg px-5 py-2 bg-green-500 text-white dark:text-blue-500 hover:bg-green-600"
 
